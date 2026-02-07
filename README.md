@@ -9,7 +9,8 @@
 - **React Router** – Client-side routing
 - **React Hot Toast** – Simple toast notifications
 - **Framer Motion** – Animation library for smooth UI transitions
-- **HeroIcons / HeroUI** – Ready-to-use UI icons/components
+- **HeroUI** – Ready-to-use UI components
+- **Lucide React** - Icon library for react
 
 ## Backend (Spring Boot)
 
