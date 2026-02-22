@@ -34,7 +34,8 @@
       "@context/*": ["src/context/*"],
       "@utils/*": ["src/utils/*"],
       "@components/*": ["src/components/*"],
-      "@styles/*": ["src/styles/*"]
+      "@styles/*": ["src/styles/*"],
+      "@api/*": ["src/api/*"]
     }
   },
 
