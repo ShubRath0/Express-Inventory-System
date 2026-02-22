@@ -1,64 +1,80 @@
+import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
+import { Button, Divider, Navbar, NavbarBrand, NavbarContent } from "@heroui/react";
+import { TOP_PAGES, BOTTOM_PAGES } from "@pages/index";
+import type { Page } from "@pages/index";
 import { useState } from "react";
-import reactLogo from "@assets/react.svg";
-import viteLogo from "@assets/vite.svg";
-import { Button } from '@heroui/react'
 
-const App = () => {
-    const [count, setCount] = useState(0);
+const MainPage = () => {
+    const [activePage, setActivePage] = useState<Page>(TOP_PAGES[0]);
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white">
-            {/* Logos */}
-            <div className="flex gap-6 mb-6">
-                <a
-                    href="https://vite.dev"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="will-change-transform"
-                >
-                    <img
-                        src={viteLogo}
-                        className="h-24 p-6 transition-filter duration-300 hover:drop-shadow-[0_0_2em_#646cffaa] animate-logo-spin"
-                        alt="Vite logo"
-                    />
-                </a>
+        <div className="h-screen flex">
 
-                <a
-                    href="https://react.dev"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="will-change-transform"
-                >
-                    <img
-                        src={reactLogo}
-                        className="h-24 p-6 transition-filter duration-300 hover:drop-shadow-[0_0_2em_#61dafbaa]"
-                        alt="React logo"
-                    />
-                </a>
+            {/* SIDEBAR */}
+            <div className="w-64 border-gray-200 dark:border-gray-900 flex flex-col">
+
+                {/* LOGO SECTION */}
+                <div className="h-16 border-gray-200 dark:border-gray-900 flex items-center justify-center">
+                    <p className="font-bold text-inherit text-lg">LOGO</p>
+                </div>
+
+                {/* SIDEBAR SECTION */}
+                <div className="flex-1 flex flex-col justify-between">
+                    <div>
+                        {TOP_PAGES.map((page: Page) => (
+                            <Button
+                                key={page.key}
+                                variant="flat"
+                                radius="none"
+                                size="lg"
+                                className={`w-full ${activePage.key === page.key ? "bg-gray-200 dark:bg-gray-900" : ""}`}
+                                onPress={() => setActivePage(page)}
+                            >
+                                {page.label}
+                            </Button>
+                        ))}
+                    </div>
+                    <div>
+                        {BOTTOM_PAGES.map((page: Page) => (
+                            <Button
+                                key={page.key}
+                                variant="flat"
+                                radius="none"
+                                size="lg"
+                                className={`w-full ${activePage.key === page.key ? "bg-gray-200 dark:bg-gray-900" : ""}`}
+                                onPress={() => setActivePage(page)}
+                            >
+                                {page.label}
+                            </Button>
+                        ))}
+                    </div>
+                </div>
             </div>
 
-            {/* Heading */}
-            <h1 className="text-4xl font-bold mb-6">Vite + React</h1>
+            <Divider orientation="vertical" />
 
-            {/* Card */}
-            <div className="bg-gray-800 p-8 rounded-xl flex flex-col items-center gap-4 mb-6">
-                <Button
-                    className="relative px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition overflow-hidden"
-                    onClick={() => setCount((count) => count + 1)}
-                >
-                    count is {count}
-                </Button>
-                <p className="text-gray-400">
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
+            {/* NAVBAR */}
+            <div className="flex-1 flex flex-col overflow-auto">
+                {activePage.navbar ? activePage.navbar : (
+                    <Navbar position="static" isBordered maxWidth="full">
+                        <NavbarContent justify="start">
+                            <NavbarBrand>
+                                <p className="font-bold text-inherit">Welcome, User</p>
+                            </NavbarBrand>
+                        </NavbarContent>
+                        <NavbarContent justify="end">
+                            <ThemeSwitcher />
+                        </NavbarContent>
+                    </Navbar>
+                )}
+
+                {/* MAIN CONTENT */}
+                <main className="flex-1 p-4 overflow-auto">
+                    {activePage.component}
+                </main>
             </div>
-
-            {/* Footer / read-the-docs */}
-            <p className="text-gray-500">
-                Click on the Vite and React logos to learn more
-            </p>
         </div>
-    );
-};
+    )
+}
 
-export default App;
+export default MainPage;
