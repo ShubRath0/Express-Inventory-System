@@ -16,12 +16,12 @@ export default function SideBar() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleIsExpanded = () => {
-    setIsExpanded(!isExpanded)
-  }
- 
+    setIsExpanded(!isExpanded);
+  };
+
   const toggleSidebarOpen = () => {
-    setIsSidebarOpen(!isSidebarOpen)
-  }
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
     <aside
