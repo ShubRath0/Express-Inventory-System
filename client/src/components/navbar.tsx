@@ -5,8 +5,8 @@ export const NavbarMenu = () => {
     return (
         <Navbar maxWidth="full" className="bg-white flex justify-between">
             <NavbarContent justify="start">
-                <Input className="w-80" size="sm" placeholder="Search" type="text" startContent={<Search size={14}/>}/>
-                <Button className="bg-primary-500 text-blue-50" size="sm">Search</Button>
+                <Input className="w-80" size="md" placeholder="Search" type="text" startContent={<Search size={14}/>}/>
+                <Button className="bg-primary-500 text-blue-50" size="md">Search</Button>
             </NavbarContent>
             <NavbarContent  justify="end" className="">
                 <NavbarItem>

@@ -25,7 +25,7 @@ export default function SideBar() {
 
   return (
     <aside
-      className={`h-screen flex flex-col justify-between bg-blue-950 text-blue-50 ${isSidebarOpen ? "w-10" : "min-w-50"} `}
+      className={`bg-sidebar flex flex-col justify-between ${isSidebarOpen ? "w-10" : "min-w-50"} `}
     >
       <div>
         <header className="py-4 px-2 flex gap-2 items-center">
@@ -33,13 +33,19 @@ export default function SideBar() {
           <span className="text-blue-50 text-xl">Express</span>
         </header>
         <Listbox aria-label="Sidebar menu options">
-          <ListboxItem key="home" href="/" startContent={<House size={18} />}>
+          <ListboxItem
+            key="home"
+            href="/"
+            className="listboxItem text-foreground"
+            startContent={<House size={18} />}
+          >
             Home
           </ListboxItem>
           <ListboxItem
-            onClick={() => toggleIsExpanded()}
             key="inventory"
+            className="listboxItem text-foreground"
             startContent={<ClipboardList size={18} />}
+            onClick={() => toggleIsExpanded()}
           >
             Inventory
           </ListboxItem>
@@ -48,14 +54,14 @@ export default function SideBar() {
               <ListboxItem
                 key="products"
                 href="/inventory/products"
-                className="pl-8"
+                className="text-foreground px-8"
               >
                 products
               </ListboxItem>
               <ListboxItem
                 key="restock"
                 href="/inventory/restock"
-                className="pl-8"
+                className="text-foreground px-8"
               >
                 restock
               </ListboxItem>
@@ -66,6 +72,7 @@ export default function SideBar() {
           <ListboxItem
             key="reports"
             href="/reports"
+            className="listboxItem text-foreground"
             startContent={<NotebookText size={18} />}
           >
             Reports
@@ -73,6 +80,7 @@ export default function SideBar() {
           <ListboxItem
             key="purchasing"
             href="purchasing"
+            className="listboxItem text-foreground"
             startContent={<Tag size={18} />}
           >
             Purchasing
@@ -80,6 +88,7 @@ export default function SideBar() {
           <ListboxItem
             key="admin"
             href="admin"
+            className="listboxItem text-foreground"
             startContent={<SquareUser size={18} />}
           >
             Admin
@@ -87,6 +96,7 @@ export default function SideBar() {
           <ListboxItem
             key="help"
             href="help"
+            className="listboxItem text-foreground"
             startContent={<BadgeQuestionMark size={18} />}
           >
             Help

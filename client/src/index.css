@@ -2,16 +2,5 @@
 @plugin "./utils/hero.ts";
 @source "../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
 @custom-variant dark (&:is(.dark *));
-
-@theme {
-    --color-blue-50: #E6F1FE,
-    --color-blue-100: #CCE3FD,
-    --color-blue-200: #99C7FB,
-    --color-blue-300: #66AAF9,
-    --color-blue-400: #338EF7,
-    --color-blue-500: #006FEE,
-    --color-blue-600: #005BC4,
-    --color-blue-700: #004493,
-    --color-blue-800: #002E62,
-    --color-blue-900: #001731,
-}
+@layer theme;
+@import "./styles/themes.css";
