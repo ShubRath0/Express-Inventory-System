@@ -1,0 +1,11 @@
+@layer components {
+    .listboxItem {
+        margin-top: .5rem;
+        margin-bottom: .5rem;
+    }
+}
+
+@theme {
+    --color-sidebar: oklch(0.2033 0.0604 251.77);
+    --color-foreground: oklch(0.9537 0.0211 252.5);
+}
