@@ -17,6 +17,7 @@ export const SearchBar = (
         <Input
             variant="flat"
             radius="none"
+            color="default"
             label={placeholder}
             className={className}
             onChange={(e) => onChange(e.target.value)}

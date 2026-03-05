@@ -6,8 +6,9 @@ import { useSearchSort } from "@/hooks/useSearchSort";
 import { Loading } from "@/components/ui/Loading";
 import { ProductStatsBanner } from "@/components/ui/ProductStatsBanner";
 import { SearchBar } from "@/components/ui/SearchBar";
+import { CreateProductAction } from "@/components/buttons/CreateProductAction";
 
-export const InventoryPage = () => {
+export const InventorySection = () => {
     const { products, isLoading } = useProducts();
     const { items, sortColumn, sortDirection, setSortColumn, setSortDirection, setSearch } = useSearchSort<Product>({ items: products, searchableKeys: ["id", "name", "stock", "price", "category"] });
 
@@ -15,10 +16,10 @@ export const InventoryPage = () => {
 
     return (
         // CONTAINER
-        <div className="flex flex-col h-full w-full">
+        <div className="flex flex-col h-full w-full p-4">
 
             {/* TOP SECTION */}
-            <div className="flex flex-row items-center gap-4">
+            <div className="flex flex-row items-center justify-between gap-4">
 
                 {/* SEARCH BAR */}
                 <SearchBar
@@ -28,7 +29,10 @@ export const InventoryPage = () => {
                 />
 
                 {/* STATS */}
+
                 <ProductStatsBanner products={items} />
+
+                <CreateProductAction />
 
             </div>
 

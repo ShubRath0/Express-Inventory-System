@@ -1,6 +1,6 @@
 // pages.tsx
 import React from "react"
-import { InventoryPage as InvPage } from "@/pages/ProduceInventoryPage"
+import { InventoryPage as InvPage } from "@/sections/ProduceInventorySection"
 import { InventoryNavbar } from "@/components/navbars/InventoryNavbar"
 import { InventorySubmissionPage } from "./InventorySubmissionPage"
 import { RequestNavbar } from "@/components/navbars/RequestNavbar"

@@ -1,15 +1,31 @@
-import { Route, Routes } from 'react-router-dom'
-import MainPage from '@pages/MainPage'
+import { Route, Routes, useNavigate, useHref } from "react-router-dom";
+import AppPage from "@pages/MainPage";
+import type { NavigateOptions } from "react-router-dom";
+import { HeroUIProvider } from "@heroui/react";
 
-function App() {
-  return (
-    // Here we will give each page a path and route to it
-    <Routes>
-
-      <Route path='/' element={<MainPage />}></Route>
-
-    </Routes>
-  )
+declare module "@react-types/shared" {
+  interface RouterConfig {
+    routerOptions: NavigateOptions;
+  }
 }
 
-export default App
+function App() {
+  const navigate = useNavigate();
+
+  return (
+    // Here we will give each page a path and route to it
+    <HeroUIProvider navigate={navigate} useHref={useHref}>
+      <Routes>
+        <Route path="/" element={<AppPage />}></Route>
+        <Route path="/inventory/products"></Route>
+        <Route path="/inventory/restock"></Route>
+        <Route path="/reports"></Route>
+        <Route path="/purchasing"></Route>
+        <Route path="/admin"></Route>
+        <Route path="/help"></Route>
+      </Routes>
+    </HeroUIProvider>
+  );
+}
+
+export default App;
