@@ -1,15 +1,9 @@
-import Sidebar from "@/components/sidebar";
-import { NavbarMenu } from "@/components/navbar";
+import { Dashboard } from "./Dashboard";
 
 const App = () => {
   return (
-    <div
-      className="min-h-screen bg-gray-100 flex flex-row"
-    >
-      <Sidebar />
-      <main className="w-full">
-        <NavbarMenu />
-      </main>
+    <div className="min-h-screen bg-gray-100">
+      <Dashboard />
     </div>
   );
 };
