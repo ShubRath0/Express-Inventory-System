@@ -1,14 +1,21 @@
+// API
 import type { InventorySubmission, InventorySubmissionItem } from "@/api/requests/types";
-import { InventorySubmissionItemTable } from "@/components/tables/InventorySubmissionItemTable";
-import { InventorySubmissionTable } from "@/components/tables/InventorySubmissionTable";
-import { Loading } from "@/components/ui/Loading";
-import { SearchBar } from "@/components/ui/SearchBar";
-import { useInventorySubmissionItems, useInventorySubmissions } from "@/hooks/useInventorySubmissions";
-import { useProducts } from "@/hooks/useProducts";
-import { useSearchSort } from "@/hooks/useSearchSort";
+
+// COMPONENTS
 import { Button, Divider } from "@heroui/react";
 import { GitMerge, Undo, X } from "lucide-react";
+import { Loading } from "@/components/brandons-component-library";
+import { SearchBar } from "@/components/brandons-component-library";
+import { InventorySubmissionTable } from "@/components/brandons-component-library";
+import { InventorySubmissionItemTable } from "@/components/brandons-component-library";
+
+// HOOKS
 import { useState } from "react";
+import { useProducts } from "@/hooks/useProducts";
+import { useSearchSort } from "@/hooks/useSearchSort";
+import { useInventorySubmissionItems, useInventorySubmissions } from "@/hooks/useInventorySubmissions";
+
+
 export const InventorySubmissionPage = () => {
     const { inventorySubmissions, isLoading: isLoadingSubmissions } =
         useInventorySubmissions()
@@ -102,7 +109,7 @@ export const InventorySubmissionPage = () => {
                     sortDirection={submissionSortDirection}
                     setSortColumn={setSubmissionSortColumn}
                     setSortDirection={setSubmissionSortDirection}
-                    onPress={(item) => setCurrentView(item)}
+                    onPress={(item: InventorySubmission) => setCurrentView(item)}
                 />
             )}
         </div>

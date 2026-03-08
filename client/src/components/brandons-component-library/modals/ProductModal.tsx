@@ -1,4 +1,4 @@
-import { ProductForm, type ProductFormData } from "../forms/ProductForm";
+import { ProductForm, type ProductFormData } from '@/components/brandons-component-library/forms/ProductForm'
 import { GenericModal } from "./GenericModal";
 
 type ProductModalProps = {

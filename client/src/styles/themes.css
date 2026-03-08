@@ -21,43 +21,45 @@
   }
 }
 
+/* For anything that we would need two colors for light/dark we put here */
+@layer base {
+  /* -------------------- MAIN COLORS -------------------- */
+  :root {
+    --background: oklch(96.7% 0.003 264.542);
+    --foreground: oklch(20.33% 0.0604 251.77);
+
+    --sidebar: oklch(20.33% 0.0604 251.77);
+    --sidebar-foreground: oklch(95.37% 0.0211 252.5);
+
+    --navbar: oklch(100% 0 0);
+    --navbar-foreground: oklch(20.33% 0.0604 251.77);
+    --navbar-icon: oklch(14.39% 0.054 252.01);
+  }
+
+  /* ---------------- DARK MODE VARIATIONS ---------------- */
+  .dark {
+    --background: oklch(12.72% 0.006 286.37);
+    --foreground: oklch(98.51% 0.002 247.84);
+
+    --sidebar: oklch(17.44% 0.008 285.8);
+    --sidebar-foreground: oklch(98.51% 0.002 247.84);
+
+    --navbar: oklch(16.03% 0.006 285.9);
+    --navbar-foreground: oklch(98.51% 0.002 247.84);
+    --navbar-icon: oklch(98.51% 0.002 247.84);
+  }
+}
+
+/* Here we import the colors above, and any extra colors that dont need light/dark mode */
 @theme {
-  /* Main UI Slots */
+  /* ------------------- EXPORT COLORS  ------------------- */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  /* Component-Specific Slots */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
+
   --color-navbar: var(--navbar);
   --color-navbar-foreground: var(--navbar-foreground);
   --color-navbar-icon: var(--navbar-icon);
-}
-
-@layer base {
-  :root {
-    --background: oklch(96.7% 0.003 264.542);
-    --foreground: oklch(0.2033 0.0604 251.77);
-
-    /* Sidebar: Teresa's Dark Navy with White Text */
-    --sidebar: oklch(0.2033 0.0604 251.77);
-    --sidebar-foreground: oklch(0.9537 0.0211 252.5);
-
-    /* Navbar: Maybe a soft gray or white with dark text */
-    --navbar: #ffffff;
-    --navbar-foreground: oklch(0.2033 0.0604 251.77);
-    --navbar-icon: #001731;
-  }
-
-  .dark {
-    --background: #09090b;
-    --foreground: #fafafa;
-
-    --sidebar: #131316;
-    --sidebar-foreground: #fafafa;
-
-    --navbar: #0f0f12;
-    --navbar-foreground: #fafafa;
-    --navbar-icon: #fafafa;
-  }
 }

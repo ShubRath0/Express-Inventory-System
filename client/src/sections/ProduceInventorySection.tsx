@@ -1,13 +1,20 @@
-import { Divider } from "@heroui/react";
-import { useProducts } from "@hooks/useProducts"
-import type { Product } from "@/api/products/types";
-import { ProductTable } from "@/components/tables/ProductTable";
-import { useSearchSort } from "@/hooks/useSearchSort";
-import { Loading } from "@/components/ui/Loading";
-import { ProductStatsBanner } from "@/components/ui/ProductStatsBanner";
-import { SearchBar } from "@/components/ui/SearchBar";
-import { CreateProductAction } from "@/components/buttons/CreateProductAction";
 
+// TYPES
+import type { Product } from "@/api/products/types";
+
+// COMPONENTS
+import { Divider } from "@heroui/react";
+import { Loading } from "@/components/brandons-component-library";
+import { SearchBar } from "@/components/brandons-component-library";
+import { ProductTable } from "@/components/brandons-component-library";
+import { ProductStatsBanner } from "@/components/brandons-component-library";
+import { CreateProductAction } from "@/components/brandons-component-library";
+
+// HOOKS
+import { useSearchSort } from "@/hooks/useSearchSort";
+import { useProducts } from "@hooks/useProducts"
+
+// MAIN SECTION
 export const InventorySection = () => {
     const { products, isLoading } = useProducts();
     const { items, sortColumn, sortDirection, setSortColumn, setSortDirection, setSearch } = useSearchSort<Product>({ items: products, searchableKeys: ["id", "name", "stock", "price", "category"] });

@@ -1,6 +1,6 @@
 import { Button, useDisclosure } from "@heroui/react";
 import { useCreateProduct } from "@/hooks/useProducts";
-import { ProductModal } from "../modals/ProductModal";
+import { ProductModal } from "@/components/brandons-component-library/modals/ProductModal";
 import { useToast } from "@/hooks/useToast";
 import type { ProductFormData } from "../forms/ProductForm";
 import type { Category, PostProduct } from "@/api/products/types";

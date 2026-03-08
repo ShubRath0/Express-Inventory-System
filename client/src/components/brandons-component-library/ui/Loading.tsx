@@ -8,7 +8,7 @@ export const Loading = ({
     label
 }: LoadingProps) => {
     return (
-        <div className="flex justify-center items-center w-full h-full">
+        <div className="flex justify-center items-center w-full h-screen">
             <Spinner label={label} size="lg" />
         </div >
     )

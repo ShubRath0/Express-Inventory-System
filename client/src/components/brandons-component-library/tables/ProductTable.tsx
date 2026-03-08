@@ -1,11 +1,11 @@
 import type { Product } from "@/api/products/types"
-import { GenericTable } from "@components/tables/GenericTable"
+import { GenericTable } from "@components/brandons-component-library/tables/GenericTable"
 import { useMemo, useState } from "react"
-import type { ColumnDef } from "@components/tables/GenericTable"
+import type { ColumnDef } from "@/components/brandons-component-library/tables/GenericTable"
 import { Button } from "@heroui/react"
 import { Delete } from "lucide-react"
 import { useDeleteProduct } from "@/hooks/useProducts"
-import { DeleteAlert } from "../alerts/DeleteAlert"
+import { DeleteAlert } from "@/components//brandons-component-library/alerts/DeleteAlert"
 import { useToast } from "@/hooks/useToast"
 
 export type ProductTableProps = {

@@ -1,4 +1,4 @@
-import { GenericAlert } from "@components/alerts/GenericAlert"
+import { GenericAlert } from "@/components/brandons-component-library/alerts/GenericAlert"
 import { Button } from "@heroui/react"
 
 export type DeleteAlertProps = {

@@ -6,7 +6,7 @@ import {
   SquareUser,
   BadgeQuestionMark,
 } from "lucide-react";
-import type { ListItemProps } from "@/components/sidebar/listItemProps";
+import type { ListItemProps } from "@/components/Sidebar/ListItemProps";
 
 export const Items: ListItemProps[] = [
   {
