@@ -1,5 +1,5 @@
-import SideBar from "@components/Sidebar/sidebar";
-import { NavbarMenu } from "@/components/navbar";
+import SideBar from "@/components/sidebar/sidebar";
+import { NavbarMenu } from "@/components/navbar/navbar";
 
 export const Dashboard = () => {
   return (

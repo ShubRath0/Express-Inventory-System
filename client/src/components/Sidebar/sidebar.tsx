@@ -1,7 +1,6 @@
-// import type { LucideProps } from "lucide-react";
 import { PanelRightOpen } from "lucide-react";
 import { Listbox, ListboxItem, ListboxSection } from "@heroui/react";
-import { Items } from "@components/Sidebar/Items";
+import { Items } from "@/components/sidebar/Items";
 import logo from "@assets/Express-Logo.svg";
 import { useState } from "react";
 
