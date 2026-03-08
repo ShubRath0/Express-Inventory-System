@@ -1,19 +1,9 @@
-import Sidebar from "@/components/sidebar";
-import { NavbarMenu } from "@/components/navbar";
-import { useState } from "react";
+import { Dashboard } from "@pages/Dashboard";
 
 const App = () => {
-    const [content, setContent] = useState<React.ReactNode | null>(null)
-
     return (
-        <div
-            className="min-h-screen bg-background flex flex-row"
-        >
-            <Sidebar setContent={setContent} />
-            <main className="flex flex-col w-full">
-                <NavbarMenu />
-                {content && content}
-            </main>
+        <div className="min-h-screen bg-gray-100">
+            <Dashboard />
         </div>
     );
 };
