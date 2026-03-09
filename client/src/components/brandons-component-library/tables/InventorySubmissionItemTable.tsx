@@ -53,7 +53,7 @@ export const InventorySubmissionItemTable = ({
         },
         {
             key: "change",
-            label: "Differece",
+            label: "Difference",
             virtual: true,
             renderVirtual: (item) => {
                 const change = item.productStock - item.countedQuantity
