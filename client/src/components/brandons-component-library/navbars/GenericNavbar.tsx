@@ -15,24 +15,24 @@ export const GenericNavbar = ({
         <Navbar isBordered maxWidth="full">
             <NavbarContent>
                 <NavbarContent justify="start">
-                    {startContent?.map(content => (
-                        <NavbarItem>
+                    {startContent?.map((content, index) => (
+                        <NavbarItem key={index}>
                             {content}
                         </NavbarItem>
                     ))}
                 </NavbarContent>
 
                 <NavbarContent justify="center">
-                    {centerContent?.map(content => (
-                        <NavbarItem>
+                    {centerContent?.map((content, index) => (
+                        <NavbarItem key={index}>
                             {content}
                         </NavbarItem>
                     ))}
                 </NavbarContent>
 
                 <NavbarContent justify="end">
-                    {endContent?.map(content => (
-                        <NavbarItem>
+                    {endContent?.map((content, index) => (
+                        <NavbarItem key={index}>
                             {content}
                         </NavbarItem>
                     ))}

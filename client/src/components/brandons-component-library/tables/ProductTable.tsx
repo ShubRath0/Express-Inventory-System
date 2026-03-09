@@ -5,7 +5,7 @@ import type { ColumnDef } from "@/components/brandons-component-library/tables/G
 import { Button } from "@heroui/react"
 import { Delete } from "lucide-react"
 import { useDeleteProduct } from "@/hooks/useProducts"
-import { DeleteAlert } from "@/components//brandons-component-library/alerts/DeleteAlert"
+import { DeleteAlert } from "@/components/brandons-component-library/alerts/DeleteAlert"
 import { useToast } from "@/hooks/useToast"
 
 export type ProductTableProps = {

@@ -4,8 +4,6 @@ import { GenericNavbar } from "./GenericNavbar"
 
 export const RequestNavbar = () => {
 
-    const { isOpen, onOpen, onOpenChange } = useDisclosure()
-
     return (
         <GenericNavbar
             startContent={[<p>Requests</p>]}
@@ -14,7 +12,6 @@ export const RequestNavbar = () => {
                     color="primary"
                     variant="solid"
                     radius="sm"
-                    onPress={() => onOpen()}
                 >
                     Create Request
                 </Button>,

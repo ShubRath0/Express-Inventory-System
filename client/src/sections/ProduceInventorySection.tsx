@@ -12,7 +12,7 @@ import { CreateProductAction } from "@/components/brandons-component-library";
 
 // HOOKS
 import { useSearchSort } from "@/hooks/useSearchSort";
-import { useProducts } from "@hooks/useProducts"
+import { useProducts } from "@/hooks/useProducts"
 
 // MAIN SECTION
 export const InventorySection = () => {
