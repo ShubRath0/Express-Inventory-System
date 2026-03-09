@@ -1,6 +1,6 @@
 import { PanelRightOpen } from "lucide-react";
 import { Listbox, ListboxItem, ListboxSection } from "@heroui/react";
-import { Items } from "@/components/sidebar/Items";
+import { Items } from "@/components/Sidebar/Items";
 import logo from "@assets/Express-Logo.svg";
 import { useState } from "react";
 
@@ -31,7 +31,7 @@ export default function SideBar() {
               <ListboxItem
                 key={item.key}
                 href={item.href}
-                className={item.className}
+                className={`${item.className} text-sidebar-foreground`}
                 startContent={item.startContent}
                 onClick={() => toggleIsExpanded(item.key)}
                 textValue={item.label}
@@ -44,7 +44,7 @@ export default function SideBar() {
                     <ListboxItem
                       key={subItem.key}
                       href={subItem.href}
-                      className={subItem.className}
+                      className={`${subItem.className} text-sidebar-foreground`}
                     >
                       {subItem.label}
                     </ListboxItem>

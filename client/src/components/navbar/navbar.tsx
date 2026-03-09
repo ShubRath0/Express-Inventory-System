@@ -8,10 +8,13 @@ import {
 } from "@heroui/react";
 import { Search, LogOut } from "lucide-react";
 import { Items } from "@components/navbar/navItemList";
+import { ThemeSwitcher } from "../brandons-component-library";
 
 export const NavbarMenu = () => {
   return (
-    <Navbar maxWidth="full" className="bg-white flex justify-between">
+    <Navbar maxWidth="full" className="bg-navbar flex justify-between">
+
+      {/* START CONTENT */}
       <NavbarContent justify="start">
         <Input
           className="w-80"
@@ -24,6 +27,8 @@ export const NavbarMenu = () => {
           Search
         </Button>
       </NavbarContent>
+
+      {/* END CONTENT */}
       <NavbarContent justify="end">
         {Items.map((item) => (
           <NavbarItem key={item.key}>
@@ -31,8 +36,11 @@ export const NavbarMenu = () => {
           </NavbarItem>
         ))}
         <NavbarItem>
+          <ThemeSwitcher />
+        </NavbarItem>
+        <NavbarItem>
           <Button
-            className="bg-blue-50"
+            color="default"
             startContent={<LogOut size={18} color="#006FEE" />}
           >
             <Link href="#">Sign out</Link>
