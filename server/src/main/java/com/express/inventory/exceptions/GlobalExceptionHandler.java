@@ -1,4 +1,4 @@
-package com.express.inventory.exception;
+package com.express.inventory.exceptions;
 
 import java.util.List;
 
