@@ -2,6 +2,8 @@ package com.express.inventory.exceptions;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -34,6 +36,8 @@ import com.express.inventory.dto.FieldError;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     /**
      * Handles unexpected runtime exceptions.
      * 
@@ -48,7 +52,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> handleRunTime(RuntimeException ex) {
-        return createResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), null);
+        logger.error("Unexpected server error occured", ex);
+        return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong", null);
     }
 
     /**
@@ -73,29 +78,6 @@ public class GlobalExceptionHandler {
                 .map(e -> new FieldError(e.getField(), e.getDefaultMessage()))
                 .toList();
 
-        return createResponse(HttpStatus.BAD_REQUEST, "Validation failed", fieldErrors);
-    }
-
-    /**
-     * Helper method used to construct standardized API error responses.
-     * 
-     * <p>
-     * This method centralizes the logic for building {@link ApiResponse} objects
-     * and wrapping them in a {@link ResponseEntity} with the appropriate HTTP
-     * status code.
-     * </p>
-     * 
-     * @param status      The HTTP status to return.
-     * @param message     A human-readable description of the error.
-     * @param fieldErrors A list of validation errors, or {@code null} if none
-     *                    exist.
-     * @return A {@link ResponseEntity} containing the formatted
-     *         {@link ApiResponse}.
-     */
-    private ResponseEntity<ApiResponse<Void>> createResponse(
-            HttpStatus status,
-            String message,
-            List<FieldError> fieldErrors) {
-        return ResponseEntity.status(status).body(ApiResponse.error(status, message, fieldErrors));
+        return ApiResponse.error(HttpStatus.BAD_REQUEST, "Validation failed", fieldErrors);
     }
 }
