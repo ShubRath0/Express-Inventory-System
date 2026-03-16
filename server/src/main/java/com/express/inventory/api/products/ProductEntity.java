@@ -1,69 +1,35 @@
 package com.express.inventory.api.products;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+
+import java.sql.Timestamp;
 
 @Entity
-@Table(name = "products")
 public class ProductEntity {
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    // @Column(nullable = false, unique = true, length = 50)
-    // private String sku;
-
-    @Column(nullable = false, length = 150)
     private String name;
-
-    @Column(nullable = false, length = 500)
     private String productType;
-
-    @Column(nullable = false, precision = 10, scale = 2)
     private Double stockThreshold;
-
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
-
-    @Column(nullable = false)
-    private Integer stock;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    // Lifecycle hooks 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
+    private Double price;
+    private int stock;
+    private Timestamp created_at;
+    private Timestamp updated_at;
 
     // Constructors
     public ProductEntity() {
 
     }
 
-    public ProductEntity(int id, String name) {
+    public ProductEntity(int id) {
         this.id = id;
-        this.name = name;
     }
 
     // Getters
     public int getId() {
         return id;
     }
-
-    /* public String getSku() {
-        return sku;
-    } */
 
     public String getName() {
         return name;
@@ -77,26 +43,26 @@ public class ProductEntity {
         return stockThreshold;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public Integer getStock() {
+    public int getStock() {
         return stock;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public Timestamp getCreatedAt() {
+        return created_at;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public Timestamp getUpdatedAt() {
+        return updated_at;
     }
 
     // Setters
-    /* public void setSku(String sku) {
-        this.sku = sku;
-    } */
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -110,11 +76,20 @@ public class ProductEntity {
         this.stockThreshold = stockThreshold;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public void setStock(Integer stock) {
+    public void setStock(int stock) {
         this.stock = stock;
     }
+
+    public void setCreatedAt(Timestamp created_at) {
+        this.created_at = created_at;
+    }
+
+    public void setUpdatedAt(Timestamp updated_at) {
+        this.updated_at = updated_at;
+    }
+
 }

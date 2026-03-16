@@ -1,6 +1,7 @@
 package com.express.inventory.api.products;
 
 import com.express.inventory.api.products.dto.CreateProductRequest;
+import com.express.inventory.api.products.dto.UpdateProductRequest;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,32 +20,38 @@ public class ProductService {
     // Create Product
     @Transactional
     public ProductEntity createProduct(CreateProductRequest request) {
-        ProductEntity product = new ProductEntity();
-        product.setName(request.getName());
-        product.setProductType(request.getProductType());
-        product.setStock(request.getStock());
-        product.setStockThreshold(request.getStockThreshold());
-        product.setPrice(request.getPrice());
-
-        return product;
+       return productRepository.createProductEntity(request);
     }
 
-    // Read Operations
+    // Read Product(s)
     @Transactional(readOnly = true)
     public List<ProductEntity> getAllProducts() {
         return productRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public List<ProductEntity> getProductById(int id) {
+    public List<ProductEntity> searchProduct(String keyword) {
+        return productRepository.findSearched(keyword);
+    }
+
+    @Transactional(readOnly = true)
+    public ProductEntity getProductById(int id) {
         return productRepository.findById(id);
     }
 
-    /* @Transactional(readOnly = true)
-    public ProductEntity getProductBySku(String sku) {
-        return productRepository.findBySku(sku)
-            .orElseThrow(() ->
-                    new IllegalArgumentException("Product not found with SKU: " + sku)
-            );
-    } */
+    // Update Product
+    @Transactional
+    public ProductEntity updateProduct(UpdateProductRequest request) {
+        return productRepository.updateProductEntity(request);
+    }
+
+    // Delete Product
+    @Transactional
+    public void deleteProduct(int id) {
+        boolean deleted = productRepository.deleteProductEntity(id);
+
+        if (!deleted) {
+            throw new RuntimeException("Product not found");
+        }
+    }
 }
