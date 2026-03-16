@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
@@ -62,9 +63,10 @@ public record ApiResponse<T>(
      * @param servletRequest The HTTP request used to extract the request path.
      * @param message        A human-readable message describing the result.
      * @param data           The response payload returned by the API.
-     * @return A populated {@code ApiResponse} representing a successful request
+     * @return A {@link ResponseEntity} containing a successful {@link ApiResponse}
+     *         wrapping the data
      */
-    public static <T> ApiResponse<T> success(
+    public static <T> ResponseEntity<ApiResponse<T>> success(
             HttpStatus status,
             String message,
             T data) {
@@ -74,7 +76,7 @@ public record ApiResponse<T>(
                 .build()
                 .getPath();
 
-        return new ApiResponse<T>(
+        ApiResponse<T> apiResponse = new ApiResponse<T>(
                 Instant.now(),
                 status.value(),
                 true,
@@ -83,6 +85,8 @@ public record ApiResponse<T>(
                 path,
                 data,
                 null);
+
+        return ResponseEntity.status(status).body(apiResponse);
     }
 
     /**
@@ -100,9 +104,10 @@ public record ApiResponse<T>(
      * @param fieldErrors    A map containing field-specific validation errors where
      *                       the key is the field name and the value is the error
      *                       message.
-     * @return A populated {@code ApiResponse} representing a failed request
+     * @return A {@link ResponseEntity} containing an {@link ApiResponse} formatted
+     *         for error delivery
      */
-    public static <T> ApiResponse<T> error(
+    public static <T> ResponseEntity<ApiResponse<T>> error(
             HttpStatus status,
             String message,
             List<FieldError> fieldErrors) {
@@ -112,7 +117,7 @@ public record ApiResponse<T>(
                 .build()
                 .getPath();
 
-        return new ApiResponse<T>(
+        ApiResponse<T> apiResponse = new ApiResponse<T>(
                 Instant.now(),
                 status.value(),
                 false,
@@ -121,5 +126,27 @@ public record ApiResponse<T>(
                 path,
                 null,
                 fieldErrors);
+
+        return ResponseEntity.status(status).body(apiResponse);
+    }
+
+    /**
+     * Creates a basic error API response without field-specific details.
+     * 
+     * <p>
+     * Convenience method that calls {@link #error(HttpStatus, String, List)} with
+     * null field errors.
+     * </p>
+     * 
+     * @param status  The {@link HttpStatus} representing the failure.
+     * 
+     * @param message A human-readable description of the error.
+     * @return A {@link ResponseEntity} containing a basic error
+     *         {@link ApiResponse}.
+     */
+    public static <T> ResponseEntity<ApiResponse<T>> error(
+            HttpStatus status,
+            String message) {
+        return error(status, message, null);
     }
 }
