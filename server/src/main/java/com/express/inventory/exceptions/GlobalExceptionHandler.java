@@ -80,4 +80,15 @@ public class GlobalExceptionHandler {
 
         return ApiResponse.error(HttpStatus.BAD_REQUEST, "Validation failed", fieldErrors);
     }
+
+    /**
+     * 
+     * @param ex
+     * @return
+     *
+     */
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleValidationExceptions(ProductNotFoundException ex) {
+        return ApiResponse.error(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
 }

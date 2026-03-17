@@ -1,4 +1,4 @@
-package com.express.inventory.api.products;
+/* package com.express.inventory.api.products;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -84,3 +84,4 @@ public class ProductRepository {
         return jdbcTemplate.update(ProductSQL.DELETE_ENTITY, id) >= 0;
     }
 }
+*/

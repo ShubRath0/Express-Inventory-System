@@ -1,10 +1,21 @@
 package com.express.inventory.api.products.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 public class CreateProductRequest {
+    @NotNull(message = "Name cannot be blank")
     private String name;
+
+    @NotNull(message = "Product type cannot be blank")
     private String productType;
+
+    @NotNull(message = "stock cannot be blank")
     private int stock;
+
+    @NotNull(message = "stock threshold cannot be blank")
     private Double stockThreshold;
+
+    @NotNull(message = "price cannot be blank")
     private Double price;
 
     // Constructors

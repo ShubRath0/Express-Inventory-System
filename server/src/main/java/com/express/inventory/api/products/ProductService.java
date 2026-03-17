@@ -2,25 +2,34 @@ package com.express.inventory.api.products;
 
 import com.express.inventory.api.products.dto.CreateProductRequest;
 import com.express.inventory.api.products.dto.UpdateProductRequest;
+import com.express.inventory.exceptions.ProductNotFoundException;
+import com.express.inventory.utility.Utilities;
 
+import lombok.AllArgsConstructor;
+
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class ProductService {
 
-    private final ProductRepository productRepository;
-
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+    private final ProductRepositoryV2 productRepository;
 
     // Create Product
     @Transactional
     public ProductEntity createProduct(CreateProductRequest request) {
-       return productRepository.createProductEntity(request);
+        ProductEntity product = ProductEntity.builder()
+        .name(request.getName())
+        .productType(request.getProductType())
+        .stockThreshold(request.getStockThreshold())
+        .price(request.getPrice())
+        .stock(request.getStock()).build();
+        return productRepository.save(product);
     }
 
     // Read Product(s)
@@ -31,27 +40,36 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public List<ProductEntity> searchProduct(String keyword) {
-        return productRepository.findSearched(keyword);
+        return productRepository.findByName(keyword);
     }
 
     @Transactional(readOnly = true)
-    public ProductEntity getProductById(int id) {
-        return productRepository.findById(id);
+    public ProductEntity getProductById(Integer id) {
+        Optional<ProductEntity> product = productRepository.findById(id);
+
+        if (product.isEmpty()) {
+            throw new ProductNotFoundException();
+        }
+
+        return product.get();
     }
 
     // Update Product
     @Transactional
-    public ProductEntity updateProduct(UpdateProductRequest request) {
-        return productRepository.updateProductEntity(request);
+    public ProductEntity updateProduct(UpdateProductRequest request, Integer id) {
+        ProductEntity product = getProductById(id);
+        Utilities.copyNonNullProperties(request, product);
+        return productRepository.save(product);
     }
 
     // Delete Product
     @Transactional
-    public void deleteProduct(int id) {
-        boolean deleted = productRepository.deleteProductEntity(id);
-
-        if (!deleted) {
-            throw new RuntimeException("Product not found");
+    public void deleteProduct(Integer id) {
+        try { 
+            productRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException ex ) {
+            throw new ProductNotFoundException();
         }
     }
+
 }
