@@ -1,7 +1,7 @@
 package com.express.inventory.api.products;
 
-import com.express.inventory.api.products.dto.CreateProductRequest;
-import com.express.inventory.api.products.dto.UpdateProductRequest;
+import com.express.inventory.dto.products.request.CreateProductRequest;
+import com.express.inventory.dto.products.request.UpdateProductRequest;
 import com.express.inventory.exceptions.ProductNotFoundException;
 import com.express.inventory.utility.Utilities;
 
@@ -24,11 +24,11 @@ public class ProductService {
     @Transactional
     public ProductEntity createProduct(CreateProductRequest request) {
         ProductEntity product = ProductEntity.builder()
-        .name(request.getName())
-        .productType(request.getProductType())
-        .stockThreshold(request.getStockThreshold())
-        .price(request.getPrice())
-        .stock(request.getStock()).build();
+        .name(request.name())
+        .productType(request.productType())
+        .stockThreshold(request.stockThreshold())
+        .price(request.price())
+        .stock(request.stock()).build();
         return productRepository.save(product);
     }
 

@@ -1,8 +1,8 @@
 package com.express.inventory.api.products;
 
-import com.express.inventory.api.products.dto.CreateProductRequest;
-import com.express.inventory.api.products.dto.UpdateProductRequest;
 import com.express.inventory.dto.ApiResponse;
+import com.express.inventory.dto.products.request.CreateProductRequest;
+import com.express.inventory.dto.products.request.UpdateProductRequest;
 
 import jakarta.validation.Valid;
 
