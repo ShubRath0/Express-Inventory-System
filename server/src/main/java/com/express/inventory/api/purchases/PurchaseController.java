@@ -3,21 +3,22 @@ package com.express.inventory.api.purchases;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
+import lombok.RequiredArgsConstructor;
+
+
 import java.util.List;
 
 @RequestMapping ("/api/purchases")
+@RequiredArgsConstructor
 public class PurchaseController {
 
-    private final List<PurchaseEntity> PurchaseOrders = new ArrayList<>();
+    private final PurchaseService purchaseService;
 
-    public PurchaseController(){
-        PurchaseOrders.add(new PurchaseEntity(1,1,1,"",1.0,"",1));
-
-    }
 
     @GetMapping
     public List<PurchaseEntity> getPurchaseOrders(){
-        return PurchaseOrders;
+        return purchaseService.getAllPurchases();
     }
+
 }
+

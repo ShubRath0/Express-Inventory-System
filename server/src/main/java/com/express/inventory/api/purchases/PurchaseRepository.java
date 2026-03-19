@@ -1,5 +1,6 @@
 package com.express.inventory.api.purchases;
 
-public class PurchaseRepository {
-    
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PurchaseRepository extends JpaRepository<PurchaseEntity, Long> {
 }
