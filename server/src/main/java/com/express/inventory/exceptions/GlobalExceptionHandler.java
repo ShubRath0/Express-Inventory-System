@@ -41,9 +41,23 @@ public class GlobalExceptionHandler {
         return ApiResponse.error(HttpStatus.BAD_REQUEST, "Validation failed", fieldErrors);
     }
 
+<<<<<<< HEAD
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiResponse<Void>> handleRunTime(RuntimeException ex) {
         logger.error("Unexpected server error occurred", ex);
         return ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong", null);
     }
 }
+=======
+    /**
+     * 
+     * @param ex
+     * @return
+     *
+     */
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleValidationExceptions(ProductNotFoundException ex) {
+        return ApiResponse.error(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+}
+>>>>>>> dd39f84266c38e7e2d6edd76f58343983f2b3457
