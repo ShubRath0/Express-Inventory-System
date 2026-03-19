@@ -1,7 +1,10 @@
 package com.express.inventory.controller;
 
 import com.express.inventory.service.UserService;
-import org.springframework.web.bind.annotation.*;
+//import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 
 import java.util.List;
 
