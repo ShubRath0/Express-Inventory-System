@@ -1,8 +1,10 @@
-package com.express.inventory.api.products;
+package com.express.inventory.controllers;
 
-import com.express.inventory.api.products.dto.CreateProductRequest;
-import com.express.inventory.api.products.dto.UpdateProductRequest;
-import com.express.inventory.dto.ApiResponse;
+import com.express.inventory.dto.common.ApiResponse;
+import com.express.inventory.dto.products.request.CreateProductRequest;
+import com.express.inventory.dto.products.request.UpdateProductRequest;
+import com.express.inventory.models.ProductEntity;
+import com.express.inventory.services.ProductService;
 
 import jakarta.validation.Valid;
 
@@ -25,8 +27,7 @@ public class ProductController {
     // Create Product
     @PostMapping
     public ResponseEntity<ApiResponse<ProductEntity>> createProduct(
-            @Valid @RequestBody CreateProductRequest request
-    ) {
+            @Valid @RequestBody CreateProductRequest request) {
         ProductEntity createdProduct = productService.createProduct(request);
         return ApiResponse.success(HttpStatus.CREATED, "Product created successfully!", createdProduct);
     }
@@ -44,14 +45,14 @@ public class ProductController {
 
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<ProductEntity>>> searchProduct(@RequestParam String keyword) {
-        return ApiResponse.success(HttpStatus.OK, "Products retreived successfully!", productService.searchProduct(keyword));
+        return ApiResponse.success(HttpStatus.OK, "Products retreived successfully!",
+                productService.searchProduct(keyword));
     }
 
     // Update Product
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<ProductEntity>> updateProduct(
-        @PathVariable Integer id, @RequestBody UpdateProductRequest request
-    ) {
+            @PathVariable Integer id, @RequestBody UpdateProductRequest request) {
         ProductEntity updatedProduct = productService.updateProduct(request, id);
         return ApiResponse.success(HttpStatus.OK, "Product updated successfully!", updatedProduct);
     }
@@ -60,6 +61,13 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable int id) {
         productService.deleteProduct(id);
-        return ApiResponse.success(HttpStatus.NO_CONTENT, "Product deleted successfully!", null);
+        return ApiResponse.success(HttpStatus.OK, "Product deleted successfully!", null);
+    }
+
+    @DeleteMapping("/DELETE_EVERY_SINGLE_PRODUCT")
+    public ResponseEntity<ApiResponse<Void>> deleteAllproducts() {
+        productService.deleteAllProducts();
+        ;
+        return ApiResponse.success(HttpStatus.OK, "All products have been deleted!", null);
     }
 }

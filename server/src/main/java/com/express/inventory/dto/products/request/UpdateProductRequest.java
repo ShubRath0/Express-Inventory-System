@@ -1,4 +1,4 @@
-package com.express.inventory.api.products.dto;
+package com.express.inventory.dto.products.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

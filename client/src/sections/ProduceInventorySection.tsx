@@ -15,9 +15,9 @@ import { useSearchSort } from "@/hooks/useSearchSort";
 import { useProducts } from "@/hooks/useProducts"
 
 // MAIN SECTION
-export const InventorySection = () => {
+export const ProductInventorySection = () => {
     const { products, isLoading } = useProducts();
-    const { items, sortColumn, sortDirection, setSortColumn, setSortDirection, setSearch } = useSearchSort<Product>({ items: products, searchableKeys: ["id", "name", "stock", "price", "category"] });
+    const { items, sortColumn, sortDirection, setSortColumn, setSortDirection, setSearch } = useSearchSort<Product>({ items: products, searchableKeys: ["id", "name", "category"] });
 
     if (isLoading) return <Loading label="Loading Products..." />
 
