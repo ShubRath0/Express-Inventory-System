@@ -1,5 +1,5 @@
 import type { Product } from "@/api/products/types";
-import { createProduct, deleteProduct, getProducts } from "@api/products/api";
+import { createProduct, deleteProduct, getProducts, updateProduct } from "@api/products/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 
@@ -21,6 +21,16 @@ export const useCreateProduct = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["products"] });
         },
+    })
+}
+
+export const useUpdateProduct = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: updateProduct,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["updateProduct"] })
+        }
     })
 }
 

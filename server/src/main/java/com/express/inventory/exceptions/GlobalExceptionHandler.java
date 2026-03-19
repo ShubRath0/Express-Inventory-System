@@ -10,8 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.express.inventory.dto.ApiResponse;
-import com.express.inventory.dto.FieldError;
+import com.express.inventory.dto.common.ApiResponse;
+import com.express.inventory.dto.common.FieldError;
 
 /**
  * Global exception handler for the application.

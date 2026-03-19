@@ -1,4 +1,4 @@
-package com.express.inventory.api.products;
+package com.express.inventory.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Entity
@@ -15,15 +16,15 @@ import java.sql.Timestamp;
 @Builder
 @Table(name = "products")
 public class ProductEntity {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    private String productType;
-    private Double stockThreshold;
-    private Double price;
-    private int stock;
-    private Timestamp created_at;
-    private Timestamp updated_at;
+    private String category;
+    private BigDecimal stock;
+    private BigDecimal lowStockThreshold;
+    private BigDecimal price;
+    private Timestamp createdAt;
+    private Timestamp lastUpdated;
 }

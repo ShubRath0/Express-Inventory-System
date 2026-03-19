@@ -2,11 +2,12 @@ import type { Product } from "@/api/products/types"
 import { GenericTable } from "@components/brandons-component-library/tables/GenericTable"
 import { useMemo, useState } from "react"
 import type { ColumnDef } from "@/components/brandons-component-library/tables/GenericTable"
-import { Button } from "@heroui/react"
-import { Delete } from "lucide-react"
+import { Button, useDisclosure } from "@heroui/react"
+import { Delete, Minus, Plus } from "lucide-react"
 import { useDeleteProduct } from "@/hooks/useProducts"
 import { DeleteAlert } from "@/components/brandons-component-library/alerts/DeleteAlert"
 import { useToast } from "@/hooks/useToast"
+import { AddProductModal } from "../modals/AddProductModal"
 
 export type ProductTableProps = {
     products: Product[],
@@ -17,6 +18,7 @@ export type ProductTableProps = {
 }
 
 export const ProductTable = ({ products, sortColumn, sortDirection, setSortColumn, setSortDirection }: ProductTableProps) => {
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [productToDelete, setProductToDelete] = useState<Product | null>(null)
     const deleteMutation = useDeleteProduct();
     const toast = useToast()
@@ -29,6 +31,10 @@ export const ProductTable = ({ products, sortColumn, sortDirection, setSortColum
                 error: "Product could not be deleted."
             })
         }
+    }
+
+    function updateProduct() {
+        console.log("HI")
     }
 
     const columns: ColumnDef<Product>[] = useMemo<ColumnDef<Product>[]>(() => [
@@ -75,6 +81,8 @@ export const ProductTable = ({ products, sortColumn, sortDirection, setSortColum
             allowSorting: false,
             renderVirtual: (item => (
                 <div>
+                    <Button isIconOnly startContent={<Plus />} variant="light" color="success" onPress={onOpen} />
+                    <Button isIconOnly startContent={<Minus />} variant="light" color="danger" onPress={() => console.log("HI")} />
                     <Button isIconOnly startContent={<Delete />} variant="light" color="danger" onPress={() => setProductToDelete(item)} />
                 </div>
             ))
@@ -96,6 +104,7 @@ export const ProductTable = ({ products, sortColumn, sortDirection, setSortColum
                 isOpen={!!productToDelete}
                 onOpenChange={(open) => !open && setProductToDelete(null)}
             />
+            <AddProductModal isOpen={isOpen} onOpenChange={onOpenChange} onSubmit={updateProduct} />
         </>
 
     )

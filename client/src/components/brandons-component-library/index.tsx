@@ -9,7 +9,7 @@
 export { DeleteAlert } from "./alerts/DeleteAlert";
 
 //BUTTONS
-export { CreateProductAction } from "./buttons/CreateProductAction";
+export { CreateProductAction } from "./buttons/CreateProductBtn";
 
 //FORMS
 export { ProductForm } from "./forms/ProductForm";
@@ -19,11 +19,8 @@ export { ProductModal } from "./modals/ProductModal";
 
 //NAVBAR
 export { InventoryNavbar } from "./navbars/InventoryNavbar";
-export { RequestNavbar } from "./navbars/RequestNavbar";
 
 //TABLES
-export { InventorySubmissionItemTable } from "./tables/InventorySubmissionItemTable";
-export { InventorySubmissionTable } from "./tables/InventorySubmissionTable";
 export { ProductTable } from "./tables/ProductTable";
 
 //OTHER UI COMPONENTS

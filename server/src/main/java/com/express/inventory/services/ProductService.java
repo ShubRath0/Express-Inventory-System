@@ -1,8 +1,10 @@
-package com.express.inventory.api.products;
+package com.express.inventory.services;
 
-import com.express.inventory.api.products.dto.CreateProductRequest;
-import com.express.inventory.api.products.dto.UpdateProductRequest;
+import com.express.inventory.dto.products.request.CreateProductRequest;
+import com.express.inventory.dto.products.request.UpdateProductRequest;
 import com.express.inventory.exceptions.ProductNotFoundException;
+import com.express.inventory.models.ProductEntity;
+import com.express.inventory.repositories.ProductRepository;
 import com.express.inventory.utility.Utilities;
 
 import lombok.AllArgsConstructor;
@@ -18,17 +20,17 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ProductService {
 
-    private final ProductRepositoryV2 productRepository;
+    private final ProductRepository productRepository;
 
     // Create Product
     @Transactional
     public ProductEntity createProduct(CreateProductRequest request) {
         ProductEntity product = ProductEntity.builder()
-        .name(request.getName())
-        .productType(request.getProductType())
-        .stockThreshold(request.getStockThreshold())
-        .price(request.getPrice())
-        .stock(request.getStock()).build();
+                .name(request.name())
+                .category(request.category())
+                .lowStockThreshold(request.lowStockThreshold())
+                .price(request.price())
+                .stock(request.stock()).build();
         return productRepository.save(product);
     }
 
@@ -65,11 +67,16 @@ public class ProductService {
     // Delete Product
     @Transactional
     public void deleteProduct(Integer id) {
-        try { 
+        try {
             productRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException ex ) {
+        } catch (EmptyResultDataAccessException ex) {
             throw new ProductNotFoundException();
         }
+    }
+
+    @Transactional
+    public void deleteAllProducts() {
+        productRepository.deleteAll();
     }
 
 }
