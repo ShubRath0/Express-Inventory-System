@@ -33,7 +33,7 @@
 
         --navbar: oklch(100% 0 0);
         --navbar-foreground: oklch(20.33% 0.0604 251.77);
-        --navbar-icon: oklch(14.39% 0.054 252.01);
+        --navbar-icon: oklch(20.33% 0.0604 251.77);
     }
 
     /* ---------------- DARK MODE VARIATIONS ---------------- */
