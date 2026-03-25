@@ -24,7 +24,7 @@ export const GenericAlert = ({
                 placement="center"
             >
                 <ModalContent>
-                    {(onClose) => (
+                    {() => (
                         <>
                             <ModalHeader className="flex flex-col gap-1">
                                 {title || "Confirm Action"}

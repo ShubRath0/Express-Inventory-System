@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 
-type SortDirection = "ascending" | "descending"
+export type SortDirection = "ascending" | "descending"
 type useSearchSortProps<T> = {
     items: T[],
     searchableKeys: (keyof T)[]
@@ -41,6 +41,7 @@ export function useSearchSort<T extends Record<string, any>>({
         items: filteredItems,
         sortColumn,
         sortDirection,
+        search,
         setSearch,
         setSortColumn,
         setSortDirection

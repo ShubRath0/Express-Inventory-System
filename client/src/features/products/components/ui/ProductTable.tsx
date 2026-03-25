@@ -1,7 +1,7 @@
 // IMPORTS
-import { useMemo, useState } from "react"
-import { Button, useDisclosure } from "@heroui/react"
-import { Delete, Minus, Plus } from "lucide-react"
+import { useMemo } from "react"
+import { Button } from "@heroui/react"
+import { Delete, PackageSearch } from "lucide-react"
 
 import { type ColumnDef, GenericTable } from "@/components"
 import type { Product } from "@/features/products/api/products.types"
@@ -9,45 +9,31 @@ import { DeleteAlert, UpdateStockModal, type UpdateStockFormData } from "@/featu
 
 // Hooks
 import { useToast } from "@/hooks/useToast"
-import { useDeleteProduct, useUpdateProduct } from "@/features/products/hooks/useProducts"
-
-// TYPES
-export type ProductTableProps = {
-    products: Product[],
-    sortColumn?: keyof Product,
-    sortDirection: "ascending" | "descending",
-    setSortColumn: React.Dispatch<React.SetStateAction<keyof Product | undefined>>
-    setSortDirection: React.Dispatch<React.SetStateAction<"ascending" | "descending">>
-}
-
-type ActionType = "delete" | "update" | null;
+import { useDeleteProduct, useUpdateStock } from "@/features/products/hooks/useProducts"
+import { useInventory } from "../../context"
 
 // MAIN FUNCTION
-export const ProductTable = ({ products, sortColumn, sortDirection, setSortColumn, setSortDirection }: ProductTableProps) => {
+export const ProductTable = () => {
     // HOOKS
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-    const [action, setAction] = useState<ActionType>()
+    const { selectedProduct, setSelectedProduct, filteredProducts, sortColumn, setSortColumn, sortDirection, setSortDirection, setActiveModal } = useInventory();
     const toast = useToast()
 
     // MUTATIONS
     const deleteMutation = useDeleteProduct();
-    const updateMutation = useUpdateProduct();
+    const updateMutation = useUpdateStock();
 
     // FUNCTIONS
     function deleteProduct() {
-        if (selectedProduct) {
-            toast.promise(deleteMutation.mutateAsync(selectedProduct.id), {
-                loading: "Deleting product...",
-                success: "Product deleted!",
-                error: "Product could not be deleted."
-            })
-        }
+        if (!selectedProduct) return;
+        toast.promise(deleteMutation.mutateAsync(selectedProduct.id), {
+            loading: "Deleting product...",
+            success: "Product deleted!",
+            error: "Product could not be deleted."
+        })
     }
 
-    function updateProduct(data: UpdateStockFormData) {
-        const newData: UpdateStockFormData = { ...data, id: selectedProduct!.id }
-        toast.promise(updateMutation.mutateAsync(newData), {
+    function updateStock(data: UpdateStockFormData) {
+        toast.promise(updateMutation.mutateAsync(data), {
             loading: "Updating product...",
             success: "Product updated!",
             error: "Product could not be updated."
@@ -88,33 +74,22 @@ export const ProductTable = ({ products, sortColumn, sortDirection, setSortColum
                 `$${Number(value).toFixed(2)}`
         },
         {
-            key: "category",
-            label: "Category"
-        },
-        {
             key: "actions",
             label: "Actions",
             virtual: true,
             allowSorting: false,
             renderVirtual: (item => (
-                <div>
-
-                    <Button isIconOnly startContent={<Plus />} variant="light" color="success" onPress={() => {
-                        setSelectedProduct(item)
-                        setAction("update")
-                        onOpen()
-                    }} />
-
-                    <Button isIconOnly startContent={<Minus />} variant="light" color="danger" onPress={() => {
-                        setSelectedProduct(item)
-                        setAction("update")
-                        onOpen()
-                    }} />
-                    <Button isIconOnly startContent={<Delete />} variant="light" color="danger" onPress={() => {
-                        setSelectedProduct(item)
-                        setAction("delete")
-                    }} />
-
+                <div className="flex items-center">
+                    <div className="bg-card rounded-xl shadow-2xl">
+                        <Button isIconOnly startContent={<PackageSearch />} variant="light" color="success" onPress={() => {
+                            setSelectedProduct(item)
+                            setActiveModal('update')
+                        }} />
+                        <Button isIconOnly startContent={<Delete />} variant="light" color="danger" onPress={() => {
+                            setSelectedProduct(item)
+                            setActiveModal('delete')
+                        }} />
+                    </div>
                 </div>
             ))
         }
@@ -123,24 +98,16 @@ export const ProductTable = ({ products, sortColumn, sortDirection, setSortColum
     return (
         <>
             <GenericTable
-                items={products}
+                items={filteredProducts || []}
                 columns={columns}
                 sortColumn={sortColumn}
                 sortDirection={sortDirection}
                 setSortColumn={setSortColumn}
                 setSortDirection={setSortDirection}
+                className="h-180"
             />
-            <DeleteAlert
-                handleDelete={deleteProduct}
-                isOpen={action == 'delete' && selectedProduct != null}
-                onOpenChange={(open) => {
-                    if (!open) {
-                        setSelectedProduct(null)
-                        setAction(null)
-                    }
-                }}
-            />
-            <UpdateStockModal isOpen={isOpen} onOpenChange={onOpenChange} onSubmit={updateProduct} />
+            <DeleteAlert handleDelete={deleteProduct} />
+            <UpdateStockModal onSubmit={updateStock} />
         </>
 
     )

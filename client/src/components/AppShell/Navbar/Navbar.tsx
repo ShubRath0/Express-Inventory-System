@@ -1,33 +1,17 @@
 import {
-    Input,
     Button,
     Navbar,
     NavbarContent,
     NavbarItem,
     Link,
 } from "@heroui/react";
-import { Search, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { Items } from "./NavItemList";
 import { ThemeSwitcher } from "@/components/ui";
 
 export const AppNavbar = () => {
     return (
         <Navbar maxWidth="full" className="bg-navbar flex justify-between">
-
-            {/* START CONTENT */}
-            <NavbarContent justify="start">
-                <Input
-                    className="w-80"
-                    size="md"
-                    placeholder="Search"
-                    type="text"
-                    startContent={<Search size={14} />}
-                />
-                <Button className="bg-primary-500 text-blue-50" size="md">
-                    Search
-                </Button>
-            </NavbarContent>
-
             {/* END CONTENT */}
             <NavbarContent justify="end">
                 {Items.map((item) => (
@@ -38,10 +22,10 @@ export const AppNavbar = () => {
                 <ThemeSwitcher />
                 <NavbarItem>
                     <Button
-                        color="default"
-                        startContent={<LogOut size={18} color="#006FEE" />}
+                        color="primary"
+                        startContent={<LogOut size={18} />}
                     >
-                        <Link href="#">Sign out</Link>
+                        <Link href="#" className="text-white">Sign out</Link>
                     </Button>
                 </NavbarItem>
             </NavbarContent>

@@ -1,12 +1,14 @@
-import { Button, useDisclosure } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { useCreateProduct } from "@/features/products/hooks/useProducts";
 import { CreateProductModal } from "./CreateProductModal";
 import { useToast } from "@/hooks/useToast";
 import type { Category, PostProduct } from "@/features/products/api/products.types";
 import type { ProductFormData } from "./CreateProductForm";
+import { Plus } from "lucide-react";
+import { useInventory } from "../../context";
 
 export const CreateProductBtn = () => {
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { openModal } = useInventory();
     const createMutation = useCreateProduct();
     const toast = useToast();
 
@@ -29,18 +31,17 @@ export const CreateProductBtn = () => {
     return (
         <>
             <Button
-                color="default"
+                color="primary"
                 variant="solid"
                 radius="sm"
-                onPress={onOpen}
+                onPress={() => openModal('create')}
                 size="lg"
+                startContent={<Plus />}
             >
                 Add Item
             </Button>
 
             <CreateProductModal
-                isOpen={isOpen}
-                onOpenChange={onOpenChange}
                 onSubmit={onSubmit}
             />
         </>

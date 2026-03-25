@@ -24,12 +24,12 @@ export const useCreateProduct = () => {
     })
 }
 
-export const useUpdateProduct = () => {
+export const useUpdateStock = () => {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn: updateStock,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["updateStock"] })
+            queryClient.invalidateQueries({ queryKey: ["products"] })
         }
     })
 }
@@ -44,11 +44,7 @@ export const useDeleteProduct = () => {
     })
 }
 
-type useProductStats = {
-    products: Product[]
-}
-
-export const useProductStats = ({ products }: useProductStats) => {
+export const useProductStats = (products: Product[]) => {
     return useMemo(() => {
         const totalStock = products.reduce(
             (sum, product) => sum + product.stock,

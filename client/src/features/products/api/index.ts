@@ -4,3 +4,4 @@ export * from './get-products'
 export * from './update-stock'
 
 export * from './products.types'
+export * from './get-profits'
