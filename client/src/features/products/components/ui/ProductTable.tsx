@@ -1,6 +1,6 @@
 // IMPORTS
 import { useMemo } from "react"
-import { Button, useDisclosure } from "@heroui/react"
+import { Button } from "@heroui/react"
 import { Delete, PackageSearch } from "lucide-react"
 
 import { type ColumnDef, GenericTable } from "@/components"

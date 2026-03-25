@@ -1,4 +1,4 @@
-import { Card, CardBody, CardFooter, CardHeader } from "@heroui/react"
+import { Card, CardBody, CardHeader } from "@heroui/react"
 
 interface SectionProp {
     children?: React.ReactNode,

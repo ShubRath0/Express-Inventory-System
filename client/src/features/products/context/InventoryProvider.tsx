@@ -1,10 +1,10 @@
-import { act, createContext, useContext, useMemo, useState } from "react"
+import { createContext, useContext, useMemo, useState } from "react"
 import type { Product } from "../api"
 import { useProducts, useProductStats } from "../hooks";
 import { Outlet } from "react-router-dom";
 import { useSearchSort, type SortDirection } from "@/hooks/useSearchSort";
 import { useFilter } from "../hooks/useFilter";
-import { useDisclosure, type SharedSelection } from "@heroui/react";
+import { type SharedSelection } from "@heroui/react";
 
 interface InventoryContextType {
     // Selection State

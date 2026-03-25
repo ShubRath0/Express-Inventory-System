@@ -1,4 +1,4 @@
-import { Card, CardBody, Button, CardHeader, CardFooter } from "@heroui/react";
+import { Button, CardHeader, CardFooter } from "@heroui/react";
 import { ChevronRight, FileText, type LucideIcon } from "lucide-react";
 import { Section } from "./Section";
 import { motion } from 'framer-motion'
