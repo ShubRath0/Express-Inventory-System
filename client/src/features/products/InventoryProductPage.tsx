@@ -1,14 +1,16 @@
 // COMPONENTS
-import { Loading, ProductStatsBanner, ScrollContainer, SearchBar, Section, SectionContainer } from "@/components";
-import { CreateProductBtn, FilterBtn, HealthChart, ProductTable, ProfitChart, StockChart } from "./components";
+import { Loading, ProductStatsBanner, ScrollContainer, Section, SectionContainer } from "@/components";
 import { Divider } from "@heroui/react";
-import { useInventory } from "./context";
+import { CreateProductBtn, FilterBtn, HealthChart, ProductTable, ProfitChart, StockChart } from "./components";
+import { InventorySearchbar } from "./components/ui/InventorySearchbar";
+import { useProductContext } from "./context/ProductProvider";
 
 // MAIN SECTION
 export const ProductInventorySection = () => {
-    const { isLoading, setSearch } = useInventory();
 
-    if (isLoading) return <Loading label="Loading Products..." />
+    const { isLoading } = useProductContext();
+
+    if (isLoading) return <Loading label="Fetching Data..." />
 
     return (
         // CONTAINER
@@ -35,7 +37,7 @@ export const ProductInventorySection = () => {
 
                     {/* Profit Chart */}
                     <Section size="lg">
-                        <h3 className="text-sm font-medium text-gray-400 mb-4">Total Value</h3>
+                        <h3 className="text-sm font-medium text-gray-400 mb-4">Total Inventory Value</h3>
                         <div className="h-full">
                             <ProfitChart />
                         </div>
@@ -58,12 +60,7 @@ export const ProductInventorySection = () => {
 
                         {/* SEARCH BAR */}
                         <div className="flex flex-1 gap-4 items-center">
-                            <SearchBar
-                                onChange={setSearch}
-                                placeholder="Search Items"
-                                className="w-[20%]"
-                            />
-
+                            <InventorySearchbar />
                             {/* FILTER BUTTON (CATEGORY) */}
                             <FilterBtn />
                         </div>

@@ -1,9 +1,9 @@
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, type SharedSelection } from "@heroui/react";
-import { useInventory } from "../../context";
+import { useFilterContext } from "../../context/FilterProvider";
 
 export const FilterBtn = () => {
 
-    const { selectedCategories, setSelectedCategories } = useInventory();
+    const { selectedCategories, setSelectedCategories } = useFilterContext();
 
     const handleSelectionChange = (keys: SharedSelection) => {
         const newSet = new Set(Array.from(keys) as string[]);

@@ -1,12 +1,15 @@
-import type { Product } from "@/features/products/api/products.types";
-import { createProduct, deleteProduct, getProducts, updateStock } from "../api";
+import type { Product } from "@/features/products/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { createProduct, deleteProduct, getProducts, updateStock } from "../api";
+import { searchProduct } from "../api/search-product";
 
-export const useProducts = () => {
+export const useProducts = (keyword?: string) => {
     const query = useQuery<Product[]>({
-        queryKey: ["products"],
-        queryFn: getProducts,
+        queryKey: ["products", keyword],
+        queryFn: () => keyword ?
+            searchProduct({ keyword })
+            : getProducts(),
     })
     return {
         ...query,

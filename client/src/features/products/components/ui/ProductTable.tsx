@@ -1,44 +1,21 @@
 // IMPORTS
-import { useMemo } from "react"
 import { Button } from "@heroui/react"
 import { Delete, PackageSearch } from "lucide-react"
+import { useMemo } from "react"
 
-import { type ColumnDef, GenericTable } from "@/components"
-import type { Product } from "@/features/products/api/products.types"
-import { DeleteAlert, UpdateStockModal, type UpdateStockFormData } from "@/features/products/components"
+import { GenericTable, type ColumnDef } from "@/components"
+import type { Product } from "@/features/products/api"
+import { DeleteAlert, UpdateStockModal } from "@/features/products/components"
 
 // Hooks
-import { useToast } from "@/hooks/useToast"
-import { useDeleteProduct, useUpdateStock } from "@/features/products/hooks/useProducts"
-import { useInventory } from "../../context"
+import { useFilterContext } from "../../context/FilterProvider"
+import { useModalContext } from "../../context/ModalProvider"
 
 // MAIN FUNCTION
 export const ProductTable = () => {
     // HOOKS
-    const { selectedProduct, setSelectedProduct, filteredProducts, sortColumn, setSortColumn, sortDirection, setSortDirection, setActiveModal } = useInventory();
-    const toast = useToast()
-
-    // MUTATIONS
-    const deleteMutation = useDeleteProduct();
-    const updateMutation = useUpdateStock();
-
-    // FUNCTIONS
-    function deleteProduct() {
-        if (!selectedProduct) return;
-        toast.promise(deleteMutation.mutateAsync(selectedProduct.id), {
-            loading: "Deleting product...",
-            success: "Product deleted!",
-            error: "Product could not be deleted."
-        })
-    }
-
-    function updateStock(data: UpdateStockFormData) {
-        toast.promise(updateMutation.mutateAsync(data), {
-            loading: "Updating product...",
-            success: "Product updated!",
-            error: "Product could not be updated."
-        })
-    }
+    const { openModal } = useModalContext();
+    const { filteredProducts, sortColumn, setSortColumn, sortDirection, setSortDirection } = useFilterContext();
 
     const columns: ColumnDef<Product>[] = useMemo<ColumnDef<Product>[]>(() => [
         {
@@ -78,16 +55,14 @@ export const ProductTable = () => {
             label: "Actions",
             virtual: true,
             allowSorting: false,
-            renderVirtual: (item => (
+            renderVirtual: ((item: Product) => (
                 <div className="flex items-center">
                     <div className="bg-card rounded-xl shadow-2xl">
                         <Button isIconOnly startContent={<PackageSearch />} variant="light" color="success" onPress={() => {
-                            setSelectedProduct(item)
-                            setActiveModal('update')
+                            openModal('update', item)
                         }} />
                         <Button isIconOnly startContent={<Delete />} variant="light" color="danger" onPress={() => {
-                            setSelectedProduct(item)
-                            setActiveModal('delete')
+                            openModal('delete', item)
                         }} />
                     </div>
                 </div>
@@ -106,8 +81,8 @@ export const ProductTable = () => {
                 setSortDirection={setSortDirection}
                 className="h-180"
             />
-            <DeleteAlert handleDelete={deleteProduct} />
-            <UpdateStockModal onSubmit={updateStock} />
+            <DeleteAlert />
+            <UpdateStockModal />
         </>
 
     )

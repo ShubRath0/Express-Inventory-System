@@ -1,5 +1,5 @@
-import type { Product } from "@/features/products/api/products.types";
 import { GenericForm, type FormField } from "@/components";
+import type { Product } from "@/features/products/api";
 
 const productFields: FormField<Product>[] = [
     {

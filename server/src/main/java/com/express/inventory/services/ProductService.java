@@ -1,5 +1,12 @@
 package com.express.inventory.services;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.express.inventory.dto.products.request.CreateProductRequest;
 import com.express.inventory.dto.products.request.UpdateProductRequest;
 import com.express.inventory.exceptions.ProductNotFoundException;
@@ -8,13 +15,6 @@ import com.express.inventory.repositories.ProductRepository;
 import com.express.inventory.utility.Utilities;
 
 import lombok.AllArgsConstructor;
-
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -42,7 +42,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public List<ProductEntity> searchProduct(String keyword) {
-        return productRepository.findByName(keyword);
+        return productRepository.findByNameContainingIgnoreCase(keyword);
     }
 
     @Transactional(readOnly = true)

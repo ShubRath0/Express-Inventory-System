@@ -1,8 +1,8 @@
-import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
-import { useInventory } from '../../context'
+import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { useProductContext } from '../../context/ProductProvider';
 
 export const StockChart = () => {
-    const { products } = useInventory();
+    const { products } = useProductContext();
     const produceItems = products.filter(p => p.category === "PRODUCE").reduce((acc, p) => acc + p.stock, 0)
     const plasticItems = products.filter(p => p.category === "PLASTIC").reduce((acc, p) => acc + p.stock, 0)
 

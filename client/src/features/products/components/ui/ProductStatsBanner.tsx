@@ -1,8 +1,8 @@
-import { StatCard, type StatCardProps } from "../../../../components/ui/StatCard";
 import { Boxes, CircleDollarSign, Package, Ticket } from "lucide-react";
-import { useInventory } from "../../context";
+import { StatCard, type StatCardProps } from "../../../../components/ui/StatCard";
+import { useStatContext } from "../../context/StatProvider";
 export const ProductStatsBanner = () => {
-    const { totalStock, totalUnitPrice, totalValue, totalProducts } = useInventory();
+    const { totalStock, totalUnitPrice, totalValue, totalProducts } = useStatContext();
 
     const stats: StatCardProps[] = [
         { statName: "Total Items", statValue: totalProducts, render: (v: number) => `${v.toFixed(0)}`, icon: Package },
