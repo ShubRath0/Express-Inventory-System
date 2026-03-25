@@ -31,4 +31,8 @@ public class PurchaseService {
 
         return purchaseRepository.save(purchase);
     }
+
+    public void deletePurchase(Integer id) {
+        purchaseRepository.deleteById(id);
+    }
 }
