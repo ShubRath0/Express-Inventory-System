@@ -19,8 +19,8 @@ export type GenericTableProps<T extends { id: string | number }> = {
     className?: string,
     sortColumn?: keyof T,
     sortDirection: "ascending" | "descending"
-    setSortColumn: React.Dispatch<React.SetStateAction<keyof T | undefined>>
-    setSortDirection: React.Dispatch<React.SetStateAction<"ascending" | "descending">>,
+    setSortColumn: (column: keyof T | undefined) => void;
+    setSortDirection: (direction: "ascending" | "descending") => void;
 }
 
 export const GenericTable = <T extends { id: string | number }>({

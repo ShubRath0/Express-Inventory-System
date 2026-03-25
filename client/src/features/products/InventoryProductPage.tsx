@@ -1,56 +1,86 @@
-
-// TYPES
-import type { Product } from "@/features/products/api/products.types";
-
 // COMPONENTS
+import { Loading, ProductStatsBanner, ScrollContainer, SearchBar, Section, SectionContainer } from "@/components";
+import { CreateProductBtn, FilterBtn, HealthChart, ProductTable, ProfitChart, StockChart } from "./components";
 import { Divider } from "@heroui/react";
-import { Loading, ProductStatsBanner, SearchBar } from "@/components";
-import { CreateProductBtn, ProductTable } from "./components";
-
-// HOOKS
-import { useSearchSort } from "@/hooks/useSearchSort";
-import { useProducts } from "./hooks/useProducts"
+import { useInventory } from "./context";
 
 // MAIN SECTION
 export const ProductInventorySection = () => {
-    const { products, isLoading } = useProducts();
-    const { items, sortColumn, sortDirection, setSortColumn, setSortDirection, setSearch } = useSearchSort<Product>({ items: products, searchableKeys: ["id", "name", "category"] });
+    const { isLoading, setSearch } = useInventory();
 
     if (isLoading) return <Loading label="Loading Products..." />
 
     return (
         // CONTAINER
-        <div className="flex flex-col h-full w-full p-4">
+        <div className="flex flex-col h-full p-4 overflow-y-auto bg-background">
 
-            {/* TOP SECTION */}
-            <div className="flex flex-row items-center justify-between gap-4">
+            <ScrollContainer>
+                {/* KPI's */}
+                <SectionContainer>
+                    <ProductStatsBanner />
+                </SectionContainer>
 
-                {/* SEARCH BAR */}
-                <SearchBar
-                    onChange={setSearch}
-                    placeholder="Search Items"
-                    className="w-[15%]"
-                />
+                <Divider />
 
-                {/* STATS */}
+                {/* CHARTS */}
+                <SectionContainer size="xs">
 
-                <CreateProductBtn />
-            </div>
+                    {/* Stock Chart */}
+                    <Section size="lg">
+                        <h3 className="text-sm font-medium text-gray-400 mb-4">Stock Distribution</h3>
+                        <div className="h-full">
+                            <StockChart />
+                        </div>
+                    </Section>
 
-            {/* DIVIDER */}
+                    {/* Profit Chart */}
+                    <Section size="lg">
+                        <h3 className="text-sm font-medium text-gray-400 mb-4">Total Value</h3>
+                        <div className="h-full">
+                            <ProfitChart />
+                        </div>
+                    </Section>
 
-            <div className="m-4">
-                <ProductStatsBanner products={items} />
-            </div>
+                    {/* Cool ass Chart */}
+                    <Section size="lg">
+                        <h3 className="text-sm font-medium text-gray-400 mb-4">Health Check</h3>
+                        <div className="flex h-full justify-center items-center">
+                            <HealthChart />
+                        </div>
+                    </Section>
 
-            {/* TABLE */}
-            <ProductTable
-                products={items}
-                sortColumn={sortColumn}
-                sortDirection={sortDirection}
-                setSortColumn={setSortColumn}
-                setSortDirection={setSortDirection}
-            />
+                </SectionContainer>
+
+                <Divider />
+
+                <section className="flex flex-col gap-4 p-6 pb-2">
+                    <div className="flex flex-row items-center justify-between gap-4">
+
+                        {/* SEARCH BAR */}
+                        <div className="flex flex-1 gap-4 items-center">
+                            <SearchBar
+                                onChange={setSearch}
+                                placeholder="Search Items"
+                                className="w-[20%]"
+                            />
+
+                            {/* FILTER BUTTON (CATEGORY) */}
+                            <FilterBtn />
+                        </div>
+
+                        {/* CREATE BTN */}
+                        <CreateProductBtn />
+                    </div>
+                </section>
+
+                <Divider />
+
+                {/* TABLE */}
+                <section className="pb-10">
+                    <ProductTable />
+                </section>
+            </ScrollContainer>
         </div >
+
     )
 }

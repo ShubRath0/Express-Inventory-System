@@ -1,13 +1,9 @@
 import { SunIcon, MoonIcon } from "lucide-react";
 import { Switch } from "@heroui/react";
-import { useTheme } from "@heroui/use-theme";
+import { useTheme } from "@/hooks/useTheme";
 
 export const ThemeSwitcher = ({ className = "" }) => {
-    const { theme, setTheme } = useTheme();
-
-    if (!theme) return null;
-
-    const isDark = theme === "dark";
+    const { isDark, toggleTheme } = useTheme();
 
     return (
         <Switch
@@ -15,7 +11,7 @@ export const ThemeSwitcher = ({ className = "" }) => {
             endContent={<SunIcon />}
             startContent={<MoonIcon />}
             isSelected={isDark}
-            onValueChange={(isDark) => setTheme(isDark ? "dark" : "light")}
+            onValueChange={toggleTheme}
             className={className}
         />
     );

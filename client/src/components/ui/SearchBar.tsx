@@ -15,9 +15,9 @@ export const SearchBar = (
     }: SearchBarProps) => {
     return (
         <Input
-            variant="flat"
-            radius="none"
-            color="default"
+            variant="bordered"
+            color="primary"
+            size="lg"
             label={placeholder}
             className={className}
             onChange={(e) => onChange(e.target.value)}

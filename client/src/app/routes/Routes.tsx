@@ -1,4 +1,5 @@
 import { AppShell } from "@/components"
+import { InventoryProvider } from "@/features/products/context"
 import { ProductInventorySection } from "@/features/products/InventoryProductPage"
 import { Route, Routes } from "react-router-dom"
 
@@ -10,7 +11,12 @@ export const AppRoutes = () => {
             {/* Anything outside of the route will NOT have an AppShell (login / anything else) */}
             <Route element={<AppShell />}>
                 <Route path="/" element={<></>}></Route>
-                <Route path="/inventory/products" element={<ProductInventorySection />}></Route>
+
+                {/* Wrapped this route in a provider to prevent MASS prop drilling (ANNOYING) */}
+                <Route element={<InventoryProvider />}>
+                    <Route path="/inventory/products" element={<ProductInventorySection />}></Route>
+                </Route>
+
                 <Route path="/inventory/restock"></Route>
                 <Route path="/reports"></Route>
                 <Route path="/dashboard"></Route>

@@ -1,28 +1,28 @@
+import { useInventory } from '../../context';
 import { CreateProductForm, type ProductFormData } from './CreateProductForm'
 import { GenericModal } from "@/components";
 
 type ProductModalProps = {
-    isOpen: boolean
-    onOpenChange: (isOpen: boolean) => void
     onSubmit: (data: ProductFormData) => void
 }
 
 export const CreateProductModal = ({
-    isOpen,
-    onOpenChange,
     onSubmit
 }: ProductModalProps) => {
+
+    const { activeModal, closeModal } = useInventory();
+
     return (
         <GenericModal
             title="Create a Product"
-            isOpen={isOpen}
-            onOpenChange={onOpenChange}
+            isOpen={activeModal === 'create'}
+            onOpenChange={(open) => { if (!open) closeModal() }}
         >
-            {(onClose) => (
+            {() => (
                 <CreateProductForm
                     onSubmit={(data) => {
                         onSubmit(data);
-                        onClose();
+                        closeModal();
                     }}
                 />
             )}

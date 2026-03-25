@@ -1,0 +1,24 @@
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { getProfits } from "../../api"
+
+export const ProfitChart = () => {
+    const profits = getProfits();
+
+    return (
+        <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={profits}>
+                <CartesianGrid />
+                <XAxis dataKey="day" />
+                <YAxis />
+                <Tooltip
+                    contentStyle={{
+                        backgroundColor: "var(--card)",
+                        border: 'none',
+                        borderRadius: '12px'
+                    }}
+                />
+                <Line type="monotone" dataKey="profit" stroke="#8884d8" strokeWidth={2} />
+            </LineChart>
+        </ResponsiveContainer>
+    )
+}
