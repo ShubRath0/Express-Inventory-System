@@ -3,6 +3,7 @@ package com.express.inventory.services;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.express.inventory.api.products.InventoryActionType;
+import com.express.inventory.api.products.InventoryLogEntity;
+import com.express.inventory.api.products.InventoryLogRepository;
 import com.express.inventory.dto.products.request.CreateProductRequest;
 import com.express.inventory.dto.products.request.UpdateProductRequest;
 import com.express.inventory.exceptions.ProductNotFoundException;
@@ -25,12 +29,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ProductService {
 
-<<<<<<< HEAD:server/src/main/java/com/express/inventory/services/ProductService.java
     private final ProductRepository productRepository;
-=======
-    private final ProductRepositoryV2 productRepository;
     private final InventoryLogRepository inventoryLogRepository;
->>>>>>> 1b9c581 (Inventory Logs should be working now.):server/src/main/java/com/express/inventory/api/products/ProductService.java
 
     // Create Product
     @Transactional
@@ -99,21 +99,19 @@ public class ProductService {
         }
     }
 
-<<<<<<< HEAD:server/src/main/java/com/express/inventory/services/ProductService.java
     @Transactional
     public void deleteAllProducts() {
         productRepository.deleteAll();
     }
 
-=======
     // Stock Changes and Log Creation
-    public void updateStock(Integer productId, int stockChange, InventoryActionType actionType, String note) {
+    public void updateStock(Integer productId, BigDecimal stockChange, InventoryActionType actionType, String note) {
 
         ProductEntity product = productRepository.findById(productId)
-            .orElseThrow(() -> new ProductNotFoundException());
+                .orElseThrow(() -> new ProductNotFoundException());
 
         // Update stock
-        product.setStock(product.getStock() + stockChange);
+        product.setStock(product.getStock().add(stockChange));
 
         productRepository.save(product);
 
@@ -126,5 +124,4 @@ public class ProductService {
 
         inventoryLogRepository.save(log);
     }
->>>>>>> 1b9c581 (Inventory Logs should be working now.):server/src/main/java/com/express/inventory/api/products/ProductService.java
 }

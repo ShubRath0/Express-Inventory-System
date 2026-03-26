@@ -1,8 +1,10 @@
 package com.express.inventory.api.products;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import com.express.inventory.models.ProductEntity;
 
 public interface InventoryLogRepository extends JpaRepository<InventoryLogEntity, Integer> {
     // Get logs for a specific product

@@ -1,9 +1,12 @@
 package com.express.inventory.api.products;
 
+import java.math.BigDecimal;
 import java.security.Timestamp;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.express.inventory.models.ProductEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -34,7 +37,7 @@ public class InventoryLogEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
 
-    private int stockChange;
+    private BigDecimal stockChange;
 
     @Enumerated(EnumType.STRING)
     private InventoryActionType actionType;
