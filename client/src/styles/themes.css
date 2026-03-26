@@ -37,6 +37,7 @@
         --status-healthy: theme("colors.emerald.500");
         --status-low: theme("colors.amber.500");
         --status-empty: theme("colors.rose.500");
+        --blue: oklch(0.5671 0.209451 257.9449);
     }
 
     .dark {
@@ -82,4 +83,5 @@
     --status-healthy: var(--status-healthy);
     --status-low: var(--status-low);
     --status-empty: var(--status-empty);
+    --color-blue: var(--blue);
 }

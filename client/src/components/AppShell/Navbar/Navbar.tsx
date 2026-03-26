@@ -1,34 +1,32 @@
-import {
-    Button,
-    Navbar,
-    NavbarContent,
-    NavbarItem,
-    Link,
-} from "@heroui/react";
+import { Button, Link } from "@heroui/react";
 import { LogOut } from "lucide-react";
-import { Items } from "./NavItemList";
 import { ThemeSwitcher } from "@/components/ui";
+import { GenericNavbar, GenericBreadCrumbs } from "@/components";
+import { Items } from "./NavItemList";
 
 export const AppNavbar = () => {
-    return (
-        <Navbar maxWidth="full" className="bg-navbar flex justify-between">
-            {/* END CONTENT */}
-            <NavbarContent justify="end">
-                {Items.map((item) => (
-                    <NavbarItem key={item.key}>
-                        <Link href={item.href}>{item.icon}</Link>
-                    </NavbarItem>
-                ))}
-                <ThemeSwitcher />
-                <NavbarItem>
-                    <Button
-                        color="primary"
-                        startContent={<LogOut size={18} />}
-                    >
-                        <Link href="#" className="text-white">Sign out</Link>
-                    </Button>
-                </NavbarItem>
-            </NavbarContent>
-        </Navbar>
-    );
+  return (
+    <GenericNavbar>
+      <GenericNavbar.Start>
+        <GenericBreadCrumbs />
+      </GenericNavbar.Start>
+      <GenericNavbar.End>
+        <ThemeSwitcher />
+        {Items.map((item) => (
+          <Link key={item.key} href={item.href}>
+            {item.icon}
+          </Link>
+        ))}
+        <Button
+          className="bg-blue text-white"
+          startContent={<LogOut size={18} />}
+          variant="shadow"
+        >
+          <Link href="#" className="text-white">
+            Sign out
+          </Link>
+        </Button>
+      </GenericNavbar.End>
+    </GenericNavbar>
+  );
 };
