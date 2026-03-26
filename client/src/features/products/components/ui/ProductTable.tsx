@@ -1,7 +1,7 @@
 // IMPORTS
 import { Button } from "@heroui/react"
 import { Delete, PackageSearch } from "lucide-react"
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 
 import { GenericTable, type ColumnDef } from "@/components"
 import type { Product } from "@/features/products/api"
@@ -16,6 +16,22 @@ export const ProductTable = () => {
     // HOOKS
     const { openModal } = useModalContext();
     const { filteredProducts, sortColumn, setSortColumn, sortDirection, setSortDirection } = useFilterContext();
+
+    const [page, setPage] = useState(1);
+    const rowsPerPage = 10;
+
+    const pages = Math.ceil((filteredProducts?.length || 0) / rowsPerPage)
+    console.log(pages);
+    const items = useMemo(() => {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        return filteredProducts?.slice(start, end);
+    }, [page, filteredProducts])
+
+    const changePage = (page: number) => {
+        setPage(page);
+    }
 
     const columns: ColumnDef<Product>[] = useMemo<ColumnDef<Product>[]>(() => [
         {
@@ -73,12 +89,15 @@ export const ProductTable = () => {
     return (
         <>
             <GenericTable
-                items={filteredProducts || []}
+                items={items || []}
                 columns={columns}
                 sortColumn={sortColumn}
                 sortDirection={sortDirection}
                 setSortColumn={setSortColumn}
                 setSortDirection={setSortDirection}
+                page={page}
+                pages={pages}
+                onChange={changePage}
                 className="h-180"
             />
             <DeleteAlert />

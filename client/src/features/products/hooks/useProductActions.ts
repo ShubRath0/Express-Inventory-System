@@ -1,13 +1,14 @@
 import { useToast } from "@/hooks/useToast";
 import { useCallback } from "react";
 import type { Category, CreateProductRequest, ModifyStockRequest, Product } from "../api";
-import { useCreateProduct, useDeleteProduct, useUpdateStock } from "./useProducts";
+import { useCreateProduct, useDeleteProduct, useUpdateStock, useUploadCsv } from "./useProducts";
 
 export const useProductActions = (selectedProduct: Product | null, onSuccess?: () => void) => {
 
     const updateStockMutation = useUpdateStock();
     const createProductMutation = useCreateProduct();
     const deleteProductMutation = useDeleteProduct();
+    const uplaodCsvMutation = useUploadCsv();
     const toast = useToast();
 
     const onUpdateStock = useCallback(async (data: ModifyStockRequest) => {
@@ -48,5 +49,14 @@ export const useProductActions = (selectedProduct: Product | null, onSuccess?: (
         onSuccess?.()
     }, [deleteProductMutation, selectedProduct, toast, onSuccess]);
 
-    return { onCreateProduct, onDeleteProduct, onUpdateStock }
+    const onUploadCsv = useCallback(async (file: File) => {
+        if (!file) return;
+        await toast.promise(uplaodCsvMutation.mutateAsync(file), {
+            loading: "Adding Products...",
+            success: "Products Added!",
+            error: "Products could not be added."
+        })
+    }, []);
+
+    return { onCreateProduct, onDeleteProduct, onUpdateStock, onUploadCsv }
 }

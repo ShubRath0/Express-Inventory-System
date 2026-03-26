@@ -1,7 +1,7 @@
 import type { Product } from "@/features/products/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { createProduct, deleteProduct, getProducts, updateStock } from "../api";
+import { createProduct, deleteProduct, getProducts, updateStock, uploadCsv } from "../api";
 import { searchProduct } from "../api/search-product";
 
 export const useProducts = (keyword?: string) => {
@@ -24,6 +24,16 @@ export const useCreateProduct = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["products"] });
         },
+    })
+}
+
+export const useUploadCsv = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: uploadCsv,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["products"] })
+        }
     })
 }
 

@@ -13,6 +13,7 @@ interface ModalContextType {
     onCreateProduct: (data: CreateProductRequest) => Promise<void>,
     onUpdateStock: (data: ModifyStockRequest) => Promise<void>,
     onDeleteProduct: () => Promise<void>,
+    onUploadCsv: (file: File) => Promise<void>
 }
 
 
@@ -20,7 +21,7 @@ const ModalContext = createContext<ModalContextType | undefined>(undefined)
 
 export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
     const { activeModal, openModal, closeModal, onOpenChange, selectedProduct, setSelectedProduct } = useModalActions();
-    const { onCreateProduct, onDeleteProduct, onUpdateStock } = useProductActions(selectedProduct, closeModal);
+    const { onCreateProduct, onDeleteProduct, onUpdateStock, onUploadCsv } = useProductActions(selectedProduct, closeModal);
 
     const value = useMemo(() => ({
         activeModal,
@@ -31,8 +32,9 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
         setSelectedProduct,
         onCreateProduct,
         onUpdateStock,
-        onDeleteProduct
-    }), [activeModal, selectedProduct, onCreateProduct, onUpdateStock, onDeleteProduct])
+        onDeleteProduct,
+        onUploadCsv,
+    }), [activeModal, selectedProduct, onCreateProduct, onUpdateStock, onDeleteProduct, onUploadCsv])
 
     return (
         <ModalContext.Provider value={value}>

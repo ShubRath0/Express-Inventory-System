@@ -31,6 +31,10 @@ export const StockChart = () => {
                     paddingAngle={5}
                     stroke="none"
                     cornerRadius={6}
+                    label={({ name, percent }) =>
+                        percent && percent > 0 ? `${name} ${(percent * 100).toFixed(0)}%` : null
+                    }
+                    labelLine={false}
                 >
                 </Pie>
                 <Legend />

@@ -1,7 +1,7 @@
 // COMPONENTS
 import { Loading, ProductStatsBanner, ScrollContainer, Section, SectionContainer } from "@/components";
 import { Divider } from "@heroui/react";
-import { CreateProductBtn, FilterBtn, HealthChart, ProductTable, ProfitChart, StockChart } from "./components";
+import { CreateByCsvBtn, CreateProductBtn, FilterBtn, HealthChart, ProductTable, ProfitChart, StockChart } from "./components";
 import { InventorySearchbar } from "./components/ui/InventorySearchbar";
 import { useProductContext } from "./context/ProductProvider";
 
@@ -17,6 +17,7 @@ export const ProductInventorySection = () => {
         <div className="flex flex-col h-full p-4 overflow-y-auto bg-background">
 
             <ScrollContainer>
+
                 {/* KPI's */}
                 <SectionContainer>
                     <ProductStatsBanner />
@@ -67,6 +68,7 @@ export const ProductInventorySection = () => {
 
                         {/* CREATE BTN */}
                         <CreateProductBtn />
+                        <CreateByCsvBtn />
                     </div>
                 </section>
 

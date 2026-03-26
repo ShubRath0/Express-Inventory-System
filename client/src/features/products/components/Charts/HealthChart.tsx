@@ -1,26 +1,17 @@
-import { useState } from "react";
 import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { useProductContext } from "../../context/ProductProvider";
 
 export const HealthChart = () => {
-    const [isAnimated, setIsAnimated] = useState<boolean>(false);
-
     const { products } = useProductContext();
     const healthy = products.filter((product) => product.stock >= product.lowStockThreshold).length;
     const lowStock = products.filter((product) => product.stock !== 0 && product.stock < product.lowStockThreshold).length;
     const empty = products.filter((product) => product.stock === 0).length;
 
-    const counts = [healthy, lowStock, empty];
-    const activeSegments = counts.filter(num => num > 0).length;
-    const paddingAngle = (isAnimated && activeSegments <= 1 ? 0 : 5);
-
-    console.log(activeSegments, isAnimated)
-    console.log(paddingAngle)
 
     const chartData = [
-        { name: "healthy", value: healthy, fill: 'var(--status-healthy)' },
+        { name: "Healthy", value: healthy, fill: 'var(--status-healthy)' },
         { name: "Low", value: lowStock, fill: 'var(--status-low)' },
-        { name: "Empty", value: empty, fill: 'var(--status-empty)' }
+        { name: "Empty", value: empty, fill: 'var(--status-empty)' },
     ]
 
     return (
@@ -40,11 +31,13 @@ export const HealthChart = () => {
                     dataKey="value"
                     innerRadius={70}
                     outerRadius={100}
-                    paddingAngle={paddingAngle}
+                    paddingAngle={5}
                     cornerRadius={6}
                     stroke="none"
-                    onAnimationStart={() => setIsAnimated(false)}
-                    onAnimationEnd={() => setIsAnimated(true)}
+                    label={({ name, percent }) =>
+                        percent && percent > 0 ? `${name} ${(percent * 100).toFixed(0)}%` : null
+                    }
+                    labelLine={false}
                 >
                 </Pie>
             </PieChart>
