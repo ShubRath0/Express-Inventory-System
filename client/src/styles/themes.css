@@ -4,67 +4,84 @@
         margin-bottom: 0.5rem;
     }
 
-    .status-badge-approved {
-        @apply bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300;
-    }
-    .status-badge-denied {
-        @apply bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300;
-    }
-    .status-badge-pending {
-        @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300;
-    }
     .low-stock {
         @apply bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300;
     }
     .high-stock {
         @apply bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300;
     }
+    .produce {
+        @apply bg-green-400 dark:bg-green-800;
+    }
+    .plastic {
+        @apply bg-blue-400 dark:bg-blue-800;
+    }
 }
 
-/* For anything that we would need two colors for light/dark we put here */
 @layer base {
-    /* -------------------- MAIN COLORS -------------------- */
     :root {
-        --background: oklch(96.7% 0.003 264.542);
-        --foreground: oklch(20.335% 0.06047 251.793);
+        --background: oklch(98.5% 0.002 264.05);
+        --foreground: oklch(25% 0.02 264.05);
+        --icon: oklch(89.912% 0.01943 263.054);
 
-        --sidebar: oklch(20.33% 0.0604 251.77);
-        --sidebar-foreground: oklch(95.37% 0.0211 252.5);
+        --sidebar: oklch(20% 0.04 264.05);
+        --sidebar-foreground: oklch(98% 0.01 264.05);
 
-        --navbar: oklch(100% 0 0);
-        --navbar-foreground: oklch(20.33% 0.0604 251.77);
-        --navbar-icon: oklch(20.33% 0.0604 251.77);
+        --card: oklch(100% 0 0);
 
-        /* Primitive Colors (Do not change between light and dark) */
+        --navbar: oklch(100% 0 0 / 80%);
+        --navbar-foreground: oklch(25% 0.02 264.05);
+
+        --chart-produce: theme("colors.green.400");
+        --chart-plastic: theme("colors.blue.400");
+        --status-healthy: theme("colors.emerald.500");
+        --status-low: theme("colors.amber.500");
+        --status-empty: theme("colors.rose.500");
         --blue: oklch(0.5671 0.209451 257.9449);
     }
 
-    /* ---------------- DARK MODE VARIATIONS ---------------- */
     .dark {
-        --background: oklch(12.72% 0.006 286.37);
-        --foreground: oklch(98.51% 0.002 247.84);
+        /* Main */
+        --background: oklch(12% 0.008 260);
+        --foreground: oklch(96% 0.02 260);
+        --icon: oklch(70% 0.008 260);
 
-        --sidebar: oklch(17.44% 0.008 285.8);
-        --sidebar-foreground: oklch(98.51% 0.002 247.84);
+        /* Sidebar */
+        --sidebar: oklch(16% 0.01 260);
+        --sidebar-foreground: oklch(88% 0.01 260);
 
-        --navbar: oklch(16.03% 0.006 285.9);
-        --navbar-foreground: oklch(98.51% 0.002 247.84);
-        --navbar-icon: oklch(98.51% 0.002 247.84);
+        /* Card */
+        --card: oklch(18% 0.007 260);
+
+        /* Navbar */
+        --navbar: oklch(14% 0.01 260 / 80%);
+        --navbar-foreground: oklch(94% 0.01 260);
+
+        /* Charts */
+        --chart-produce: theme("colors.green.400");
+        --chart-plastic: theme("colors.blue.400");
+        --status-healthy: theme("colors.emerald.400");
+        --status-low: theme("colors.amber.400");
+        --status-empty: theme("colors.rose.400");
     }
 }
 
-/* Here we import the colors above, and any extra colors that dont need light/dark mode */
 @theme {
-    /* ------------------- EXPORT COLORS  ------------------- */
     --color-background: var(--background);
     --color-foreground: var(--foreground);
+    --color-icon: var(--icon);
+    --color-card: var(--card);
 
     --color-sidebar: var(--sidebar);
     --color-sidebar-foreground: var(--sidebar-foreground);
 
     --color-navbar: var(--navbar);
     --color-navbar-foreground: var(--navbar-foreground);
-    --color-navbar-icon: var(--navbar-icon);
 
+    --chart-produce: var(--chart-produce);
+    --chart-plastic: var(--chart-plastic);
+    --status-healthy: var(--status-healthy);
+    --status-low: var(--status-low);
+    --status-empty: var(--status-empty);
     --color-blue: var(--blue);
 }

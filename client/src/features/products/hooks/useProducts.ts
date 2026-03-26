@@ -1,12 +1,15 @@
-import type { Product } from "@/features/products/api/products.types";
-import { createProduct, deleteProduct, getProducts, updateStock } from "../api";
+import type { Product } from "@/features/products/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { createProduct, deleteProduct, getProducts, updateStock, uploadCsv } from "../api";
+import { searchProduct } from "../api/search-product";
 
-export const useProducts = () => {
+export const useProducts = (keyword?: string) => {
     const query = useQuery<Product[]>({
-        queryKey: ["products"],
-        queryFn: getProducts,
+        queryKey: ["products", keyword],
+        queryFn: () => keyword ?
+            searchProduct({ keyword })
+            : getProducts(),
     })
     return {
         ...query,
@@ -24,12 +27,22 @@ export const useCreateProduct = () => {
     })
 }
 
-export const useUpdateProduct = () => {
+export const useUploadCsv = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: uploadCsv,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["products"] })
+        }
+    })
+}
+
+export const useUpdateStock = () => {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn: updateStock,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["updateStock"] })
+            queryClient.invalidateQueries({ queryKey: ["products"] })
         }
     })
 }
@@ -44,11 +57,7 @@ export const useDeleteProduct = () => {
     })
 }
 
-type useProductStats = {
-    products: Product[]
-}
-
-export const useProductStats = ({ products }: useProductStats) => {
+export const useProductStats = (products: Product[]) => {
     return useMemo(() => {
         const totalStock = products.reduce(
             (sum, product) => sum + product.stock,

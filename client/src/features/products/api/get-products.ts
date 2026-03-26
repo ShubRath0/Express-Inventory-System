@@ -1,6 +1,6 @@
 import type { ApiResponse } from "@/api/api.types";
-import type { Product } from "./products.types";
 import api from "@/lib/axios";
+import type { Product } from ".";
 
 export const getProducts = async (): Promise<Product[]> => {
     try {

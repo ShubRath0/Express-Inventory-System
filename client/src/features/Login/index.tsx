@@ -1,3 +1,3 @@
 export * from "./LoginForm";
 export * from "./ui/loginHeader";
-export * from "./ui/LoginFooter";
+export * from "./ui/loginFooter";

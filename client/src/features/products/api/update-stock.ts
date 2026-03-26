@@ -1,9 +1,8 @@
-import api from "@/lib/axios";
-import type { Product, UpdateStock } from '@/features/products/api/products.types';
 import type { ApiResponse } from "@/api/api.types";
+import type { ModifyStockRequest, Product } from '@/features/products/api';
+import api from "@/lib/axios";
 
-export const updateStock = async (request: UpdateStock): Promise<Product> => {
-    console.log(request)
+export const updateStock = async (request: ModifyStockRequest): Promise<Product> => {
     try {
         const response = await api.patch<ApiResponse<Product>>(`/products/${request.id}`, request)
         return response.data.data;
