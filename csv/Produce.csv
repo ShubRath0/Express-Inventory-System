@@ -1,0 +1,14 @@
+Name,Category,Stock,LowStockThreshold,Price
+"Apple Fuji",PRODUCE,2.00,5.00,30.00
+"Apple Honeycrisp 80Ct",PRODUCE,1.50,5.00,39.50
+"Apple Red Del 100 Ct.",PRODUCE,0.00,5.00,28.00
+"Apples Granny Smith 80 Ct.",PRODUCE,5.00,10.00,36.00
+"Blueberries 12/6 Oz",PRODUCE,12.00,20.00,22.00
+"Cantaloupe 9/12 Ct.",PRODUCE,23.00,15.00,23.50
+"Grapes Green Seedless",PRODUCE,44.00,10.00,28.00
+"Honeydew 5/6 Ct.",PRODUCE,14.00,10.00,21.50
+"Mangoes 9/12 Ct.",PRODUCE,10.00,10.00,12.00
+"Oranges 88 Ct.",PRODUCE,2.00,5.00,28.00
+"Papaya 8/10 Ct.",PRODUCE,4.00,5.00,26.00
+"Pineapple 5/6/7 Ct.",PRODUCE,57.00,20.00,17.50
+"Strawberries 8/1 Lb.",PRODUCE,14.00,20.00,26.00

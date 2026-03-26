@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
+import { Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
 import { useMemo } from "react"
 
 export type ColumnDef<T> = {
@@ -19,8 +19,11 @@ export type GenericTableProps<T extends { id: string | number }> = {
     className?: string,
     sortColumn?: keyof T,
     sortDirection: "ascending" | "descending"
-    setSortColumn: React.Dispatch<React.SetStateAction<keyof T | undefined>>
-    setSortDirection: React.Dispatch<React.SetStateAction<"ascending" | "descending">>,
+    setSortColumn: (column: keyof T | undefined) => void;
+    setSortDirection: (direction: "ascending" | "descending") => void;
+    page?: number,
+    pages?: number,
+    onChange?: (page: number) => void,
 }
 
 export const GenericTable = <T extends { id: string | number }>({
@@ -31,6 +34,9 @@ export const GenericTable = <T extends { id: string | number }>({
     sortDirection,
     setSortColumn,
     setSortDirection,
+    page,
+    pages,
+    onChange
 }: GenericTableProps<T>) => {
     const sortedItems = useMemo(() => {
         if (!sortColumn) return items
@@ -60,6 +66,17 @@ export const GenericTable = <T extends { id: string | number }>({
                 setSortDirection(descriptor.direction as "ascending" | "descending")
             }}
             className={className}
+            bottomContent={page && pages && (
+                <div className="flex justify-center">
+                    <Pagination
+                        page={page}
+                        total={pages}
+                        onChange={onChange}
+                    />
+                </div>
+
+            )
+            }
         >
 
             {/* COLUMNS */}

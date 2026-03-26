@@ -1,57 +1,36 @@
 // IMPORTS
+import { Button } from "@heroui/react"
+import { Delete, PackageSearch } from "lucide-react"
 import { useMemo, useState } from "react"
-import { Button, useDisclosure } from "@heroui/react"
-import { Delete, Minus, Plus } from "lucide-react"
 
-import { type ColumnDef, GenericTable } from "@/components"
-import type { Product } from "@/features/products/api/products.types"
-import { DeleteAlert, UpdateStockModal, type UpdateStockFormData } from "@/features/products/components"
+import { GenericTable, type ColumnDef } from "@/components"
+import type { Product } from "@/features/products/api"
+import { DeleteAlert, UpdateStockModal } from "@/features/products/components"
 
 // Hooks
-import { useToast } from "@/hooks/useToast"
-import { useDeleteProduct, useUpdateProduct } from "@/features/products/hooks/useProducts"
-
-// TYPES
-export type ProductTableProps = {
-    products: Product[],
-    sortColumn?: keyof Product,
-    sortDirection: "ascending" | "descending",
-    setSortColumn: React.Dispatch<React.SetStateAction<keyof Product | undefined>>
-    setSortDirection: React.Dispatch<React.SetStateAction<"ascending" | "descending">>
-}
-
-type ActionType = "delete" | "update" | null;
+import { useFilterContext } from "../../context/FilterProvider"
+import { useModalContext } from "../../context/ModalProvider"
 
 // MAIN FUNCTION
-export const ProductTable = ({ products, sortColumn, sortDirection, setSortColumn, setSortDirection }: ProductTableProps) => {
+export const ProductTable = () => {
     // HOOKS
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-    const [action, setAction] = useState<ActionType>()
-    const toast = useToast()
+    const { openModal } = useModalContext();
+    const { filteredProducts, sortColumn, setSortColumn, sortDirection, setSortDirection } = useFilterContext();
 
-    // MUTATIONS
-    const deleteMutation = useDeleteProduct();
-    const updateMutation = useUpdateProduct();
+    const [page, setPage] = useState(1);
+    const rowsPerPage = 10;
 
-    // FUNCTIONS
-    function deleteProduct() {
-        if (selectedProduct) {
-            toast.promise(deleteMutation.mutateAsync(selectedProduct.id), {
-                loading: "Deleting product...",
-                success: "Product deleted!",
-                error: "Product could not be deleted."
-            })
-        }
-    }
+    const pages = Math.ceil((filteredProducts?.length || 0) / rowsPerPage)
+    console.log(pages);
+    const items = useMemo(() => {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
 
-    function updateProduct(data: UpdateStockFormData) {
-        const newData: UpdateStockFormData = { ...data, id: selectedProduct!.id }
-        toast.promise(updateMutation.mutateAsync(newData), {
-            loading: "Updating product...",
-            success: "Product updated!",
-            error: "Product could not be updated."
-        })
+        return filteredProducts?.slice(start, end);
+    }, [page, filteredProducts])
+
+    const changePage = (page: number) => {
+        setPage(page);
     }
 
     const columns: ColumnDef<Product>[] = useMemo<ColumnDef<Product>[]>(() => [
@@ -88,33 +67,20 @@ export const ProductTable = ({ products, sortColumn, sortDirection, setSortColum
                 `$${Number(value).toFixed(2)}`
         },
         {
-            key: "category",
-            label: "Category"
-        },
-        {
             key: "actions",
             label: "Actions",
             virtual: true,
             allowSorting: false,
-            renderVirtual: (item => (
-                <div>
-
-                    <Button isIconOnly startContent={<Plus />} variant="light" color="success" onPress={() => {
-                        setSelectedProduct(item)
-                        setAction("update")
-                        onOpen()
-                    }} />
-
-                    <Button isIconOnly startContent={<Minus />} variant="light" color="danger" onPress={() => {
-                        setSelectedProduct(item)
-                        setAction("update")
-                        onOpen()
-                    }} />
-                    <Button isIconOnly startContent={<Delete />} variant="light" color="danger" onPress={() => {
-                        setSelectedProduct(item)
-                        setAction("delete")
-                    }} />
-
+            renderVirtual: ((item: Product) => (
+                <div className="flex items-center">
+                    <div className="bg-card rounded-xl shadow-2xl">
+                        <Button isIconOnly startContent={<PackageSearch />} variant="light" color="success" onPress={() => {
+                            openModal('update', item)
+                        }} />
+                        <Button isIconOnly startContent={<Delete />} variant="light" color="danger" onPress={() => {
+                            openModal('delete', item)
+                        }} />
+                    </div>
                 </div>
             ))
         }
@@ -123,24 +89,19 @@ export const ProductTable = ({ products, sortColumn, sortDirection, setSortColum
     return (
         <>
             <GenericTable
-                items={products}
+                items={items || []}
                 columns={columns}
                 sortColumn={sortColumn}
                 sortDirection={sortDirection}
                 setSortColumn={setSortColumn}
                 setSortDirection={setSortDirection}
+                page={page}
+                pages={pages}
+                onChange={changePage}
+                className="h-180"
             />
-            <DeleteAlert
-                handleDelete={deleteProduct}
-                isOpen={action == 'delete' && selectedProduct != null}
-                onOpenChange={(open) => {
-                    if (!open) {
-                        setSelectedProduct(null)
-                        setAction(null)
-                    }
-                }}
-            />
-            <UpdateStockModal isOpen={isOpen} onOpenChange={onOpenChange} onSubmit={updateProduct} />
+            <DeleteAlert />
+            <UpdateStockModal />
         </>
 
     )
