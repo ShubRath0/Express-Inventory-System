@@ -26,7 +26,7 @@
     /* -------------------- MAIN COLORS -------------------- */
     :root {
         --background: oklch(96.7% 0.003 264.542);
-        --foreground: oklch(20.33% 0.0604 251.77);
+        --foreground: oklch(20.335% 0.06047 251.793);
 
         --sidebar: oklch(20.33% 0.0604 251.77);
         --sidebar-foreground: oklch(95.37% 0.0211 252.5);
@@ -34,6 +34,9 @@
         --navbar: oklch(100% 0 0);
         --navbar-foreground: oklch(20.33% 0.0604 251.77);
         --navbar-icon: oklch(20.33% 0.0604 251.77);
+
+        /* Primitive Colors (Do not change between light and dark) */
+        --blue: oklch(0.5671 0.209451 257.9449);
     }
 
     /* ---------------- DARK MODE VARIATIONS ---------------- */
@@ -62,4 +65,6 @@
     --color-navbar: var(--navbar);
     --color-navbar-foreground: var(--navbar-foreground);
     --color-navbar-icon: var(--navbar-icon);
+
+    --color-blue: var(--blue);
 }

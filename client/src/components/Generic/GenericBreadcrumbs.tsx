@@ -8,7 +8,7 @@ export const GenericBreadCrumbs = () => {
   return (
     <Breadcrumbs>
       <BreadcrumbItem href={pathname} size="md">
-        {pathname === "/dashboard" ? "Welcome" : pathname}
+        {pathname === "/dashboard" || pathname === "/" ? "Welcome" : pathname}
       </BreadcrumbItem>
     </Breadcrumbs>
   );

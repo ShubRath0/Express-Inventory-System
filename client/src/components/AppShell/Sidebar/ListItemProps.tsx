@@ -1,4 +1,4 @@
-export interface ListItem {
+interface ListItem {
     key: string;
     href: string;
     label: string;

@@ -13,15 +13,18 @@ export const AppNavbar = () => {
       <GenericNavbar.End>
         <ThemeSwitcher />
         {Items.map((item) => (
-          <Link key={item.key} href={item.href} >
+          <Link key={item.key} href={item.href}>
             {item.icon}
           </Link>
         ))}
         <Button
-          className="bg-blue-50"
-          startContent={<LogOut size={18} color="#006FEE" />}
+          className="bg-blue text-white"
+          startContent={<LogOut size={18} />}
+          variant="shadow"
         >
-          <Link href="#">Sign out</Link>
+          <Link href="#" className="text-white">
+            Sign out
+          </Link>
         </Button>
       </GenericNavbar.End>
     </GenericNavbar>
