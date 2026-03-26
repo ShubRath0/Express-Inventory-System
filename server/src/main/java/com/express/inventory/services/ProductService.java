@@ -3,6 +3,7 @@ package com.express.inventory.services;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.express.inventory.api.products.InventoryActionType;
+import com.express.inventory.api.products.InventoryLogEntity;
+import com.express.inventory.api.products.InventoryLogRepository;
 import com.express.inventory.dto.products.request.CreateProductRequest;
 import com.express.inventory.dto.products.request.UpdateProductRequest;
 import com.express.inventory.exceptions.ProductNotFoundException;
@@ -26,6 +30,7 @@ import lombok.AllArgsConstructor;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final InventoryLogRepository inventoryLogRepository;
 
     // Create Product
     @Transactional
@@ -99,4 +104,24 @@ public class ProductService {
         productRepository.deleteAll();
     }
 
+    // Stock Changes and Log Creation
+    public void updateStock(Integer productId, BigDecimal stockChange, InventoryActionType actionType, String note) {
+
+        ProductEntity product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException());
+
+        // Update stock
+        product.setStock(product.getStock().add(stockChange));
+
+        productRepository.save(product);
+
+        // Create log
+        InventoryLogEntity log = new InventoryLogEntity();
+        log.setProduct(product);
+        log.setStockChange(stockChange);
+        log.setActionType(actionType);
+        log.setNote(note);
+
+        inventoryLogRepository.save(log);
+    }
 }
