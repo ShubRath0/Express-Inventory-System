@@ -1,4 +1,4 @@
-package com.express.inventory.api.test;
+package test;
 
 public class TestSQL {
     public static final String GET_ALL = "SELECT * FROM test_entity";

@@ -1,4 +1,4 @@
-package com.express.inventory.api.test.dto;
+package test.dto;
 
 public class CreateTestEntityRequest {
     private String name;
