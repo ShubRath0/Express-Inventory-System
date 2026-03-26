@@ -1,26 +1,31 @@
 import { useMemo, useState } from "react"
 
-type SortDirection = "ascending" | "descending"
+export type SortDirection = "ascending" | "descending"
 type useSearchSortProps<T> = {
     items: T[],
-    searchableKeys: (keyof T)[]
+    searchableKeys: (keyof T)[],
+    query: string,
 }
 
 export function useSearchSort<T extends Record<string, any>>({
     items,
-    searchableKeys
+    searchableKeys,
+    query,
 }: useSearchSortProps<T>
 ) {
-    const [search, setSearch] = useState("")
     const [sortColumn, setSortColumn] = useState<keyof T | undefined>(undefined)
     const [sortDirection, setSortDirection] = useState<SortDirection>("ascending")
 
     const filteredItems = useMemo(() => {
         let result = [...items]
-        const lowercaseSearch = search.toLowerCase()
 
-        if (lowercaseSearch !== "") {
-            result = result.filter(item => searchableKeys.some((key) => String(item[key]).toLowerCase().includes(lowercaseSearch)))
+        if (query.trim() !== "") {
+            const lowerQuery = query.toLowerCase();
+            result = items.filter((item) =>
+                searchableKeys.some((key => {
+                    const value = item[key];
+                    return value && String(value).toLowerCase().includes(lowerQuery);
+                })))
         }
 
         if (sortColumn) {
@@ -35,13 +40,12 @@ export function useSearchSort<T extends Record<string, any>>({
         }
 
         return result
-    }, [items, search, sortColumn, sortDirection, searchableKeys])
+    }, [items, sortColumn, sortDirection, searchableKeys])
 
     return {
         items: filteredItems,
         sortColumn,
         sortDirection,
-        setSearch,
         setSortColumn,
         setSortDirection
     }
