@@ -25,7 +25,12 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ProductService {
 
+<<<<<<< HEAD:server/src/main/java/com/express/inventory/services/ProductService.java
     private final ProductRepository productRepository;
+=======
+    private final ProductRepositoryV2 productRepository;
+    private final InventoryLogRepository inventoryLogRepository;
+>>>>>>> 1b9c581 (Inventory Logs should be working now.):server/src/main/java/com/express/inventory/api/products/ProductService.java
 
     // Create Product
     @Transactional
@@ -94,9 +99,32 @@ public class ProductService {
         }
     }
 
+<<<<<<< HEAD:server/src/main/java/com/express/inventory/services/ProductService.java
     @Transactional
     public void deleteAllProducts() {
         productRepository.deleteAll();
     }
 
+=======
+    // Stock Changes and Log Creation
+    public void updateStock(Integer productId, int stockChange, InventoryActionType actionType, String note) {
+
+        ProductEntity product = productRepository.findById(productId)
+            .orElseThrow(() -> new ProductNotFoundException());
+
+        // Update stock
+        product.setStock(product.getStock() + stockChange);
+
+        productRepository.save(product);
+
+        // Create log
+        InventoryLogEntity log = new InventoryLogEntity();
+        log.setProduct(product);
+        log.setStockChange(stockChange);
+        log.setActionType(actionType);
+        log.setNote(note);
+
+        inventoryLogRepository.save(log);
+    }
+>>>>>>> 1b9c581 (Inventory Logs should be working now.):server/src/main/java/com/express/inventory/api/products/ProductService.java
 }
