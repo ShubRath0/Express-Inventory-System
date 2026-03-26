@@ -1,5 +1,5 @@
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { getProfits } from "../../api"
+import { getProfits } from "../../api";
 
 export const ProfitChart = () => {
     const profits = getProfits();
@@ -17,7 +17,7 @@ export const ProfitChart = () => {
                         borderRadius: '12px'
                     }}
                 />
-                <Line type="monotone" dataKey="profit" stroke="#8884d8" strokeWidth={2} />
+                <Line type="monotone" dataKey="profit" name="Value" stroke="#8884d8" strokeWidth={4} />
             </LineChart>
         </ResponsiveContainer>
     )

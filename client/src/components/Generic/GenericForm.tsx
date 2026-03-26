@@ -56,6 +56,7 @@ export const GenericForm = <T extends Record<string, any>>({
                         name={String(field.key)}
                         placeholder={field.placeholder}
                         isRequired={field.required}
+                        step="any"
                     />
                 )}
             </div>

@@ -1,30 +1,19 @@
 import { GenericModal } from "@/components";
-import { UpdateStockForm, type UpdateStockFormData } from '../../components';
-import { useInventory } from "../../context";
+import { UpdateStockForm } from '../../components';
+import { useModalContext } from "../../context/ModalProvider";
 
-interface UpdateStockModalProps {
-    onSubmit: (data: UpdateStockFormData) => void,
-}
+export const UpdateStockModal = () => {
 
-export const UpdateStockModal = ({
-    onSubmit,
-}: UpdateStockModalProps) => {
-
-    const { activeModal, closeModal } = useInventory();
+    const { activeModal, onUpdateStock, onOpenChange } = useModalContext();
 
     return (
         <GenericModal
             title="Modify Stock"
             isOpen={activeModal === 'update'}
-            onOpenChange={(open) => { if (!open) closeModal() }}
+            onOpenChange={onOpenChange}
         >
             {() => (
-                <UpdateStockForm
-                    onSubmit={(data) => {
-                        onSubmit(data);
-                        closeModal();
-                    }}
-                />
+                <UpdateStockForm onSubmit={onUpdateStock} />
             )}
         </GenericModal>
     )

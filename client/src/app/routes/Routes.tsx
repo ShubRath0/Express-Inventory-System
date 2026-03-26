@@ -1,5 +1,5 @@
 import { AppShell } from "@/components"
-import { InventoryProvider } from "@/features/products/context"
+import { InventoryProviders } from "@/features/products/context/InventoryProviders"
 import { ProductInventorySection } from "@/features/products/InventoryProductPage"
 import { Route, Routes } from "react-router-dom"
 
@@ -13,7 +13,7 @@ export const AppRoutes = () => {
                 <Route path="/" element={<></>}></Route>
 
                 {/* Wrapped this route in a provider to prevent MASS prop drilling (ANNOYING) */}
-                <Route element={<InventoryProvider />}>
+                <Route element={<InventoryProviders />}>
                     <Route path="/inventory/products" element={<ProductInventorySection />}></Route>
                 </Route>
 

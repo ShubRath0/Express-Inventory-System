@@ -1,1 +1,2 @@
-export * from './InventoryProvider'
+export * from './InventoryProviders';
+

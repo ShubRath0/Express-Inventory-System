@@ -11,15 +11,3 @@ export interface Product {
     lastUpdated: string,
 }
 
-export interface PostProduct {
-    name: string,
-    category: Category,
-    stock: number,
-    lowStockThreshold: number,
-    price: number,
-}
-
-export interface UpdateStock {
-    id: number,
-    stock: number
-}

@@ -1,43 +1,36 @@
 // IMPORTS
-import { useMemo } from "react"
 import { Button } from "@heroui/react"
 import { Delete, PackageSearch } from "lucide-react"
+import { useMemo, useState } from "react"
 
-import { type ColumnDef, GenericTable } from "@/components"
-import type { Product } from "@/features/products/api/products.types"
-import { DeleteAlert, UpdateStockModal, type UpdateStockFormData } from "@/features/products/components"
+import { GenericTable, type ColumnDef } from "@/components"
+import type { Product } from "@/features/products/api"
+import { DeleteAlert, UpdateStockModal } from "@/features/products/components"
 
 // Hooks
-import { useToast } from "@/hooks/useToast"
-import { useDeleteProduct, useUpdateStock } from "@/features/products/hooks/useProducts"
-import { useInventory } from "../../context"
+import { useFilterContext } from "../../context/FilterProvider"
+import { useModalContext } from "../../context/ModalProvider"
 
 // MAIN FUNCTION
 export const ProductTable = () => {
     // HOOKS
-    const { selectedProduct, setSelectedProduct, filteredProducts, sortColumn, setSortColumn, sortDirection, setSortDirection, setActiveModal } = useInventory();
-    const toast = useToast()
+    const { openModal } = useModalContext();
+    const { filteredProducts, sortColumn, setSortColumn, sortDirection, setSortDirection } = useFilterContext();
 
-    // MUTATIONS
-    const deleteMutation = useDeleteProduct();
-    const updateMutation = useUpdateStock();
+    const [page, setPage] = useState(1);
+    const rowsPerPage = 10;
 
-    // FUNCTIONS
-    function deleteProduct() {
-        if (!selectedProduct) return;
-        toast.promise(deleteMutation.mutateAsync(selectedProduct.id), {
-            loading: "Deleting product...",
-            success: "Product deleted!",
-            error: "Product could not be deleted."
-        })
-    }
+    const pages = Math.ceil((filteredProducts?.length || 0) / rowsPerPage)
+    console.log(pages);
+    const items = useMemo(() => {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
 
-    function updateStock(data: UpdateStockFormData) {
-        toast.promise(updateMutation.mutateAsync(data), {
-            loading: "Updating product...",
-            success: "Product updated!",
-            error: "Product could not be updated."
-        })
+        return filteredProducts?.slice(start, end);
+    }, [page, filteredProducts])
+
+    const changePage = (page: number) => {
+        setPage(page);
     }
 
     const columns: ColumnDef<Product>[] = useMemo<ColumnDef<Product>[]>(() => [
@@ -78,16 +71,14 @@ export const ProductTable = () => {
             label: "Actions",
             virtual: true,
             allowSorting: false,
-            renderVirtual: (item => (
+            renderVirtual: ((item: Product) => (
                 <div className="flex items-center">
                     <div className="bg-card rounded-xl shadow-2xl">
                         <Button isIconOnly startContent={<PackageSearch />} variant="light" color="success" onPress={() => {
-                            setSelectedProduct(item)
-                            setActiveModal('update')
+                            openModal('update', item)
                         }} />
                         <Button isIconOnly startContent={<Delete />} variant="light" color="danger" onPress={() => {
-                            setSelectedProduct(item)
-                            setActiveModal('delete')
+                            openModal('delete', item)
                         }} />
                     </div>
                 </div>
@@ -98,16 +89,19 @@ export const ProductTable = () => {
     return (
         <>
             <GenericTable
-                items={filteredProducts || []}
+                items={items || []}
                 columns={columns}
                 sortColumn={sortColumn}
                 sortDirection={sortDirection}
                 setSortColumn={setSortColumn}
                 setSortDirection={setSortDirection}
+                page={page}
+                pages={pages}
+                onChange={changePage}
                 className="h-180"
             />
-            <DeleteAlert handleDelete={deleteProduct} />
-            <UpdateStockModal onSubmit={updateStock} />
+            <DeleteAlert />
+            <UpdateStockModal />
         </>
 
     )
