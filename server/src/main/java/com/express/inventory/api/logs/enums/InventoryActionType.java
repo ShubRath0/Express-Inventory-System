@@ -1,4 +1,4 @@
-package com.express.inventory.api.products;
+package com.express.inventory.api.logs.enums;
 
 public enum InventoryActionType {
     ADD,

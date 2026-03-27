@@ -1,4 +1,4 @@
-package com.express.inventory.dto.common;
+package com.express.inventory.common.dto;
 
 import java.time.Instant;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.express.inventory.services;
+package com.express.inventory.api.products;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -12,14 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.express.inventory.api.products.InventoryActionType;
-import com.express.inventory.api.products.InventoryLogEntity;
-import com.express.inventory.api.products.InventoryLogRepository;
-import com.express.inventory.dto.products.request.CreateProductRequest;
-import com.express.inventory.dto.products.request.UpdateProductRequest;
-import com.express.inventory.exceptions.ProductNotFoundException;
-import com.express.inventory.models.ProductEntity;
-import com.express.inventory.repositories.ProductRepository;
+import com.express.inventory.api.logs.InventoryLogEntity;
+import com.express.inventory.api.logs.InventoryLogRepository;
+import com.express.inventory.api.logs.enums.InventoryActionType;
+import com.express.inventory.api.products.dto.request.CreateProductRequest;
+import com.express.inventory.api.products.dto.request.UpdateProductRequest;
+import com.express.inventory.api.products.exception.ProductNotFoundException;
 import com.express.inventory.utility.Utilities;
 import com.opencsv.bean.CsvToBeanBuilder;
 

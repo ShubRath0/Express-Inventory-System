@@ -1,4 +1,4 @@
-package com.express.inventory.exceptions;
+package com.express.inventory.api.products.exception;
 
 public class ProductNotFoundException extends RuntimeException {
     public ProductNotFoundException() {

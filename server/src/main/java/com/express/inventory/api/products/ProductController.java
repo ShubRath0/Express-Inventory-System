@@ -1,4 +1,4 @@
-package com.express.inventory.controllers;
+package com.express.inventory.api.products;
 
 import java.util.List;
 
@@ -15,11 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.express.inventory.dto.common.ApiResponse;
-import com.express.inventory.dto.products.request.CreateProductRequest;
-import com.express.inventory.dto.products.request.UpdateProductRequest;
-import com.express.inventory.models.ProductEntity;
-import com.express.inventory.services.ProductService;
+import com.express.inventory.api.products.dto.request.CreateProductRequest;
+import com.express.inventory.api.products.dto.request.UpdateProductRequest;
+import com.express.inventory.common.dto.ApiResponse;
 
 import jakarta.validation.Valid;
 
