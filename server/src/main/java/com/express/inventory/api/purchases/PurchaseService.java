@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.express.inventory.exceptions.InvalidPurchaseException;
-import com.express.inventory.exceptions.PurchaseNotFoundException;
+import com.express.inventory.api.purchases.exception.InvalidPurchaseException;
+import com.express.inventory.api.purchases.exception.PurchaseNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 

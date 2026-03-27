@@ -1,4 +1,4 @@
-package com.express.inventory.dto.products.request;
+package com.express.inventory.api.products.dto.request;
 
 import java.math.BigDecimal;
 

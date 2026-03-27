@@ -1,4 +1,4 @@
-package com.express.inventory.api.products;
+package com.express.inventory.api.logs;
 
 import java.math.BigDecimal;
 import java.security.Timestamp;
@@ -6,7 +6,8 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.express.inventory.models.ProductEntity;
+import com.express.inventory.api.logs.enums.InventoryActionType;
+import com.express.inventory.api.products.ProductEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

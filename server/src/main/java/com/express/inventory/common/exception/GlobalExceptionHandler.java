@@ -1,4 +1,4 @@
-package com.express.inventory.exceptions;
+package com.express.inventory.common.exception;
 
 import java.util.List;
 
@@ -10,8 +10,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.express.inventory.dto.common.ApiResponse;
-import com.express.inventory.dto.common.FieldError;
+import com.express.inventory.api.products.exception.ProductNotFoundException;
+import com.express.inventory.api.purchases.exception.InvalidPurchaseException;
+import com.express.inventory.api.purchases.exception.PurchaseNotFoundException;
+import com.express.inventory.common.dto.ApiResponse;
+import com.express.inventory.common.dto.FieldError;
 
 /**
  * Global exception handler for the application.
@@ -91,6 +94,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleValidationExceptions(ProductNotFoundException ex) {
         return ApiResponse.error(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
+
     @ExceptionHandler(InvalidPurchaseException.class)
     public ResponseEntity<ApiResponse<Void>> handleInvalidPurchase(InvalidPurchaseException ex) {
         logger.error("Invalid purchase data", ex);

@@ -1,4 +1,4 @@
-package com.express.inventory.models;
+package com.express.inventory.api.products;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;

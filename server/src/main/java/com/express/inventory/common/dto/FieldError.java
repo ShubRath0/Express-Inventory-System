@@ -1,4 +1,4 @@
-package com.express.inventory.dto.common;
+package com.express.inventory.common.dto;
 
 /**
  * Data Transfer Object representing a validation error on a specific field.
