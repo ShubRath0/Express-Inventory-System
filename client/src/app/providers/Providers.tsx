@@ -1,7 +1,7 @@
 import { HeroUIProvider } from "@heroui/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { Toaster } from "react-hot-toast"
-import { useHref, useNavigate } from "react-router-dom"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "react-hot-toast";
+import { useHref, useNavigate } from "react-router-dom";
 import { ThemeProvider } from "../context/ThemeProvider";
 
 interface ProviderProps {
@@ -19,10 +19,8 @@ export const Providers = ({ children }: ProviderProps) => {
                 <HeroUIProvider navigate={navigate} useHref={useHref}>
                     <Toaster position='top-center' reverseOrder={false} />
                     {children}
-
                 </HeroUIProvider>
             </QueryClientProvider>
         </ThemeProvider>
-
     )
 }

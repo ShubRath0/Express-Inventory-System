@@ -1,1 +1,2 @@
-export * from './InventoryProductPage'
+export * from './InventoryProductPage';
+export * from './state';

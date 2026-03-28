@@ -1,20 +1,22 @@
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 
 export type SortDirection = "ascending" | "descending"
 type useSearchSortProps<T> = {
     items: T[],
     searchableKeys: (keyof T)[],
     query: string,
+    sortColumn: keyof T,
+    sortDirection: SortDirection
 }
 
 export function useSearchSort<T extends Record<string, any>>({
     items,
     searchableKeys,
     query,
+    sortColumn,
+    sortDirection
 }: useSearchSortProps<T>
 ) {
-    const [sortColumn, setSortColumn] = useState<keyof T | undefined>(undefined)
-    const [sortDirection, setSortDirection] = useState<SortDirection>("ascending")
 
     const filteredItems = useMemo(() => {
         let result = [...items]
@@ -42,11 +44,5 @@ export function useSearchSort<T extends Record<string, any>>({
         return result
     }, [items, sortColumn, sortDirection, searchableKeys])
 
-    return {
-        items: filteredItems,
-        sortColumn,
-        sortDirection,
-        setSortColumn,
-        setSortDirection
-    }
+    return filteredItems;
 }

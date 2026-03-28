@@ -1,20 +1,21 @@
 import { GenericModal } from "@/components";
 import { UpdateStockForm } from '../../components';
-import { useModalContext } from "../../context/ModalProvider";
+import { useModalActions, useProductActions } from "../../hooks";
 
 export const UpdateStockModal = () => {
 
-    const { activeModal, onUpdateStock, onOpenChange } = useModalContext();
+    const { activeModal, closeModal } = useModalActions();
+    const { onUpdateStock } = useProductActions();
 
     return (
         <GenericModal
             title="Modify Stock"
             isOpen={activeModal === 'update'}
-            onOpenChange={onOpenChange}
+            onOpenChange={closeModal}
         >
             {() => (
                 <UpdateStockForm onSubmit={onUpdateStock} />
             )}
         </GenericModal>
-    )
-}
+    );
+};

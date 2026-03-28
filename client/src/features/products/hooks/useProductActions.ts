@@ -1,9 +1,11 @@
 import { useToast } from "@/hooks/useToast";
 import { useCallback } from "react";
-import type { Category, CreateProductRequest, ModifyStockRequest, Product } from "../api";
+import type { Category, CreateProductRequest, ModifyStockRequest } from "../api";
+import { useModalActions } from "./useModalActions";
 import { useCreateProduct, useDeleteProduct, useUpdateStock, useUploadCsv } from "./useProducts";
 
-export const useProductActions = (selectedProduct: Product | null, onSuccess?: () => void) => {
+export const useProductActions = () => {
+    const { selectedProduct, closeModal } = useModalActions();
 
     const updateStockMutation = useUpdateStock();
     const createProductMutation = useCreateProduct();
@@ -13,14 +15,14 @@ export const useProductActions = (selectedProduct: Product | null, onSuccess?: (
 
     const onUpdateStock = useCallback(async (data: ModifyStockRequest) => {
         if (!selectedProduct) return;
-        const newData = { ...data, id: selectedProduct?.id }
+        const newData = { ...data, id: selectedProduct?.id };
         await toast.promise(updateStockMutation.mutateAsync(newData), {
             loading: "Updating product...",
             success: "Product updated!",
             error: "Product could not be updated."
-        })
-        onSuccess?.()
-    }, [updateStockMutation, selectedProduct, toast, onSuccess]);
+        });
+        closeModal();
+    }, [updateStockMutation, selectedProduct, toast, closeModal]);
 
     const onCreateProduct = useCallback(async (data: CreateProductRequest) => {
         const newProduct: CreateProductRequest = {
@@ -36,8 +38,8 @@ export const useProductActions = (selectedProduct: Product | null, onSuccess?: (
             success: "Product created!",
             error: "Product could not be created."
         });
-        onSuccess?.()
-    }, [createProductMutation, toast, onSuccess]);
+        closeModal();
+    }, [createProductMutation, toast, closeModal]);
 
     const onDeleteProduct = useCallback(async () => {
         if (!selectedProduct) return;
@@ -45,9 +47,9 @@ export const useProductActions = (selectedProduct: Product | null, onSuccess?: (
             loading: "Deleting product...",
             success: "Product deleted!",
             error: "Product could not be deleted."
-        })
-        onSuccess?.()
-    }, [deleteProductMutation, selectedProduct, toast, onSuccess]);
+        });
+        closeModal();
+    }, [deleteProductMutation, selectedProduct, toast, closeModal]);
 
     const onUploadCsv = useCallback(async (file: File) => {
         if (!file) return;
@@ -55,8 +57,8 @@ export const useProductActions = (selectedProduct: Product | null, onSuccess?: (
             loading: "Adding Products...",
             success: "Products Added!",
             error: "Products could not be added."
-        })
+        });
     }, []);
 
-    return { onCreateProduct, onDeleteProduct, onUpdateStock, onUploadCsv }
-}
+    return { onCreateProduct, onDeleteProduct, onUpdateStock, onUploadCsv };
+};

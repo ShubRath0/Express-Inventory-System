@@ -1,10 +1,10 @@
 import { Button } from "@heroui/react";
 import { Plus } from "lucide-react";
-import { useModalContext } from "../../context/ModalProvider";
+import { useModalActions } from "../../hooks";
 import { CreateProductModal } from "./CreateProductModal";
 
 export const CreateProductBtn = () => {
-    const { openModal } = useModalContext();
+    const { openModal } = useModalActions();
 
     return (
         <>

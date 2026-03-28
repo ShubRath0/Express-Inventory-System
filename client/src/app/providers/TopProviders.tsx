@@ -1,4 +1,6 @@
-import { BrowserRouter } from "react-router-dom"
+import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
+import { store } from "../Store";
 
 interface TopProviders {
     children: React.ReactNode
@@ -7,7 +9,9 @@ interface TopProviders {
 export const TopProviders = ({ children }: TopProviders) => {
     return (
         <BrowserRouter>
-            {children}
+            <Provider store={store}>
+                {children}
+            </Provider>
         </BrowserRouter>
     )
 }

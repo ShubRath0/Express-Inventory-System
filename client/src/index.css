@@ -4,12 +4,3 @@
 @custom-variant dark (&:is(.dark *));
 @layer theme;
 @import "./styles/themes.css";
-
-@utility no-scrollbar {
-    &::-webkit-scrollbar {
-        display: none;
-    }
-
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}

@@ -1,37 +1,33 @@
 // IMPORTS
-import { Button } from "@heroui/react"
-import { Delete, PackageSearch } from "lucide-react"
-import { useMemo, useState } from "react"
+import { Button } from "@heroui/react";
+import { Delete, PackageSearch } from "lucide-react";
+import { useMemo } from "react";
 
-import { GenericTable, type ColumnDef } from "@/components"
-import type { Product } from "@/features/products/api"
-import { DeleteAlert, UpdateStockModal } from "@/features/products/components"
+import { GenericTable, type ColumnDef } from "@/components";
+import type { Product } from "@/features/products/api";
+import { DeleteAlert, UpdateStockModal } from "@/features/products/components";
 
 // Hooks
-import { useFilterContext } from "../../context/FilterProvider"
-import { useModalContext } from "../../context/ModalProvider"
+import type { RootState } from "@/app/Store";
+import { usePagination } from "@/hooks/usePagination";
+import { useDispatch, useSelector } from "react-redux";
+import { useModalActions } from "../../hooks";
+import { useFilteredInventory } from "../../hooks/useFilteredInventory";
+import { setSortColumn, setSortDirection } from "../../state";
 
 // MAIN FUNCTION
 export const ProductTable = () => {
     // HOOKS
-    const { openModal } = useModalContext();
-    const { filteredProducts, sortColumn, setSortColumn, sortDirection, setSortDirection } = useFilterContext();
+    const { openModal } = useModalActions();
 
-    const [page, setPage] = useState(1);
-    const rowsPerPage = 10;
+    const dispatch = useDispatch();
+    const filteredProducts = useFilteredInventory();
+    const { sortColumn, sortDirection } = useSelector((state: RootState) => state.filters);
 
-    const pages = Math.ceil((filteredProducts?.length || 0) / rowsPerPage)
-    console.log(pages);
-    const items = useMemo(() => {
-        const start = (page - 1) * rowsPerPage;
-        const end = start + rowsPerPage;
-
-        return filteredProducts?.slice(start, end);
-    }, [page, filteredProducts])
-
-    const changePage = (page: number) => {
-        setPage(page);
-    }
+    const { items, page, totalPages, setPage } = usePagination<Product>({
+        data: filteredProducts,
+        rowsPerPage: 10
+    });
 
     const columns: ColumnDef<Product>[] = useMemo<ColumnDef<Product>[]>(() => [
         {
@@ -46,14 +42,14 @@ export const ProductTable = () => {
             key: "stock",
             label: "Stock",
             render: (value: string | number, item: Product) => {
-                const isLow = item.stock < item.lowStockThreshold
+                const isLow = item.stock < item.lowStockThreshold;
 
                 return (
                     <div className="flex justify-between font-bold">
                         <div>{value}</div>
                         <div>{isLow ? "LOW" : "GOOD"}</div>
                     </div>
-                )
+                );
             },
             className: (item: Product) =>
                 item.stock < item.lowStockThreshold
@@ -75,16 +71,16 @@ export const ProductTable = () => {
                 <div className="flex items-center">
                     <div className="bg-card rounded-xl shadow-2xl">
                         <Button isIconOnly startContent={<PackageSearch />} variant="light" color="success" onPress={() => {
-                            openModal('update', item)
+                            openModal('update', item);
                         }} />
                         <Button isIconOnly startContent={<Delete />} variant="light" color="danger" onPress={() => {
-                            openModal('delete', item)
+                            openModal('delete', item);
                         }} />
                     </div>
                 </div>
             ))
         }
-    ], [])
+    ], []);
 
     return (
         <>
@@ -93,16 +89,16 @@ export const ProductTable = () => {
                 columns={columns}
                 sortColumn={sortColumn}
                 sortDirection={sortDirection}
-                setSortColumn={setSortColumn}
-                setSortDirection={setSortDirection}
+                setSortColumn={(col) => dispatch(setSortColumn(col))}
+                setSortDirection={(dir) => dispatch(setSortDirection(dir))}
                 page={page}
-                pages={pages}
-                onChange={changePage}
+                pages={totalPages}
+                onChange={(page) => setPage(page)}
                 className="h-180"
             />
             <DeleteAlert />
             <UpdateStockModal />
         </>
 
-    )
-}
+    );
+};

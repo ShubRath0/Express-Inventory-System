@@ -1,22 +1,22 @@
 import { Button } from "@heroui/react";
 import { Plus } from "lucide-react";
 import { useRef, type ChangeEvent } from "react";
-import { useModalContext } from "../../context/ModalProvider";
+import { useProductActions } from "../../hooks";
 
 export const CreateByCsvBtn = () => {
 
-    const { onUploadCsv } = useModalContext();
+    const { onUploadCsv } = useProductActions();
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleButtonClick = () => {
         fileInputRef.current?.click();
-    }
+    };
 
     const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
         const file = event?.target.files?.[0];
         onUploadCsv(file!);
-    }
+    };
 
     return (
         <>
@@ -37,5 +37,5 @@ export const CreateByCsvBtn = () => {
             </Button>
         </>
 
-    )
-}
+    );
+};

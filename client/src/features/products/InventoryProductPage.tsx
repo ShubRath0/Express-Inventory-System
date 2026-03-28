@@ -2,21 +2,36 @@
 import { Loading, ProductStatsBanner, ScrollContainer, Section, SectionContainer } from "@/components";
 import { Divider } from "@heroui/react";
 import { CreateByCsvBtn, CreateProductBtn, FilterBtn, HealthChart, ProductTable, ProfitChart, StockChart } from "./components";
+import { FilteredStatsBanner } from "./components/ui/FilteredStatBanner";
 import { InventorySearchbar } from "./components/ui/InventorySearchbar";
-import { useProductContext } from "./context/ProductProvider";
+import { useProducts } from "./hooks";
 
 // MAIN SECTION
 export const ProductInventorySection = () => {
+    const { isLoading } = useProducts();
 
-    const { isLoading } = useProductContext();
 
-    if (isLoading) return <Loading label="Fetching Data..." />
+    const scrollToTable = () => {
+        const viewport = document.getElementById('main-content-viewport');
+        const table = document.getElementById('inventory-table');
+
+        if (viewport && table) {
+            const targetScroll = (table.getBoundingClientRect().top + viewport.scrollTop) - viewport.getBoundingClientRect().top;
+
+            viewport.scrollTo({
+                top: targetScroll - 20,
+                behavior: "smooth"
+            });
+        }
+    };
+
+    if (isLoading) return <Loading label="Fetching Data..." />;
 
     return (
         // CONTAINER
         <div className="flex flex-col h-full p-4 overflow-y-auto bg-background">
 
-            <ScrollContainer>
+            <ScrollContainer id="main-content-viewport">
 
                 {/* KPI's */}
                 <SectionContainer>
@@ -28,33 +43,27 @@ export const ProductInventorySection = () => {
                 {/* CHARTS */}
                 <SectionContainer size="xs">
 
-                    {/* Stock Chart */}
-                    <Section size="lg">
-                        <h3 className="text-sm font-medium text-gray-400 mb-4">Stock Distribution</h3>
-                        <div className="h-full">
-                            <StockChart />
-                        </div>
+                    {/* Profit Chart */}
+                    <Section size="lg" title="Daily Inventory Value">
+                        <ProfitChart />
                     </Section>
 
-                    {/* Profit Chart */}
-                    <Section size="lg">
-                        <h3 className="text-sm font-medium text-gray-400 mb-4">Total Inventory Value</h3>
-                        <div className="h-full">
-                            <ProfitChart />
-                        </div>
+                    {/* Stock Chart */}
+                    <Section size="lg" title="Stock Distribution">
+                        <StockChart onChartClick={scrollToTable} />
                     </Section>
 
                     {/* Cool ass Chart */}
-                    <Section size="lg">
-                        <h3 className="text-sm font-medium text-gray-400 mb-4">Health Check</h3>
-                        <div className="flex h-full justify-center items-center">
-                            <HealthChart />
-                        </div>
+                    <Section size="lg" title="Health Check">
+                        <HealthChart onChartClick={scrollToTable} />
                     </Section>
-
                 </SectionContainer>
 
                 <Divider />
+
+                <SectionContainer>
+                    <FilteredStatsBanner />
+                </SectionContainer>
 
                 <section className="flex flex-col gap-4 p-6 pb-2">
                     <div className="flex flex-row items-center justify-between gap-4">
@@ -75,11 +84,11 @@ export const ProductInventorySection = () => {
                 <Divider />
 
                 {/* TABLE */}
-                <section className="pb-10">
+                <section id="inventory-table" className="pb-10">
                     <ProductTable />
                 </section>
             </ScrollContainer>
         </div >
 
-    )
-}
+    );
+};

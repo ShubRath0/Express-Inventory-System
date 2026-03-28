@@ -1,26 +1,28 @@
-import { useCallback, useState } from "react";
+import type { RootState } from "@/app/Store";
+import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import type { Product } from "../api";
+import { closeAllModals, setActiveModal, setActiveProduct } from '../state/modalSlice';
 
-export type Modal = "create" | "update" | "delete"
+export type Modal = "create" | "update" | "delete";
 
 export const useModalActions = () => {
-    const [activeModal, setActiveModal] = useState<Modal | null>(null)
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const { activeModal, activeProduct } = useSelector((state: RootState) => state.modals);
+    const dispatch = useDispatch();
 
     const openModal = useCallback((modal: Modal, product?: Product) => {
-        setActiveModal(modal)
-        setSelectedProduct(product ?? null);
-    }, []);
+        dispatch(setActiveModal(modal));
+        dispatch(setActiveProduct(product ?? null));
+    }, [dispatch]);
 
     const closeModal = useCallback(() => {
-        setActiveModal(null);
-        setSelectedProduct(null);
-    }, []);
+        dispatch(closeAllModals());
+    }, [dispatch]);
 
-    const onOpenChange = useCallback(() => {
-        setActiveModal(null)
-        setSelectedProduct(null);
-    }, []);
-
-    return { activeModal, setActiveModal, openModal, closeModal, onOpenChange, selectedProduct, setSelectedProduct }
-}
+    return {
+        activeModal,
+        selectedProduct: activeProduct,
+        openModal,
+        closeModal,
+    };
+};
