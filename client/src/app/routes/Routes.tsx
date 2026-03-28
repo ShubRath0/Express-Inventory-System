@@ -1,6 +1,6 @@
 import { AppShell } from "@/components";
+import { ProductInventorySection } from "@/features";
 import { Signin } from "@/features/Login/Login";
-import { ProductInventorySection } from "@/features/products/InventoryProductPage";
 import { Route, Routes } from "react-router-dom";
 
 export const AppRoutes = () => {

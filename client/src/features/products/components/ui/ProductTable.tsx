@@ -1,19 +1,15 @@
-// IMPORTS
+import type { RootState } from "@/app/Store";
+import { type ColumnDef, GenericTable } from "@/components";
+import type { Product } from "@/features/products/api";
+import { DeleteAlert } from "@/features/products/components/Delete";
+import { UpdateStockModal } from "@/features/products/components/Update";
+import { useFilteredInventory, useModalActions } from "@/features/products/hooks";
+import { setSortColumn, setSortDirection } from "@/features/products/state";
+import { usePagination } from "@/hooks";
 import { Button } from "@heroui/react";
 import { Delete, PackageSearch } from "lucide-react";
 import { useMemo } from "react";
-
-import { GenericTable, type ColumnDef } from "@/components";
-import type { Product } from "@/features/products/api";
-import { DeleteAlert, UpdateStockModal } from "@/features/products/components";
-
-// Hooks
-import type { RootState } from "@/app/Store";
-import { usePagination } from "@/hooks/usePagination";
 import { useDispatch, useSelector } from "react-redux";
-import { useModalActions } from "../../hooks";
-import { useFilteredInventory } from "../../hooks/useFilteredInventory";
-import { setSortColumn, setSortDirection } from "../../state";
 
 // MAIN FUNCTION
 export const ProductTable = () => {

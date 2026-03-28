@@ -1,7 +1,7 @@
+import { useProducts } from "@/features/products/hooks";
+import { setSelectedCategories } from "@/features/products/state";
 import { useDispatch } from "react-redux";
 import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
-import { useProducts } from "../../hooks";
-import { setSelectedCategories } from "../../state";
 
 interface HealthChartProps {
     onChartClick: () => void;

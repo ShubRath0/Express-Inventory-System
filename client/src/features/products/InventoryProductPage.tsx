@@ -1,10 +1,8 @@
 // COMPONENTS
 import { Loading, ProductStatsBanner, ScrollContainer, Section, SectionContainer } from "@/components";
+import { CreateByCsvBtn, CreateProductBtn, FilterBtn, FilteredStatsBanner, HealthChart, InventorySearchbar, ProductTable, ProfitChart, StockChart } from "@/features/products/components";
+import { useProducts } from "@/features/products/hooks";
 import { Divider } from "@heroui/react";
-import { CreateByCsvBtn, CreateProductBtn, FilterBtn, HealthChart, ProductTable, ProfitChart, StockChart } from "./components";
-import { FilteredStatsBanner } from "./components/ui/FilteredStatBanner";
-import { InventorySearchbar } from "./components/ui/InventorySearchbar";
-import { useProducts } from "./hooks";
 
 // MAIN SECTION
 export const ProductInventorySection = () => {

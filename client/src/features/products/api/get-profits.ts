@@ -7,5 +7,5 @@ export const getProfits = () => {
         { day: "Fri", profit: 4800, revenue: 7000 },
         { day: "Sat", profit: 3800, revenue: 5000 },
         { day: "Sun", profit: 4300, revenue: 6200 },
-    ]
-}
+    ];
+};

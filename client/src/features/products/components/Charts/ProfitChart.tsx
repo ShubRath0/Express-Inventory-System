@@ -1,5 +1,6 @@
+import { getProfits } from "@/features/products/api";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { getProfits } from "../../api";
+
 
 export const ProfitChart = () => {
     const profits = getProfits();

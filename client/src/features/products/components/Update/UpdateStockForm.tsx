@@ -1,7 +1,8 @@
-import { GenericForm, type FormField } from "@/components";
+import { type FormField, GenericForm } from "@/components";
+import type { ModifyStockRequest, Product } from "@/features/products/api";
+import { useModalActions } from "@/features/products/hooks";
 import { Chip } from "@heroui/react";
-import type { ModifyStockRequest, Product } from "../../api";
-import { useModalActions } from "../../hooks";
+
 
 const STOCK_REASONS = ["Spoilage", "Miscount", "Damaged", "Testing", "Yield Loss", "Found"] as const;
 type StockReason = (typeof STOCK_REASONS)[number];

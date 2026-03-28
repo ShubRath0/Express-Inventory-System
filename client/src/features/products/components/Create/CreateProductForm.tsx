@@ -1,4 +1,4 @@
-import { GenericForm, type FormField } from "@/components";
+import { type FormField, GenericForm } from "@/components";
 import type { Product } from "@/features/products/api";
 
 const productFields: FormField<Product>[] = [
@@ -42,8 +42,8 @@ const productFields: FormField<Product>[] = [
 export type ProductFormData = Pick<Product, 'name' | 'category' | 'stock' | 'lowStockThreshold' | 'price'>;
 
 export type ProductFormProps = {
-    onSubmit: (values: ProductFormData) => void
-}
+    onSubmit: (values: ProductFormData) => void;
+};
 
 export const CreateProductForm = ({ onSubmit }: ProductFormProps) => {
     return (
@@ -53,5 +53,5 @@ export const CreateProductForm = ({ onSubmit }: ProductFormProps) => {
             submitText="Create Product"
             submitColor="primary"
         />
-    )
-}
+    );
+};

@@ -1,6 +1,6 @@
 import { SearchBar } from "@/components";
+import { setSearchTerm } from "@/features/products/state";
 import { useDispatch } from "react-redux";
-import { setSearchTerm } from "../../state";
 
 export const InventorySearchbar = () => {
     const dispatch = useDispatch();
@@ -11,6 +11,6 @@ export const InventorySearchbar = () => {
             placeholder="Search Items"
             className="w-[20%]"
         />
-    )
+    );
 
-}
+};

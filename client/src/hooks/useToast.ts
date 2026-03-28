@@ -8,7 +8,7 @@ export const useToast = () => {
     const promise = useCallback(
         <T,>(
             promise: Promise<T>,
-            msgs: { loading: string; success: string; error: string }
+            msgs: { loading: string; success: string; error: string; }
         ) => {
             return toast.promise(
                 promise,

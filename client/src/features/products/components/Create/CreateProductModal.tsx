@@ -1,6 +1,6 @@
 import { GenericModal } from "@/components";
-import { useModalActions, useProductActions } from "../../hooks";
-import { CreateProductForm } from './CreateProductForm';
+import { CreateProductForm } from "@/features/products/components/Create/CreateProductForm";
+import { useModalActions, useProductActions } from "@/features/products/hooks";
 
 export const CreateProductModal = () => {
 

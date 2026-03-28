@@ -1,11 +1,11 @@
 import type { RootState } from "@/app/Store";
+import { setSelectedCategories } from "@/features/products/state";
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, type SharedSelection } from "@heroui/react";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedCategories } from "../../state";
 
 export const FilterBtn = () => {
 
-    const { selectedCategories } = useSelector((state: RootState) => state.filters)
+    const { selectedCategories } = useSelector((state: RootState) => state.filters);
     const dispatch = useDispatch();
 
     const handleSelectionChange = (keys: SharedSelection) => {
@@ -19,13 +19,13 @@ export const FilterBtn = () => {
         }
 
         if (lastSelected === "Produce") {
-            selectedArray = selectedArray.filter(key => key !== 'Plastic')
+            selectedArray = selectedArray.filter(key => key !== 'Plastic');
         } else if (lastSelected == "Plastic") {
-            selectedArray = selectedArray.filter(key => key !== 'Produce')
+            selectedArray = selectedArray.filter(key => key !== 'Produce');
         }
 
-        dispatch(setSelectedCategories(selectedArray))
-    }
+        dispatch(setSelectedCategories(selectedArray));
+    };
 
     return (
         <Dropdown>

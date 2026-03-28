@@ -1,7 +1,7 @@
+import { useProductActions } from "@/features/products/hooks";
 import { Button } from "@heroui/react";
 import { Plus } from "lucide-react";
 import { useRef, type ChangeEvent } from "react";
-import { useProductActions } from "../../hooks";
 
 export const CreateByCsvBtn = () => {
 

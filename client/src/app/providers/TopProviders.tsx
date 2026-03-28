@@ -1,9 +1,9 @@
+import { store } from "@/app/Store";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { store } from "../Store";
 
 interface TopProviders {
-    children: React.ReactNode
+    children: React.ReactNode;
 }
 
 export const TopProviders = ({ children }: TopProviders) => {
@@ -13,5 +13,5 @@ export const TopProviders = ({ children }: TopProviders) => {
                 {children}
             </Provider>
         </BrowserRouter>
-    )
-}
+    );
+};

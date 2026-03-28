@@ -1,17 +1,11 @@
+import { useProducts } from '@/features/products/hooks';
+import { setSelectedCategories } from '@/features/products/state';
 import { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
-import { useProducts } from '../../hooks';
-import { setSelectedCategories } from '../../state';
 
 interface StockChart {
     onChartClick: () => void;
-}
-
-interface ChartData {
-    name: string,
-    value: number,
-    fill: string,
 }
 
 export const StockChart = ({ onChartClick }: StockChart) => {

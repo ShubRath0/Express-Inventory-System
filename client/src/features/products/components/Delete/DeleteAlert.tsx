@@ -1,6 +1,6 @@
 import { GenericAlert } from "@/components/Generic/GenericAlert";
+import { useModalActions, useProductActions } from "@/features/products/hooks";
 import { Button } from "@heroui/react";
-import { useModalActions, useProductActions } from "../../hooks";
 
 export const DeleteAlert = () => {
     const { activeModal, closeModal } = useModalActions();
