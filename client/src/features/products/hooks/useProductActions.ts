@@ -2,7 +2,7 @@ import { useToast } from "@/hooks/useToast";
 import { useCallback } from "react";
 import type { Category, CreateProductRequest, ModifyStockRequest } from "../api";
 import { useModalActions } from "./useModalActions";
-import { useCreateProduct, useDeleteProduct, useUpdateStock, useUploadCsv } from "./useProducts";
+import { useCreateProduct, useDeleteEverything, useDeleteProduct, useUpdateStock, useUploadCsv } from "./useProducts";
 
 export const useProductActions = () => {
     const { selectedProduct, closeModal } = useModalActions();
@@ -11,6 +11,7 @@ export const useProductActions = () => {
     const createProductMutation = useCreateProduct();
     const deleteProductMutation = useDeleteProduct();
     const uplaodCsvMutation = useUploadCsv();
+    const deleteEverythingMutation = useDeleteEverything();
     const toast = useToast();
 
     const onUpdateStock = useCallback(async (data: ModifyStockRequest) => {
@@ -60,5 +61,13 @@ export const useProductActions = () => {
         });
     }, []);
 
-    return { onCreateProduct, onDeleteProduct, onUpdateStock, onUploadCsv };
+    const onDeleteEverything = useCallback(async () => {
+        await toast.promise(deleteEverythingMutation.mutateAsync(), {
+            loading: "Deleting Database",
+            success: "Database Deleted Successfully!",
+            error: "Database could not be deleted :("
+        });
+    }, []);
+
+    return { onCreateProduct, onDeleteProduct, onUpdateStock, onUploadCsv, onDeleteEverything };
 };

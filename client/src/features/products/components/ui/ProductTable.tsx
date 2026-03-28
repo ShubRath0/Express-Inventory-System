@@ -1,12 +1,11 @@
 import type { RootState } from "@/app/Store";
 import { type ColumnDef, GenericTable } from "@/components";
 import type { Product } from "@/features/products/api";
-import { DeleteAlert } from "@/features/products/components/Delete";
-import { UpdateStockModal } from "@/features/products/components/Update";
 import { useFilteredInventory, useModalActions } from "@/features/products/hooks";
 import { setSortColumn, setSortDirection } from "@/features/products/state";
 import { usePagination } from "@/hooks";
 import { Button } from "@heroui/react";
+import { motion } from "framer-motion";
 import { Delete, PackageSearch } from "lucide-react";
 import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -79,7 +78,11 @@ export const ProductTable = () => {
     ], []);
 
     return (
-        <>
+        <motion.div
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.3, ease: "backInOut" }}
+        >
             <GenericTable
                 items={items || []}
                 columns={columns}
@@ -92,9 +95,6 @@ export const ProductTable = () => {
                 onChange={(page) => setPage(page)}
                 className="h-180"
             />
-            <DeleteAlert />
-            <UpdateStockModal />
-        </>
-
+        </motion.div>
     );
 };
