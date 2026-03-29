@@ -1,5 +1,5 @@
 import { AppShell } from "@/components";
-import { ProductInventorySection } from "@/features";
+import { DashboardPage, ProductInventorySection } from "@/features";
 import { Signin } from "@/features/Login/Login";
 import { Route, Routes } from "react-router-dom";
 
@@ -13,7 +13,7 @@ export const AppRoutes = () => {
                 <Route path="/inventory/products" element={<ProductInventorySection />}></Route>
                 <Route path="/inventory/restock"></Route>
                 <Route path="/reports"></Route>
-                <Route path="/dashboard"></Route>
+                <Route path="/dashboard" element={<DashboardPage />}></Route>
                 <Route path="/purchasing"></Route>
                 <Route path="/admin"></Route>
                 <Route path="/help"></Route>

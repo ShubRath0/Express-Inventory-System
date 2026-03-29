@@ -5,7 +5,7 @@ export interface CreateByCsvBtnHandle {
     triggerClick: () => void;
 }
 
-export const CreateByCsvBtn = forwardRef<HTMLInputElement>((props, ref) => {
+export const CreateByCsvBtn = forwardRef<HTMLInputElement>((_, ref) => {
     const { onUploadCsv } = useProductActions();
 
     const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {

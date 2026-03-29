@@ -10,16 +10,14 @@ export const GenericStatBanner = ({
     return (
         <>
             {
-                stats.map((stat, index) => (
+                stats.map((stat) => (
                     <StatCard
                         key={stat.statName}
                         statName={stat.statName}
                         statValue={stat.statValue}
                         render={stat.render}
                         icon={stat.icon}
-                        index={index}
                     />
-
                 ))
             }
         </>

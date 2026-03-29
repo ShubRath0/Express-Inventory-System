@@ -6,7 +6,6 @@ export interface StatCardProps {
     statName: string;
     statValue: number;
     render?: (statValue: number) => React.ReactNode;
-    index?: number,
     icon?: LucideIcon,
 };
 
@@ -14,7 +13,6 @@ export const StatCard = ({
     statName,
     statValue,
     render,
-    index = 0,
     icon: Icon = FileText
 }: StatCardProps) => {
     return (
