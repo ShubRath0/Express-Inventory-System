@@ -1,41 +1,28 @@
-import { Button } from "@heroui/react";
-import { Plus } from "lucide-react";
-import { useRef, type ChangeEvent } from "react";
-import { useModalContext } from "../../context/ModalProvider";
+import { useProductActions } from "@/features/products/hooks";
+import { forwardRef, type ChangeEvent } from "react";
 
-export const CreateByCsvBtn = () => {
+export interface CreateByCsvBtnHandle {
+    triggerClick: () => void;
+}
 
-    const { onUploadCsv } = useModalContext();
-
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const handleButtonClick = () => {
-        fileInputRef.current?.click();
-    }
+export const CreateByCsvBtn = forwardRef<HTMLInputElement>((_, ref) => {
+    const { onUploadCsv } = useProductActions();
 
     const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event?.target.files?.[0];
-        onUploadCsv(file!);
-    }
+        const file = event.target.files?.[0];
+        if (file) {
+            onUploadCsv(file);
+            event.target.value = "";
+        }
+    };
 
     return (
-        <>
-            <input
-                type="file"
-                accept=".csv"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                style={{ display: "none" }}
-            />
-            <Button
-                color="primary"
-                size="lg"
-                startContent={<Plus />}
-                onPress={handleButtonClick}
-            >
-                Add By CSV
-            </Button>
-        </>
-
-    )
-}
+        <input
+            type="file"
+            accept=".csv"
+            ref={ref}
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+        />
+    );
+});

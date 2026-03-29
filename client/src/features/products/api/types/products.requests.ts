@@ -1,4 +1,4 @@
-import type { Category } from ".";
+import type { Category } from "@/features/products/api";
 
 export interface CreateProductRequest {
     name: string,
@@ -10,9 +10,9 @@ export interface CreateProductRequest {
 
 export interface ModifyStockRequest {
     id: number,
-    stock: number
+    stock: number;
 }
 
 export interface SearchRequest {
-    keyword: string
+    keyword: string;
 }

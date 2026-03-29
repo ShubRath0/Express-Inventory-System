@@ -1,10 +1,11 @@
-import { GenericForm, type FormField } from "@/components";
+import { type FormField, GenericForm } from "@/components";
+import type { ModifyStockRequest, Product } from "@/features/products/api";
+import { useModalActions } from "@/features/products/hooks";
 import { Chip } from "@heroui/react";
-import type { ModifyStockRequest, Product } from "../../api";
-import { useModalContext } from "../../context/ModalProvider";
+
 
 const STOCK_REASONS = ["Spoilage", "Miscount", "Damaged", "Testing", "Yield Loss", "Found"] as const;
-type StockReason = (typeof STOCK_REASONS)[number]
+type StockReason = (typeof STOCK_REASONS)[number];
 
 interface UpdateStockFields extends Product {
     reason: StockReason | null;
@@ -29,11 +30,11 @@ const productFields: FormField<UpdateStockFields>[] = [
 
 export type ModifyStockForm = {
     onSubmit: (values: ModifyStockRequest) => void,
-}
+};
 
 export const UpdateStockForm = ({ onSubmit }: ModifyStockForm) => {
 
-    const { selectedProduct } = useModalContext();
+    const { selectedProduct } = useModalActions();
 
     return (
         <GenericForm
@@ -65,5 +66,5 @@ export const UpdateStockForm = ({ onSubmit }: ModifyStockForm) => {
                 </div>
             )}
         </GenericForm>
-    )
-}
+    );
+};

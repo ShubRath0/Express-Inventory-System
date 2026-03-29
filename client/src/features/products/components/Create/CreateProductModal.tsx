@@ -1,20 +1,21 @@
 import { GenericModal } from "@/components";
-import { useModalContext } from "../../context/ModalProvider";
-import { CreateProductForm } from './CreateProductForm';
+import { CreateProductForm } from "@/features/products/components/Create/CreateProductForm";
+import { useModalActions, useProductActions } from "@/features/products/hooks";
 
 export const CreateProductModal = () => {
 
-    const { activeModal, onCreateProduct, onOpenChange } = useModalContext();
+    const { activeModal, closeModal } = useModalActions();
+    const { onCreateProduct } = useProductActions();
 
     return (
         <GenericModal
             title="Create a Product"
             isOpen={activeModal === 'create'}
-            onOpenChange={onOpenChange}
+            onOpenChange={closeModal}
         >
             {() => (
                 <CreateProductForm onSubmit={onCreateProduct} />
             )}
         </GenericModal>
-    )
-}
+    );
+};

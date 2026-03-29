@@ -1,13 +1,14 @@
 import { GenericAlert } from "@/components/Generic/GenericAlert";
+import { useModalActions, useProductActions } from "@/features/products/hooks";
 import { Button } from "@heroui/react";
-import { useModalContext } from "../../context/ModalProvider";
 
 export const DeleteAlert = () => {
-    const { activeModal, closeModal, onDeleteProduct, onOpenChange } = useModalContext();
+    const { activeModal, closeModal } = useModalActions();
+    const { onDeleteProduct } = useProductActions();
     return (
         <GenericAlert
             isOpen={activeModal == 'delete'}
-            onOpenChange={onOpenChange}
+            onOpenChange={closeModal}
             message="Are you sure you want to delete this product?"
             title="Delete Product"
             options={[
@@ -15,5 +16,5 @@ export const DeleteAlert = () => {
                 <Button key="confirm" variant="light" color="danger" onPress={onDeleteProduct}>Yes, delete</Button>
             ]}
         />
-    )
-}
+    );
+};

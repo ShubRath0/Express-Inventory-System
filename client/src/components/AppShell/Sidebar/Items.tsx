@@ -1,10 +1,10 @@
 import {
-    House,
-    ClipboardList,
-    NotebookText,
-    Tag,
-    SquareUser,
     BadgeQuestionMark,
+    ClipboardList,
+    House,
+    NotebookText,
+    SquareUser,
+    Tag,
 } from "lucide-react";
 import type { ListItemProps } from "./ListItemProps";
 
@@ -20,23 +20,8 @@ export const Items: ListItemProps[] = [
         key: "inventory",
         label: "Inventory",
         className: "listboxItem text-foreground",
+        href: "/inventory/products",
         startContent: <ClipboardList size={18} />,
-        items: [
-            {
-                key: "products",
-                href: "inventory/products",
-                label: "Products",
-                className: "text-foreground px-8",
-                isExpanded: false,
-            },
-            {
-                key: "restock",
-                href: "inventory/restock",
-                label: "Restock",
-                className: "text-foreground px-8",
-                isExpanded: false,
-            },
-        ],
     },
     {
         key: "reports",

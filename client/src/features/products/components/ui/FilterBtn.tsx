@@ -1,23 +1,31 @@
+import type { RootState } from "@/app/Store";
+import { setSelectedCategories } from "@/features/products/state";
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, type SharedSelection } from "@heroui/react";
-import { useFilterContext } from "../../context/FilterProvider";
+import { useDispatch, useSelector } from "react-redux";
 
 export const FilterBtn = () => {
 
-    const { selectedCategories, setSelectedCategories } = useFilterContext();
+    const { selectedCategories } = useSelector((state: RootState) => state.filters);
+    const dispatch = useDispatch();
 
     const handleSelectionChange = (keys: SharedSelection) => {
-        const newSet = new Set(Array.from(keys) as string[]);
+        let selectedArray = Array.from(keys) as string[];
+        const lastSelected = selectedArray[selectedArray.length - 1];
 
-        const lastSelected = Array.from(keys).pop();
-
-        if (lastSelected === "low") {
-            newSet.delete("good")
-        } else if (lastSelected === "good") {
-            newSet.delete("low")
+        if (lastSelected === "Low" || lastSelected === "Empty") {
+            selectedArray = selectedArray.filter(key => key !== "Good");
+        } else if (lastSelected === "Good") {
+            selectedArray = selectedArray.filter(key => key !== "Low" && key !== "Empty");
         }
 
-        setSelectedCategories(newSet as unknown as SharedSelection)
-    }
+        if (lastSelected === "Produce") {
+            selectedArray = selectedArray.filter(key => key !== 'Plastic');
+        } else if (lastSelected == "Plastic") {
+            selectedArray = selectedArray.filter(key => key !== 'Produce');
+        }
+
+        dispatch(setSelectedCategories(selectedArray));
+    };
 
     return (
         <Dropdown>
@@ -30,16 +38,17 @@ export const FilterBtn = () => {
                 aria-label="Filter Options"
                 closeOnSelect={false}
                 selectionMode="multiple"
-                selectedKeys={selectedCategories}
+                selectedKeys={new Set(selectedCategories)}
                 onSelectionChange={handleSelectionChange}
             >
                 <DropdownSection title="Categories">
-                    <DropdownItem key="produce">Produce</DropdownItem>
-                    <DropdownItem key="plastic">Plastic</DropdownItem>
+                    <DropdownItem key="Produce">Produce</DropdownItem>
+                    <DropdownItem key="Plastic">Plastic</DropdownItem>
                 </DropdownSection>
                 <DropdownSection title="Stock Status">
-                    <DropdownItem key="low">Low Stock</DropdownItem>
-                    <DropdownItem key="good">Good Stock</DropdownItem>
+                    <DropdownItem key="Low">Low</DropdownItem>
+                    <DropdownItem key="Good">Good</DropdownItem>
+                    <DropdownItem key="Empty">Empty</DropdownItem>
                 </DropdownSection>
             </DropdownMenu>
         </Dropdown>

@@ -1,21 +1,38 @@
+import { useProducts } from '@/features/products/hooks';
+import { setSelectedCategories } from '@/features/products/state';
+import { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
-import { useProductContext } from '../../context/ProductProvider';
 
-export const StockChart = () => {
-    const { products } = useProductContext();
-    const produceItems = products.filter(p => p.category === "PRODUCE").reduce((acc, p) => acc + p.stock, 0)
-    const plasticItems = products.filter(p => p.category === "PLASTIC").reduce((acc, p) => acc + p.stock, 0)
+interface StockChart {
+    onChartClick: () => void;
+}
 
-    const chartData = [
-        { name: "Produce", value: produceItems, fill: 'var(--chart-produce)' },
-        { name: "Plastic", value: plasticItems, fill: 'var(--chart-plastic)' }
-    ];
+export const StockChart = ({ onChartClick }: StockChart) => {
+    const { products } = useProducts();
+
+    const dispatch = useDispatch();
+
+    const chartData = useMemo(() => {
+        const produce = products
+            .filter(p => p.category === "PRODUCE")
+            .reduce((acc, p) => acc + p.stock, 0);
+
+        const plastic = products
+            .filter(p => p.category === "PLASTIC")
+            .reduce((acc, p) => acc + p.stock, 0);
+
+        return [
+            { name: "Produce", value: produce, fill: 'var(--chart-produce)' },
+            { name: "Plastic", value: plastic, fill: 'var(--chart-plastic)' }
+        ];
+    }, [products]);
 
     return (
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer>
             <PieChart>
                 <Tooltip
-                    cursor={false}
+                    cursor={{ strokeOpacity: 0, fillOpacity: 0 }}
                     contentStyle={{
                         backgroundColor: "var(--card)",
                         border: 'none',
@@ -35,10 +52,14 @@ export const StockChart = () => {
                         percent && percent > 0 ? `${name} ${(percent * 100).toFixed(0)}%` : null
                     }
                     labelLine={false}
+                    onClick={(a) => {
+                        dispatch(setSelectedCategories([a.payload.name]));
+                        onChartClick();
+                    }}
                 >
                 </Pie>
                 <Legend />
             </PieChart>
         </ResponsiveContainer>
-    )
-}
+    );
+};

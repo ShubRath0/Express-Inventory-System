@@ -16,6 +16,26 @@
     .plastic {
         @apply bg-blue-400 dark:bg-blue-800;
     }
+    .recharts-wrapper :focus {
+        outline: none !important;
+    }
+
+    .recharts-pie-sector:focus {
+        outline: none !important;
+    }
+
+    .recharts-layer:focus {
+        outline: none !important;
+    }
+}
+
+@utility no-scrollbar {
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 @layer base {

@@ -1,5 +1,5 @@
-import type { Product } from "./products.types";
+import type { Product } from "@/features/products/api";
 
 export interface SearchResponse {
-    products: Product[]
+    products: Product[];
 }

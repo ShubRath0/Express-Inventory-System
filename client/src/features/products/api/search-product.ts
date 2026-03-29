@@ -1,6 +1,7 @@
 import type { ApiResponse } from "@/api";
-import api from "@/lib/axios";
-import type { Product, SearchRequest } from ".";
+import type { Product, SearchRequest } from "@/features/products/api/types";
+import { api } from "@/lib";
+
 
 export const searchProduct = async (request: SearchRequest): Promise<Product[]> => {
     try {
@@ -12,4 +13,4 @@ export const searchProduct = async (request: SearchRequest): Promise<Product[]> 
         console.error("API ERROR: ", err);
         throw err;
     }
-}
+};

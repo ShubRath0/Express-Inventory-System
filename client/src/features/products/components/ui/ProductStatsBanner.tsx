@@ -1,31 +1,39 @@
+import { type StatCardProps, GenericStatBanner } from "@/components";
+import { useProducts, useProductStats } from "@/features/products/hooks";
 import { Boxes, CircleDollarSign, Package, Ticket } from "lucide-react";
-import { StatCard, type StatCardProps } from "../../../../components/ui/StatCard";
-import { useStatContext } from "../../context/StatProvider";
+
 export const ProductStatsBanner = () => {
-    const { totalStock, totalUnitPrice, totalValue, totalProducts } = useStatContext();
+    const { products } = useProducts();
+    const { totalStock, totalUnitPrice, totalValue, totalProducts } = useProductStats(products);
 
     const stats: StatCardProps[] = [
-        { statName: "Total Items", statValue: totalProducts, render: (v: number) => `${v.toFixed(0)}`, icon: Package },
-        { statName: "Total Stock", statValue: totalStock, icon: Boxes },
-        { statName: "Total Unit Price", statValue: totalUnitPrice, render: (v: number) => `$${v.toFixed(2)}`, icon: Ticket },
-        { statName: "Total Value", statValue: totalValue, render: (v: number) => `$${v.toFixed(2)}`, icon: CircleDollarSign }
-    ]
-
+        {
+            statName: "Total Items",
+            statValue: totalProducts,
+            icon: Package
+        },
+        {
+            statName: "Total Stock",
+            statValue: totalStock,
+            icon: Boxes,
+            render: (v) => v.toLocaleString(undefined, { minimumFractionDigits: 2 })
+        },
+        {
+            statName: "Total Unit Price",
+            statValue: totalUnitPrice,
+            icon: Ticket,
+            render: (v) => `$${v.toLocaleString(undefined, { minimumFractionDigits: 2 })}`
+        },
+        {
+            statName: "Total Value",
+            statValue: totalValue,
+            icon: CircleDollarSign,
+            render: (v) => `$${v.toLocaleString(undefined, { minimumFractionDigits: 2 })}`
+        }
+    ];
     return (
-        <>
-            {
-                stats.map((stat, index) => (
-                    <StatCard
-                        key={stat.statName}
-                        statName={stat.statName}
-                        statValue={stat.statValue}
-                        render={stat.render}
-                        icon={stat.icon}
-                        index={index}
-                    />
-
-                ))
-            }
-        </>
-    )
-}
+        <GenericStatBanner
+            stats={stats}
+        />
+    );
+};

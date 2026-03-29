@@ -1,85 +1,78 @@
 // COMPONENTS
-import { Loading, ProductStatsBanner, ScrollContainer, Section, SectionContainer } from "@/components";
+import { Loading, ScrollContainer, SectionContainer } from "@/components";
+import { CreateByCsvBtn, CreateProductBtn, CreateProductModal, DeleteAlert, FilterBtn, FilteredStatsBanner, InventorySearchbar, ProductTable, UpdateStockModal } from "@/features/products/components";
+import { ExportBtn } from "@/features/products/components/Export/ExportBtn";
+import { NukeBtn } from "@/features/products/components/ui/NukeBtn";
+import { useProducts } from "@/features/products/hooks";
 import { Divider } from "@heroui/react";
-import { CreateByCsvBtn, CreateProductBtn, FilterBtn, HealthChart, ProductTable, ProfitChart, StockChart } from "./components";
-import { InventorySearchbar } from "./components/ui/InventorySearchbar";
-import { useProductContext } from "./context/ProductProvider";
+import { motion } from 'framer-motion';
+import { useRef } from "react";
 
 // MAIN SECTION
 export const ProductInventorySection = () => {
+    const { isLoading } = useProducts();
 
-    const { isLoading } = useProductContext();
+    const csvInputRef = useRef<HTMLInputElement>(null);
 
-    if (isLoading) return <Loading label="Fetching Data..." />
+    if (isLoading) return <Loading label="Fetching Data..." />;
 
     return (
         // CONTAINER
         <div className="flex flex-col h-full p-4 overflow-y-auto bg-background">
 
-            <ScrollContainer>
+            <ScrollContainer id="main-content-viewport">
 
-                {/* KPI's */}
-                <SectionContainer>
-                    <ProductStatsBanner />
-                </SectionContainer>
+                {/* FILTERED KPIs */}
+                <motion.div
+                    initial={{ opacity: 0, x: -100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 1.3, ease: "backInOut" }}
+                >
+                    <SectionContainer>
+                        <FilteredStatsBanner />
+                    </SectionContainer>
+                </motion.div>
 
-                <Divider />
+                {/* SEARCH, FILTER, CREATE, EXPORT */}
+                <motion.div
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 1.3, ease: "backInOut" }}
+                >
+                    <section className="flex flex-col gap-4 p-6 pb-2">
+                        <div className="flex flex-row items-center justify-between gap-4">
 
-                {/* CHARTS */}
-                <SectionContainer size="xs">
+                            <div className="flex flex-1 gap-4 items-center">
+                                <InventorySearchbar />
+                                <FilterBtn />
+                            </div>
 
-                    {/* Stock Chart */}
-                    <Section size="lg">
-                        <h3 className="text-sm font-medium text-gray-400 mb-4">Stock Distribution</h3>
-                        <div className="h-full">
-                            <StockChart />
+                            {/* CREATE , EXPORT, NUKE */}
+                            <CreateProductBtn onCsvClick={() => csvInputRef.current?.click()} />
+                            <ExportBtn />
+                            <NukeBtn />
                         </div>
-                    </Section>
-
-                    {/* Profit Chart */}
-                    <Section size="lg">
-                        <h3 className="text-sm font-medium text-gray-400 mb-4">Total Inventory Value</h3>
-                        <div className="h-full">
-                            <ProfitChart />
-                        </div>
-                    </Section>
-
-                    {/* Cool ass Chart */}
-                    <Section size="lg">
-                        <h3 className="text-sm font-medium text-gray-400 mb-4">Health Check</h3>
-                        <div className="flex h-full justify-center items-center">
-                            <HealthChart />
-                        </div>
-                    </Section>
-
-                </SectionContainer>
-
-                <Divider />
-
-                <section className="flex flex-col gap-4 p-6 pb-2">
-                    <div className="flex flex-row items-center justify-between gap-4">
-
-                        {/* SEARCH BAR */}
-                        <div className="flex flex-1 gap-4 items-center">
-                            <InventorySearchbar />
-                            {/* FILTER BUTTON (CATEGORY) */}
-                            <FilterBtn />
-                        </div>
-
-                        {/* CREATE BTN */}
-                        <CreateProductBtn />
-                        <CreateByCsvBtn />
-                    </div>
-                </section>
+                    </section>
+                </motion.div>
 
                 <Divider />
 
                 {/* TABLE */}
-                <section className="pb-10">
+                <section id="inventory-table" className="pb-10">
                     <ProductTable />
                 </section>
+
             </ScrollContainer>
+
+            {/* OTHER */}
+            <section>
+                <CreateByCsvBtn ref={csvInputRef} />
+                <CreateProductModal />
+                <UpdateStockModal />
+                <DeleteAlert />
+            </section>
+
         </div >
 
-    )
-}
+    );
+};

@@ -1,25 +1,43 @@
-import { Button } from "@heroui/react";
-import { Plus } from "lucide-react";
-import { useModalContext } from "../../context/ModalProvider";
-import { CreateProductModal } from "./CreateProductModal";
+import { useModalActions } from "@/features/products/hooks";
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/react";
+import { Plus, Upload } from "lucide-react";
+import type { Key } from "react";
 
-export const CreateProductBtn = () => {
-    const { openModal } = useModalContext();
+interface CreateProductBtnProps {
+    onCsvClick: () => void;
+}
+
+export const CreateProductBtn = ({ onCsvClick }: CreateProductBtnProps) => {
+    const { openModal } = useModalActions();
+
+    const onAction = (key: Key) => {
+        switch (key) {
+            case 'create':
+                openModal('create');
+                break;
+            case 'csv':
+                onCsvClick();
+                break;
+        }
+    };
 
     return (
-        <>
-            <Button
-                color="primary"
-                variant="solid"
-                radius="sm"
-                onPress={() => openModal('create')}
-                size="lg"
-                startContent={<Plus />}
-            >
-                Add Item
-            </Button>
-
-            <CreateProductModal />
-        </>
+        <Dropdown>
+            <DropdownTrigger>
+                <Button
+                    color="primary"
+                    variant="solid"
+                    radius="sm"
+                    size="lg"
+                    startContent={<Plus />}
+                >
+                    Add Item
+                </Button>
+            </DropdownTrigger>
+            <DropdownMenu onAction={onAction}>
+                <DropdownItem key="create" startContent={<Plus />}>Create</DropdownItem>
+                <DropdownItem key="csv" startContent={<Upload />}>Upload CSV</DropdownItem>
+            </DropdownMenu>
+        </Dropdown>
     );
 };

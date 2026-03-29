@@ -1,18 +1,26 @@
+import { useProducts } from "@/features/products/hooks";
+import { setSelectedCategories } from "@/features/products/state";
+import { useDispatch } from "react-redux";
 import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
-import { useProductContext } from "../../context/ProductProvider";
 
-export const HealthChart = () => {
-    const { products } = useProductContext();
+interface HealthChartProps {
+    onChartClick: () => void;
+}
+
+export const HealthChart = ({ onChartClick }: HealthChartProps) => {
+    const { products } = useProducts();
     const healthy = products.filter((product) => product.stock >= product.lowStockThreshold).length;
     const lowStock = products.filter((product) => product.stock !== 0 && product.stock < product.lowStockThreshold).length;
     const empty = products.filter((product) => product.stock === 0).length;
 
+    const dispatch = useDispatch();
+
 
     const chartData = [
-        { name: "Healthy", value: healthy, fill: 'var(--status-healthy)' },
+        { name: "Good", value: healthy, fill: 'var(--status-healthy)' },
         { name: "Low", value: lowStock, fill: 'var(--status-low)' },
         { name: "Empty", value: empty, fill: 'var(--status-empty)' },
-    ]
+    ];
 
     return (
         <ResponsiveContainer width="100%" height="100%">
@@ -38,10 +46,14 @@ export const HealthChart = () => {
                         percent && percent > 0 ? `${name} ${(percent * 100).toFixed(0)}%` : null
                     }
                     labelLine={false}
+                    onClick={(e) => {
+                        dispatch(setSelectedCategories([e.payload.name]));
+                        onChartClick();
+                    }}
                 >
                 </Pie>
             </PieChart>
         </ResponsiveContainer>
 
-    )
-}
+    );
+};

@@ -1,15 +1,16 @@
 import { SearchBar } from "@/components";
-import { useFilterContext } from "../../context/FilterProvider";
+import { setSearchTerm } from "@/features/products/state";
+import { useDispatch } from "react-redux";
 
 export const InventorySearchbar = () => {
-    const { setSearchTerm } = useFilterContext();
+    const dispatch = useDispatch();
 
     return (
         <SearchBar
-            onChange={setSearchTerm}
+            onChange={(searchTerm) => dispatch(setSearchTerm(searchTerm))}
             placeholder="Search Items"
             className="w-[20%]"
         />
-    )
+    );
 
-}
+};
