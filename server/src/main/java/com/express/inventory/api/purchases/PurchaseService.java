@@ -7,13 +7,14 @@ import org.springframework.stereotype.Service;
 import com.express.inventory.exceptions.InvalidPurchaseException;
 import com.express.inventory.exceptions.PurchaseNotFoundException;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class PurchaseService {
 
     private final PurchaseRepository purchaseRepository;
+
+    public PurchaseService(PurchaseRepository purchaseRepository) {
+        this.purchaseRepository = purchaseRepository;
+    }
 
     public List<PurchaseEntity> getAllPurchases() {
         return purchaseRepository.findAll();

@@ -5,7 +5,7 @@ import com.express.inventory.dto.products.request.CreateProductRequest;
 import com.express.inventory.dto.products.request.UpdateProductRequest;
 import com.express.inventory.models.ProductEntity;
 import com.express.inventory.services.ProductService;
-
+import com.express.inventory.dto.products.ProductStockStatus;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -69,5 +69,16 @@ public class ProductController {
         productService.deleteAllProducts();
         ;
         return ApiResponse.success(HttpStatus.OK, "All products have been deleted!", null);
+    }
+    
+        @GetMapping("/filter")
+public ResponseEntity<ApiResponse<List<ProductEntity>>> filterProducts(
+        @RequestParam(required = false) String category,
+        @RequestParam(required = false) ProductStockStatus stockStatus) {
+    return ApiResponse.success(
+            HttpStatus.OK,
+            "Products retrieved successfully!",
+            productService.filterProducts(category, stockStatus));
+
     }
 }
