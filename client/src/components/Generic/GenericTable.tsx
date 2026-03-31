@@ -1,29 +1,32 @@
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react"
-import { useMemo } from "react"
+import { Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react";
+import { useMemo } from "react";
 
 export type ColumnDef<T> = {
-    key: keyof T | string
-    virtual?: boolean
-    renderVirtual?: (item: T) => React.ReactNode
-    label?: string
-    allowSorting?: boolean
-    render?: (value: T[keyof T], item: T) => React.ReactNode
-    className?: (item: T) => string
-    editFn?: (item: T) => void
-    sortAccessor?: (item: T) => string | number
-}
+    key: keyof T | string;
+    virtual?: boolean;
+    renderVirtual?: (item: T) => React.ReactNode;
+    label?: string;
+    allowSorting?: boolean;
+    render?: (value: T[keyof T], item: T) => React.ReactNode;
+    className?: (item: T) => string;
+    editFn?: (item: T) => void;
+    sortAccessor?: (item: T) => string | number;
+};
 
-export type GenericTableProps<T extends { id: string | number }> = {
+export type GenericTableProps<T extends { id: string | number; }> = {
     items: T[],
     columns: ColumnDef<T>[],
     className?: string,
     sortColumn?: keyof T,
-    sortDirection: "ascending" | "descending"
-    setSortColumn: React.Dispatch<React.SetStateAction<keyof T | undefined>>
-    setSortDirection: React.Dispatch<React.SetStateAction<"ascending" | "descending">>,
-}
+    sortDirection: "ascending" | "descending";
+    setSortColumn: (column: keyof T | undefined) => void;
+    setSortDirection: (direction: "ascending" | "descending") => void;
+    page?: number,
+    pages?: number,
+    onChange?: (page: number) => void,
+};
 
-export const GenericTable = <T extends { id: string | number }>({
+export const GenericTable = <T extends { id: string | number; }>({
     items,
     columns,
     className,
@@ -31,35 +34,50 @@ export const GenericTable = <T extends { id: string | number }>({
     sortDirection,
     setSortColumn,
     setSortDirection,
+    page,
+    pages,
+    onChange
 }: GenericTableProps<T>) => {
     const sortedItems = useMemo(() => {
-        if (!sortColumn) return items
+        if (!sortColumn) return items;
 
-        const column = columns.find(c => String(c.key) === String(sortColumn))
-        if (!column) return items
+        const column = columns.find(c => String(c.key) === String(sortColumn));
+        if (!column) return items;
 
-        const dir = sortDirection === "ascending" ? 1 : -1
+        const dir = sortDirection === "ascending" ? 1 : -1;
 
         return [...items].sort((a, b) => {
-            const aVal = column.sortAccessor ? column.sortAccessor(a) : a[sortColumn as keyof T]
-            const bVal = column.sortAccessor ? column.sortAccessor(b) : b[sortColumn as keyof T]
+            const aVal = column.sortAccessor ? column.sortAccessor(a) : a[sortColumn as keyof T];
+            const bVal = column.sortAccessor ? column.sortAccessor(b) : b[sortColumn as keyof T];
 
-            if (aVal < bVal) return -1 * dir
-            if (aVal > bVal) return 1 * dir
-            return 0
-        })
-    }, [items, sortColumn, sortDirection, columns])
+            if (aVal < bVal) return -1 * dir;
+            if (aVal > bVal) return 1 * dir;
+            return 0;
+        });
+    }, [items, sortColumn, sortDirection, columns]);
     return (
         <Table
+            layout="fixed"
             aria-label="Data Table"
             sortDescriptor={sortColumn
                 ? { column: String(sortColumn), direction: sortDirection }
                 : undefined}
             onSortChange={(descriptor) => {
-                setSortColumn(descriptor.column as keyof T)
-                setSortDirection(descriptor.direction as "ascending" | "descending")
+                setSortColumn(descriptor.column as keyof T);
+                setSortDirection(descriptor.direction as "ascending" | "descending");
             }}
             className={className}
+            bottomContent={page && pages && (
+                <div className="flex justify-center">
+                    <Pagination
+                        page={page}
+                        total={pages}
+                        onChange={onChange}
+                    />
+                </div>
+
+            )
+            }
         >
 
             {/* COLUMNS */}
@@ -82,9 +100,9 @@ export const GenericTable = <T extends { id: string | number }>({
                                     <TableCell key={String(col.key)} className={col.className?.(item)}>
                                         {col.renderVirtual?.(item)}
                                     </TableCell>
-                                )
+                                );
                             }
-                            const value = item[col.key as keyof T]
+                            const value = item[col.key as keyof T];
 
                             return (
                                 <TableCell
@@ -93,11 +111,11 @@ export const GenericTable = <T extends { id: string | number }>({
                                 >
                                     {col.render ? col.render(value, item) : String(value)}
                                 </TableCell>
-                            )
+                            );
                         })}
                     </TableRow>
                 )}
             </TableBody>
         </Table >
-    )
-}
+    );
+};

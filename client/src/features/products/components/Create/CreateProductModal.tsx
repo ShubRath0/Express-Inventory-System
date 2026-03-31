@@ -1,31 +1,21 @@
-import { CreateProductForm, type ProductFormData } from './CreateProductForm'
 import { GenericModal } from "@/components";
+import { CreateProductForm } from "@/features/products/components/Create/CreateProductForm";
+import { useModalActions, useProductActions } from "@/features/products/hooks";
 
-type ProductModalProps = {
-    isOpen: boolean
-    onOpenChange: (isOpen: boolean) => void
-    onSubmit: (data: ProductFormData) => void
-}
+export const CreateProductModal = () => {
 
-export const CreateProductModal = ({
-    isOpen,
-    onOpenChange,
-    onSubmit
-}: ProductModalProps) => {
+    const { activeModal, closeModal } = useModalActions();
+    const { onCreateProduct } = useProductActions();
+
     return (
         <GenericModal
             title="Create a Product"
-            isOpen={isOpen}
-            onOpenChange={onOpenChange}
+            isOpen={activeModal === 'create'}
+            onOpenChange={closeModal}
         >
-            {(onClose) => (
-                <CreateProductForm
-                    onSubmit={(data) => {
-                        onSubmit(data);
-                        onClose();
-                    }}
-                />
+            {() => (
+                <CreateProductForm onSubmit={onCreateProduct} />
             )}
         </GenericModal>
-    )
-}
+    );
+};

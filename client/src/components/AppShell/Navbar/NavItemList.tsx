@@ -1,6 +1,10 @@
-import type { NavbarProps } from "./NavbarProps";
 import { Bell, Settings, User } from "lucide-react";
 
+export interface NavbarProps {
+  key: string;
+  href: string;
+  icon?: React.ReactNode;
+}
 export const Items: NavbarProps[] = [
     {
         key: "notifications",

@@ -1,48 +1,43 @@
-import { Button, useDisclosure } from "@heroui/react";
-import { useCreateProduct } from "@/features/products/hooks/useProducts";
-import { CreateProductModal } from "./CreateProductModal";
-import { useToast } from "@/hooks/useToast";
-import type { Category, PostProduct } from "@/features/products/api/products.types";
-import type { ProductFormData } from "./CreateProductForm";
+import { useModalActions } from "@/features/products/hooks";
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/react";
+import { Plus, Upload } from "lucide-react";
+import type { Key } from "react";
 
-export const CreateProductBtn = () => {
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const createMutation = useCreateProduct();
-    const toast = useToast();
+interface CreateProductBtnProps {
+    onCsvClick: () => void;
+}
 
-    const onSubmit = async (data: ProductFormData) => {
-        const newProduct: PostProduct = {
-            name: data.name,
-            category: data.category as Category,
-            stock: data.stock,
-            lowStockThreshold: data.lowStockThreshold,
-            price: data.price
-        };
+export const CreateProductBtn = ({ onCsvClick }: CreateProductBtnProps) => {
+    const { openModal } = useModalActions();
 
-        toast.promise(createMutation.mutateAsync(newProduct), {
-            loading: "Creating product...",
-            success: "Product created!",
-            error: "Product could not be created."
-        });
+    const onAction = (key: Key) => {
+        switch (key) {
+            case 'create':
+                openModal('create');
+                break;
+            case 'csv':
+                onCsvClick();
+                break;
+        }
     };
 
     return (
-        <>
-            <Button
-                color="default"
-                variant="solid"
-                radius="sm"
-                onPress={onOpen}
-                size="lg"
-            >
-                Add Item
-            </Button>
-
-            <CreateProductModal
-                isOpen={isOpen}
-                onOpenChange={onOpenChange}
-                onSubmit={onSubmit}
-            />
-        </>
+        <Dropdown>
+            <DropdownTrigger>
+                <Button
+                    color="primary"
+                    variant="solid"
+                    radius="sm"
+                    size="lg"
+                    startContent={<Plus />}
+                >
+                    Add Item
+                </Button>
+            </DropdownTrigger>
+            <DropdownMenu onAction={onAction}>
+                <DropdownItem key="create" startContent={<Plus />}>Create</DropdownItem>
+                <DropdownItem key="csv" startContent={<Upload />}>Upload CSV</DropdownItem>
+            </DropdownMenu>
+        </Dropdown>
     );
 };

@@ -1,31 +1,21 @@
 import { GenericModal } from "@/components";
-import { UpdateStockForm, type UpdateStockFormData } from '../../components';
+import { UpdateStockForm } from "@/features/products/components/Update/UpdateStockForm";
+import { useModalActions, useProductActions } from "@/features/products/hooks";
 
-type UpdateStockModalProps = {
-    isOpen: boolean
-    onOpenChange: (isOpen: boolean) => void
-    onSubmit: (data: UpdateStockFormData) => void
-}
+export const UpdateStockModal = () => {
 
-export const UpdateStockModal = ({
-    isOpen,
-    onOpenChange,
-    onSubmit
-}: UpdateStockModalProps) => {
+    const { activeModal, closeModal } = useModalActions();
+    const { onUpdateStock } = useProductActions();
+
     return (
         <GenericModal
-            title="Add Stock"
-            isOpen={isOpen}
-            onOpenChange={onOpenChange}
+            title="Modify Stock"
+            isOpen={activeModal === 'update'}
+            onOpenChange={closeModal}
         >
-            {(onClose) => (
-                <UpdateStockForm
-                    onSubmit={(data) => {
-                        onSubmit(data);
-                        onClose();
-                    }}
-                />
+            {() => (
+                <UpdateStockForm onSubmit={onUpdateStock} />
             )}
         </GenericModal>
-    )
-}
+    );
+};

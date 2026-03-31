@@ -1,5 +1,5 @@
-import { Providers, TopProviders } from "./providers";
-import { AppRoutes } from "./routes";
+import { Providers, TopProviders } from './providers';
+import { AppRoutes } from './routes';
 
 export const App = () => {
     return (
@@ -9,6 +9,6 @@ export const App = () => {
             </Providers>
         </TopProviders>
     );
-}
+};
 
 export default App;

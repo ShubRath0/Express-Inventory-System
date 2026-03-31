@@ -1,5 +1,5 @@
-import toast from "react-hot-toast";
 import { useCallback } from "react";
+import toast from "react-hot-toast";
 
 export const useToast = () => {
     const success = useCallback((msg: string) => toast.success(msg), []);
@@ -8,7 +8,7 @@ export const useToast = () => {
     const promise = useCallback(
         <T,>(
             promise: Promise<T>,
-            msgs: { loading: string; success: string; error: string }
+            msgs: { loading: string; success: string; error: string; }
         ) => {
             return toast.promise(
                 promise,
@@ -20,8 +20,8 @@ export const useToast = () => {
                 {
                     style: {
                         borderRadius: '8px',
-                        background: '#333',
-                        color: '#fff',
+                        background: 'var(--color-card)',
+                        color: 'var(--color-foreground)',
                     },
                 }
             );

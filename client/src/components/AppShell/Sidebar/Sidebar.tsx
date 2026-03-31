@@ -27,6 +27,7 @@ export const Sidebar = () => {
                     startContent={item.startContent}
                     onClick={() => toggleIsExpanded(item.key)}
                     textValue={item.label}
+                    
                 >
                     {item.label}
                 </ListboxItem>
