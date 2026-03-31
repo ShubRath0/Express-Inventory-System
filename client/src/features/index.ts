@@ -1,2 +1,3 @@
-export * from './products'
-export * from './Login'
+export * from './Login';
+export * from './products';
+export * from './purchases';

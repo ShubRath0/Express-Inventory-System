@@ -1,9 +1,10 @@
 import type { RootState } from "@/app/Store";
 import { type ColumnDef, GenericTable } from "@/components";
 import type { Product } from "@/features/products/api";
-import { useFilteredInventory, useModalActions } from "@/features/products/hooks";
+import { useFilteredInventory } from "@/features/products/hooks";
 import { setSortColumn, setSortDirection } from "@/features/products/state";
 import { usePagination } from "@/hooks";
+import { useModalActions } from "@/hooks/useModalActions";
 import { Button } from "@heroui/react";
 import { motion } from "framer-motion";
 import { Delete, PackageSearch } from "lucide-react";
@@ -90,6 +91,7 @@ export const ProductTable = () => {
                 sortDirection={sortDirection}
                 setSortColumn={(col) => dispatch(setSortColumn(col))}
                 setSortDirection={(dir) => dispatch(setSortDirection(dir))}
+                getRowKey={(item) => item.id}
                 page={page}
                 pages={totalPages}
                 onChange={(page) => setPage(page)}

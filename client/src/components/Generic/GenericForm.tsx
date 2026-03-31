@@ -1,27 +1,27 @@
-import { Button, Form, Input, Select, SelectItem } from "@heroui/react"
-import React from "react"
+import { Button, Form, Input, Select, SelectItem } from "@heroui/react";
+import React from "react";
 
 export type GenericFormProps<T> = {
-  fields: FormField<T>[];
-  onSubmit: (values: T) => void;
-  submitText?: string;
-  submitColor?:
+    fields: FormField<T>[];
+    onSubmit: (values: T) => void;
+    submitText?: string;
+    submitColor?:
     | "danger"
     | "default"
     | "primary"
     | "secondary"
     | "success"
     | "warning";
-  children?: (values: T) => React.ReactNode;
+    children?: (values: T) => React.ReactNode;
 };
 
 export type FormField<T> = {
-  key: keyof T;
-  label: string;
-  placeholder?: string;
-  type: "text" | "number" | "select" | "email";
-  required?: boolean;
-  options?: { value: string; label: string }[];
+    key: keyof T;
+    label: string;
+    placeholder?: string;
+    type: "text" | "number" | "select" | "email";
+    required?: boolean;
+    options?: { value: string; label: string; }[];
 };
 
 export const GenericForm = <T extends Record<string, any>>({
@@ -31,19 +31,21 @@ export const GenericForm = <T extends Record<string, any>>({
     submitColor,
     children,
 }: GenericFormProps<T>) => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
 
-    const values = {} as T;
-    fields.forEach((field) => {
-      let value: any = formData.get(field.key as string);
-      if (field.type == "number") value = Number(value);
-      values[field.key] = value;
-    });
+        const values = {} as T;
+        fields.forEach((field) => {
+            if (!field.key) return;
 
-    onSubmit(values);
-  };
+            let value: any = formData.get(field.key as string);
+            if (field.type == "number") value = Number(value);
+            values[field.key] = value;
+        });
+
+        onSubmit(values);
+    };
 
     const renderField = (field: FormField<T>) => {
         return (
@@ -65,8 +67,8 @@ export const GenericForm = <T extends Record<string, any>>({
                     />
                 )}
             </div>
-        )
-    }
+        );
+    };
 
     const [values, setValues] = React.useState<T>({} as T);
 
@@ -84,15 +86,15 @@ export const GenericForm = <T extends Record<string, any>>({
 
             {typeof children === 'function' ? children(values) : children}
 
-      <Button
-        type="submit"
-        color={submitColor}
-        size="lg"
-        variant="shadow"
-        className="w-full"
-      >
-        {submitText}
-      </Button>
-    </Form>
-  );
+            <Button
+                type="submit"
+                color={submitColor}
+                size="lg"
+                variant="shadow"
+                className="w-full"
+            >
+                {submitText}
+            </Button>
+        </Form>
+    );
 };

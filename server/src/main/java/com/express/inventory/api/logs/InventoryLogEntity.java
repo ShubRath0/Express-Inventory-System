@@ -1,7 +1,6 @@
 package com.express.inventory.api.logs;
 
 import java.math.BigDecimal;
-import java.security.Timestamp;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -18,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,6 +28,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "inventory_logs")
 public class InventoryLogEntity {
 
     @Id
@@ -38,7 +39,9 @@ public class InventoryLogEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
 
-    private BigDecimal stockChange;
+    private BigDecimal initialStock;
+    private BigDecimal finalStock;
+    private BigDecimal adjustmentQuantity;
 
     @Enumerated(EnumType.STRING)
     private InventoryActionType actionType;
@@ -46,8 +49,5 @@ public class InventoryLogEntity {
     private String note;
 
     @CreationTimestamp
-    private LocalDateTime changedAt;
-
-    @CreationTimestamp
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 }

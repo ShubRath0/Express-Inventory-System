@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UpdateProductRequest {
-    private Integer id;
     private String name;
     private String productType;
     private BigDecimal stock;

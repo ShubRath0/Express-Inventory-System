@@ -13,7 +13,7 @@ export type ColumnDef<T> = {
     sortAccessor?: (item: T) => string | number;
 };
 
-export type GenericTableProps<T extends { id: string | number; }> = {
+export type GenericTableProps<T> = {
     items: T[],
     columns: ColumnDef<T>[],
     className?: string,
@@ -24,11 +24,13 @@ export type GenericTableProps<T extends { id: string | number; }> = {
     page?: number,
     pages?: number,
     onChange?: (page: number) => void,
+    getRowKey: (item: T) => string | number,
 };
 
-export const GenericTable = <T extends { id: string | number; }>({
+export const GenericTable = <T,>({
     items,
     columns,
+    getRowKey,
     className,
     sortColumn,
     sortDirection,
@@ -92,7 +94,7 @@ export const GenericTable = <T extends { id: string | number; }>({
             {/* BODY */}
             <TableBody items={sortedItems} emptyContent="No data found">
                 {(item) => (
-                    <TableRow key={item.id}>
+                    <TableRow key={getRowKey(item)}>
                         {columns.map((col) => {
 
                             if (col.virtual) {

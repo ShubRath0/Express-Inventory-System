@@ -17,6 +17,7 @@ import com.express.inventory.api.logs.InventoryLogRepository;
 import com.express.inventory.api.logs.enums.InventoryActionType;
 import com.express.inventory.api.products.dto.request.CreateProductRequest;
 import com.express.inventory.api.products.dto.request.UpdateProductRequest;
+import com.express.inventory.api.products.dto.request.UpdateStockRequest;
 import com.express.inventory.api.products.exception.ProductNotFoundException;
 import com.express.inventory.utility.Utilities;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -97,12 +98,14 @@ public class ProductService {
         }
     }
 
+    // Delete every product (TESTING)
     @Transactional
     public void deleteAllProducts() {
         productRepository.deleteAll();
     }
 
     // Stock Changes and Log Creation
+    @Transactional
     public void updateStock(Integer productId, BigDecimal stockChange, InventoryActionType actionType, String note) {
 
         ProductEntity product = productRepository.findById(productId)
@@ -116,10 +119,33 @@ public class ProductService {
         // Create log
         InventoryLogEntity log = new InventoryLogEntity();
         log.setProduct(product);
-        log.setStockChange(stockChange);
+        log.setAdjustmentQuantity(stockChange);
         log.setActionType(actionType);
         log.setNote(note);
 
         inventoryLogRepository.save(log);
+    }
+
+    @Transactional
+    public ProductEntity updateStock(Integer productId, UpdateStockRequest request) {
+        ProductEntity product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException());
+
+        BigDecimal finalStock = product.getStock().add(request.stock());
+
+        InventoryLogEntity log = InventoryLogEntity.builder()
+                .product(product)
+                .initialStock(product.getStock())
+                .finalStock(finalStock)
+                .adjustmentQuantity(request.stock())
+                .note(request.reason())
+                .actionType(InventoryActionType.ADJUSMENT)
+                .build();
+
+        product.setStock(finalStock);
+        productRepository.save(product);
+        inventoryLogRepository.save(log);
+
+        return product;
     }
 }

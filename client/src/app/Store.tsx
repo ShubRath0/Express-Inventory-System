@@ -1,10 +1,12 @@
 import filterReducer from '@/features/products/state/filterSlice';
-import modalReducer from '@/features/products/state/modalSlice';
+import purchaseOrderFilterSlice from '@/features/purchases/state/filterSlice';
+import modalReducer from '@/state/modalSlice';
 import { configureStore } from "@reduxjs/toolkit";
 
 export const store = configureStore({
     reducer: {
         filters: filterReducer,
+        purchaseFilters: purchaseOrderFilterSlice,
         modals: modalReducer
     }
 });

@@ -1,6 +1,7 @@
 import { GenericModal } from "@/components";
 import { UpdateStockForm } from "@/features/products/components/Update/UpdateStockForm";
-import { useModalActions, useProductActions } from "@/features/products/hooks";
+import { useProductActions } from "@/features/products/hooks";
+import { useModalActions } from "@/hooks/useModalActions";
 
 export const UpdateStockModal = () => {
 

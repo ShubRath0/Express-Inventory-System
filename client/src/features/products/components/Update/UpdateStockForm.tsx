@@ -1,18 +1,12 @@
 import { type FormField, GenericForm } from "@/components";
-import type { ModifyStockRequest, Product } from "@/features/products/api";
-import { useModalActions } from "@/features/products/hooks";
+import type { ModifyStockRequest } from "@/features/products/api";
+import { useModalActions } from "@/hooks/useModalActions";
 import { Chip } from "@heroui/react";
 
 
 const STOCK_REASONS = ["Spoilage", "Miscount", "Damaged", "Testing", "Yield Loss", "Found"] as const;
-type StockReason = (typeof STOCK_REASONS)[number];
 
-interface UpdateStockFields extends Product {
-    reason: StockReason | null;
-    adjustmentAmount: number;
-}
-
-const productFields: FormField<UpdateStockFields>[] = [
+const productFields: FormField<ModifyStockRequest>[] = [
     {
         key: "stock",
         label: "Adjustment",
@@ -34,7 +28,7 @@ export type ModifyStockForm = {
 
 export const UpdateStockForm = ({ onSubmit }: ModifyStockForm) => {
 
-    const { selectedProduct } = useModalActions();
+    const { activeData } = useModalActions();
 
     return (
         <GenericForm
@@ -46,10 +40,10 @@ export const UpdateStockForm = ({ onSubmit }: ModifyStockForm) => {
             {(values) => (
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-default-500">
-                        <span>Current: {selectedProduct?.stock || 0}</span>
+                        <span>Current: {activeData?.stock || 0}</span>
                         <span className="text-default-300">→</span>
                         <span className="font-bold text-default-900">
-                            {(selectedProduct?.stock || 0) + (Number(values.stock) || 0)}
+                            {(activeData?.stock || 0) + (Number(values.stock) || 0)}
                         </span>
                     </div>
 
