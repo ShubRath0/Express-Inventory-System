@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.express.inventory.api.products.dto.request.CreateProductRequest;
+import com.express.inventory.api.products.dto.request.GetFilteredRequest;
 import com.express.inventory.api.products.dto.request.UpdateProductRequest;
 import com.express.inventory.api.products.dto.request.UpdateStockRequest;
 import com.express.inventory.common.dto.ApiResponse;
@@ -91,5 +92,11 @@ public class ProductController {
     public ResponseEntity<ApiResponse<Void>> deleteAllproducts() {
         productService.deleteAllProducts();
         return ApiResponse.success(HttpStatus.OK, "All products have been deleted!", null);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<ApiResponse<List<ProductEntity>>> filterProducts(GetFilteredRequest request) {
+        List<ProductEntity> filteredProducts = productService.filterProducts(request);
+        return ApiResponse.success(HttpStatus.OK, "Products retrieved successfully!", filteredProducts);
     }
 }

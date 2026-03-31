@@ -16,6 +16,7 @@ import com.express.inventory.api.logs.InventoryLogEntity;
 import com.express.inventory.api.logs.InventoryLogRepository;
 import com.express.inventory.api.logs.enums.InventoryActionType;
 import com.express.inventory.api.products.dto.request.CreateProductRequest;
+import com.express.inventory.api.products.dto.request.GetFilteredRequest;
 import com.express.inventory.api.products.dto.request.UpdateProductRequest;
 import com.express.inventory.api.products.dto.request.UpdateStockRequest;
 import com.express.inventory.api.products.exception.ProductNotFoundException;
@@ -126,6 +127,7 @@ public class ProductService {
         inventoryLogRepository.save(log);
     }
 
+    // Update stock using a DTO
     @Transactional
     public ProductEntity updateStock(Integer productId, UpdateStockRequest request) {
         ProductEntity product = productRepository.findById(productId)
@@ -147,5 +149,34 @@ public class ProductService {
         inventoryLogRepository.save(log);
 
         return product;
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductEntity> filterProducts(GetFilteredRequest request) {
+        List<ProductEntity> products = (request.category() != null && !request.category().isBlank())
+                ? productRepository.findByCategory(request.category())
+                : productRepository.findAll();
+
+        if (request.stockStatus() == null) {
+            return products;
+        }
+
+        return products.stream()
+                .filter(product -> {
+                    BigDecimal stock = product.getStock();
+                    BigDecimal lowStockThreshold = product.getLowStockThreshold();
+
+                    if (stock == null) {
+                        return false;
+                    }
+
+                    return switch (request.stockStatus()) {
+                        case NO_STOCK -> stock.compareTo(BigDecimal.ZERO) == 0;
+                        case LOW_STOCK -> lowStockThreshold != null && stock.compareTo(BigDecimal.ZERO) > 0
+                                && stock.compareTo(lowStockThreshold) <= 0;
+                        case ABOVE_THRESHOLD -> lowStockThreshold != null && stock.compareTo(lowStockThreshold) > 0;
+                    };
+                })
+                .toList();
     }
 }
