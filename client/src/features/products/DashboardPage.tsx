@@ -1,4 +1,4 @@
-import { Loading, ProductStatsBanner, ScrollContainer, Section, SectionContainer } from "@/components";
+import { Loading, ProductStatsBanner, ScrollContainer, Section, SectionContainer, SectionHeader } from "@/components";
 import { HealthChart, ProfitChart, StockChart } from "@/features/products/components/Charts";
 import { useProducts } from "@/features/products/hooks";
 import { Divider } from "@heroui/react";
@@ -24,6 +24,8 @@ export const DashboardPage = () => {
 
     return (
         <ScrollContainer>
+
+            <SectionHeader title="Dashboard" />
 
             {/* KPIs */}
             <motion.div

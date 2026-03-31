@@ -1,11 +1,11 @@
+import { useModalActions } from "@/hooks/useModalActions";
 import { useToast } from "@/hooks/useToast";
 import { useCallback } from "react";
 import type { Category, CreateProductRequest, ModifyStockRequest } from "../api";
-import { useModalActions } from "./useModalActions";
 import { useCreateProduct, useDeleteEverything, useDeleteProduct, useUpdateStock, useUploadCsv } from "./useProducts";
 
 export const useProductActions = () => {
-    const { selectedProduct, closeModal } = useModalActions();
+    const { closeModal, activeData } = useModalActions();
 
     const updateStockMutation = useUpdateStock();
     const createProductMutation = useCreateProduct();
@@ -15,15 +15,15 @@ export const useProductActions = () => {
     const toast = useToast();
 
     const onUpdateStock = useCallback(async (data: ModifyStockRequest) => {
-        if (!selectedProduct) return;
-        const newData = { ...data, id: selectedProduct?.id };
+        if (!activeData) return;
+        const newData = { ...data, id: activeData?.id };
         await toast.promise(updateStockMutation.mutateAsync(newData), {
             loading: "Updating product...",
             success: "Product updated!",
             error: "Product could not be updated."
         });
         closeModal();
-    }, [updateStockMutation, selectedProduct, toast, closeModal]);
+    }, [updateStockMutation, activeData, toast, closeModal]);
 
     const onCreateProduct = useCallback(async (data: CreateProductRequest) => {
         const newProduct: CreateProductRequest = {
@@ -43,14 +43,14 @@ export const useProductActions = () => {
     }, [createProductMutation, toast, closeModal]);
 
     const onDeleteProduct = useCallback(async () => {
-        if (!selectedProduct) return;
-        await toast.promise(deleteProductMutation.mutateAsync(selectedProduct.id), {
+        if (!activeData) return;
+        await toast.promise(deleteProductMutation.mutateAsync(activeData.id), {
             loading: "Deleting product...",
             success: "Product deleted!",
             error: "Product could not be deleted."
         });
         closeModal();
-    }, [deleteProductMutation, selectedProduct, toast, closeModal]);
+    }, [deleteProductMutation, activeData, toast, closeModal]);
 
     const onUploadCsv = useCallback(async (file: File) => {
         if (!file) return;

@@ -10,7 +10,8 @@ export interface CreateProductRequest {
 
 export interface ModifyStockRequest {
     id: number,
-    stock: number;
+    stock: number,
+    reason: string,
 }
 
 export interface SearchRequest {

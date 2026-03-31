@@ -1,4 +1,4 @@
-import { useModalActions } from "@/features/products/hooks";
+import { useModalActions } from "@/hooks/useModalActions";
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/react";
 import { Plus, Upload } from "lucide-react";
 import type { Key } from "react";
