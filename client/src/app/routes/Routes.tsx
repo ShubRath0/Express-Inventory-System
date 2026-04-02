@@ -1,6 +1,7 @@
 import { AppShell } from "@/components";
 import {
   DashboardPage,
+  InventorySummaryPage,
   Login,
   ProductInventorySection,
   Reports,
@@ -19,7 +20,10 @@ export const AppRoutes = () => {
           element={<ProductInventorySection />}
         ></Route>
         <Route path="/reports" element={<Reports />}></Route>
-        <Route path="inventory-summary"></Route>
+        <Route
+          path="/inventory-summary"
+          element={<InventorySummaryPage />}
+        ></Route>
         <Route path="/dashboard" element={<DashboardPage />}></Route>
         <Route path="/purchasing"></Route>
         <Route path="/admin"></Route>

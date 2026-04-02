@@ -2,11 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { LoginForm, LoginHeader, LoginFooter } from "./index";
 
 export const Login = () => {
-  const s = useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = (data: any) => {
     console.log("Form submitted with data:", data);
-    s("/dashboard");
+    navigate("/dashboard");
   };
 
   return (
