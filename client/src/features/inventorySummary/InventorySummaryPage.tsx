@@ -1,5 +1,5 @@
 import { Header } from "@/components";
-import { InventoryNav } from "@/features/inventorySummary/components/searchbar";
+import { InventoryNav } from "@/features/inventorySummary/components/inventoryNav";
 import { InventoryTable } from "./components/inventoryTable";
 
 export const InventorySummaryPage = () => {
