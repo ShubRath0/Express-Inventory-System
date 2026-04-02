@@ -1,29 +1,41 @@
 package com.express.inventory.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Username is required")
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @NotBlank(message = "Password is required")
+    @Column(nullable = false)
     private String password;
 
-    // Constructors
+    // Default constructor 
     public User() {}
 
+    //Constructor used in service
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    // Getters and Setters
+    //Full constructor 
+    public User(Long id, String username, String password) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+    }
+
+    //  Getters & Setters
     public Long getId() {
         return id;
     }
