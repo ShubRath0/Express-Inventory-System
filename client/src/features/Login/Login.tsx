@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { LoginForm, LoginHeader, LoginFooter } from "./index";
 
-export const Signin = () => {
+export const Login = () => {
   const s = useNavigate();
 
   const handleSubmit = (data: any) => {
