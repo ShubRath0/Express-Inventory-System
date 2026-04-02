@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +20,8 @@ import com.express.inventory.api.logs.enums.InventoryActionType;
 import com.express.inventory.api.products.dto.request.CreateProductRequest;
 import com.express.inventory.api.products.dto.request.GetFilteredRequest;
 import com.express.inventory.api.products.dto.request.UpdateProductRequest;
+import com.express.inventory.api.products.dto.response.ProductResponse;
+import com.express.inventory.api.products.dto.response.ProductSummaryResponse;
 import com.express.inventory.api.products.exception.ProductNotFoundException;
 import com.express.inventory.utility.Utilities;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -59,6 +63,8 @@ public class ProductService {
     }
 
     // Read Product(s)
+    // first getAllProducts could be changed to private since pagination handles it, 
+    // still here just in case and because of java app test
     @Transactional(readOnly = true)
     public List<ProductEntity> getAllProducts() {
         return productRepository.findAll();
@@ -104,15 +110,17 @@ public class ProductService {
     }
 
     // Stock Changes and Log Creation
+    @Transactional
     public void updateStock(Integer productId, BigDecimal stockChange, InventoryActionType actionType, String note) {
-
         ProductEntity product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException());
 
         // Update stock
-        product.setStock(product.getStock().add(stockChange));
-
-        productRepository.save(product);
+        BigDecimal currentStock = product.getStock() != null 
+            ? product.getStock() 
+            : BigDecimal.ZERO;
+        product.setStock(currentStock.add(stockChange));
+        // productRepository.save(product); <-- not fully required anymore, might delete later
 
         // Create log
         InventoryLogEntity log = new InventoryLogEntity();
@@ -120,10 +128,10 @@ public class ProductService {
         log.setStockChange(stockChange);
         log.setActionType(actionType);
         log.setNote(note);
-
         inventoryLogRepository.save(log);
     }
 
+    // Filter Products
     @Transactional(readOnly = true)
     public List<ProductEntity> filterProducts(GetFilteredRequest request) {
         List<ProductEntity> products = (request.category() != null && !request.category().isBlank())
@@ -151,5 +159,58 @@ public class ProductService {
                     };
                 })
                 .toList();
+    }
+
+    // Pagination
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(this::mapToResponse);
+    }
+
+    @Transactional
+    private ProductResponse mapToResponse(ProductEntity product) {
+        return new ProductResponse(
+            product.getId(),
+            product.getName(),
+            product.getCategory(),
+            product.getPrice(),
+            product.getStock(),
+            product.getLowStockThreshold()
+        );
+    }
+
+    // Product Summary
+    @Transactional(readOnly = true)
+    public ProductSummaryResponse getProductSummary() {
+        List<ProductEntity> products = productRepository.findAll();
+        long totalProducts = products.size();
+        BigDecimal totalStock = BigDecimal.ZERO;
+        BigDecimal totalUnitPrice = BigDecimal.ZERO;
+        BigDecimal totalInventoryValue = BigDecimal.ZERO;
+
+        // Enhanced for loop || For-each loop
+        for (ProductEntity product : products) {
+            BigDecimal stock = product.getStock() != null 
+                    ? product.getStock() 
+                    : BigDecimal.ZERO;
+
+            BigDecimal price = product.getPrice() != null 
+                    ? product.getPrice() 
+                    : BigDecimal.ZERO;
+
+            totalStock = totalStock.add(stock);
+            totalUnitPrice = totalUnitPrice.add(price);
+
+            // total inventory value = price * stock
+            totalInventoryValue = totalInventoryValue.add(price.multiply(stock));
+        }
+
+        return new ProductSummaryResponse(
+            totalProducts,
+            totalStock,
+            totalUnitPrice,
+            totalInventoryValue
+        );
     }
 }
