@@ -2,6 +2,9 @@ package com.express.inventory.api.products;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.express.inventory.api.products.dto.request.CreateProductRequest;
 import com.express.inventory.api.products.dto.request.GetFilteredRequest;
 import com.express.inventory.api.products.dto.request.UpdateProductRequest;
+import com.express.inventory.api.products.dto.response.ProductResponse;
+import com.express.inventory.api.products.dto.response.ProductSummaryResponse;
 import com.express.inventory.common.dto.ApiResponse;
 
 import jakarta.validation.Valid;
@@ -52,15 +57,16 @@ public class ProductController {
     public ResponseEntity<ApiResponse<List<ProductEntity>>> getAllProducts() {
         return ApiResponse.success(HttpStatus.OK, "Products retreived successfully!", productService.getAllProducts());
     }
+    
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ProductEntity>> getProductById(@PathVariable Integer id) {
-        return ApiResponse.success(HttpStatus.OK, "Product retreived successfully!", productService.getProductById(id));
+        return ApiResponse.success(HttpStatus.OK, "Product retrieved successfully!", productService.getProductById(id));
     }
 
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<ProductEntity>>> searchProduct(@RequestParam String keyword) {
-        return ApiResponse.success(HttpStatus.OK, "Products retreived successfully!",
+        return ApiResponse.success(HttpStatus.OK, "Products retrieved successfully!",
                 productService.searchProduct(keyword));
     }
 
@@ -85,9 +91,28 @@ public class ProductController {
         return ApiResponse.success(HttpStatus.OK, "All products have been deleted!", null);
     }
 
+    // Filter Products
     @GetMapping("/filter")
     public ResponseEntity<ApiResponse<List<ProductEntity>>> filterProducts(GetFilteredRequest request) {
         List<ProductEntity> filteredProducts = productService.filterProducts(request);
         return ApiResponse.success(HttpStatus.OK, "Products retrieved successfully!", filteredProducts);
+    }
+
+    // Pagination
+    @GetMapping("/pagination")
+    public ResponseEntity<ApiResponse<Page<ProductResponse>>> getAllProducts(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductResponse> products = productService.getAllProducts(pageable);
+        return ApiResponse.success(HttpStatus.OK, "Products retrieved successfully!", products);
+    }
+
+    // Product Summary
+    @GetMapping("/summary")
+    public ResponseEntity<ApiResponse<ProductSummaryResponse>> getProductSummary() {
+        ProductSummaryResponse summary = productService.getProductSummary();
+        return ApiResponse.success(HttpStatus.OK, "Product summary retrieved successfully!", summary);
     }
 }
