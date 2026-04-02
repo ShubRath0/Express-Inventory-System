@@ -63,7 +63,8 @@ public class ProductService {
     }
 
     // Read Product(s)
-    // first getAllProducts could be changed to private since pagination handles it, still here just in case
+    // first getAllProducts could be changed to private since pagination handles it, 
+    // still here just in case and because of java app test
     @Transactional(readOnly = true)
     public List<ProductEntity> getAllProducts() {
         return productRepository.findAll();
