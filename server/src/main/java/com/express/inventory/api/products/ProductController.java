@@ -53,12 +53,11 @@ public class ProductController {
     }
 
     // Read Product
-    /*
     @GetMapping
     public ResponseEntity<ApiResponse<List<ProductEntity>>> getAllProducts() {
         return ApiResponse.success(HttpStatus.OK, "Products retreived successfully!", productService.getAllProducts());
     }
-    */
+    
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ProductEntity>> getProductById(@PathVariable Integer id) {
@@ -100,7 +99,7 @@ public class ProductController {
     }
 
     // Pagination
-    @GetMapping
+    @GetMapping("/pagination")
     public ResponseEntity<ApiResponse<Page<ProductResponse>>> getAllProducts(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size
