@@ -4,6 +4,7 @@ export default {
     output: {
       target: "./src/api/__generated__/types.ts",
       client: "react-query",
+      httpClient: "axios",
       mode: "tags-split",
       unwrapResponseData: true,
       override: {

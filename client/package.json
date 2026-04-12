@@ -4,11 +4,12 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
+        "generate": "orval",
         "dev": "vite",
+        "prebuild": "npm run generate",
         "build": "tsc -b && vite build",
         "lint": "eslint .",
-        "preview": "vite preview",
-        "generate": "orval"
+        "preview": "vite preview"
     },
     "dependencies": {
         "@heroui/react": "^2.8.8",
