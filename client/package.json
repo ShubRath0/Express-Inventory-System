@@ -6,7 +6,6 @@
     "scripts": {
         "generate": "orval",
         "dev": "vite",
-        "prebuild": "npm run generate",
         "build": "tsc -b && vite build",
         "lint": "eslint .",
         "preview": "vite preview"
