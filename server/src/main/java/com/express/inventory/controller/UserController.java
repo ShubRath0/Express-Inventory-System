@@ -1,100 +1,165 @@
 package com.express.inventory.controller;
 
-import com.express.inventory.models.User;
+import com.express.inventory.dto.common.ApiResponse;
+import com.express.inventory.dto.users.requests.CreateUserRequest;
+import com.express.inventory.dto.users.requests.UpdateUserRequest;
+import com.express.inventory.dto.users.requests.PartialUpdateUserRequest;
+import com.express.inventory.dto.users.responses.UserResponse;
 import com.express.inventory.service.UserService;
+
+import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-
     private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    //  all users
+    // ---------------------------------------------------------
+    // GET ALL USERS
+    // ---------------------------------------------------------
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<ResponseEntity<ApiResponse<List<UserResponse>>>> getAllUsers() {
         logger.info("Fetching all users...");
-        List<User> users = userService.getAllUsers();
-        if (users.isEmpty()) {
-            logger.warn("No users found in the system.");
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(users);
+
+        List<UserResponse> users = userService.getAllUsers();
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        HttpStatus.OK,
+                        "Users retrieved successfully",
+                        users
+                )
+        );
     }
 
-    //  user by ID
+    // ---------------------------------------------------------
+    // GET USER BY ID
+    // ---------------------------------------------------------
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<ResponseEntity<ApiResponse<UserResponse>>> getUserById(@PathVariable Long id) {
         logger.info("Fetching user with ID: {}", id);
-        Optional<User> user = userService.getUserById(id);
-        return user.map(ResponseEntity::ok)
-                   .orElseGet(() -> {
-                       logger.error("User with ID {} not found", id);
-                       return ResponseEntity.notFound().build();
-                   });
+
+        UserResponse user = userService.getUserById(id);
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        HttpStatus.OK,
+                        "User retrieved successfully!",
+                        user
+                )
+        );
     }
 
-    // create user
+    // ---------------------------------------------------------
+    // CREATE USER
+    // ---------------------------------------------------------
     @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestParam String username,
-                                           @RequestParam String password) {
-        logger.info("Creating user with username: {}", username);
-        User newUser = userService.createUser(username, password);
-        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+    public ResponseEntity<ResponseEntity<ApiResponse<UserResponse>>> createUser(
+            @Valid @RequestBody CreateUserRequest request) {
+
+        logger.info("Creating user with username: {}", request.username());
+
+        UserResponse newUser = userService.createUser(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(
+                        HttpStatus.CREATED,
+                        "User created successfully!",
+                        newUser
+                ));
     }
 
-    //  update user
+    // ---------------------------------------------------------
+    // FULL UPDATE
+    // ---------------------------------------------------------
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id,
-                                           @RequestParam(required = false) String username,
-                                           @RequestParam(required = false) String password) {
+    public ResponseEntity<ResponseEntity<ApiResponse<UserResponse>>> updateUser(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateUserRequest request) {
+
         logger.info("Updating user with ID: {}", id);
-        try {
-            User updatedUser = userService.updateUser(id, username, password);
-            return ResponseEntity.ok(updatedUser);
-        } catch (RuntimeException e) {
-            logger.error("Error updating user: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+
+        UserResponse updated = userService.updateUser(id, request);
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        HttpStatus.OK,
+                        "User updated successfully!",
+                        updated
+                )
+        );
     }
 
-    // partial update 
+    // ---------------------------------------------------------
+    // PARTIAL UPDATE
+    // ---------------------------------------------------------
     @PatchMapping("/{id}")
-    public ResponseEntity<User> partialUpdateUser(@PathVariable Long id,
-                                                  @RequestBody User partialUser) {
-        logger.debug("Partially updating user ID: {}", id);
-        User updated = userService.partialUpdateUser(id, partialUser);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<ResponseEntity<ApiResponse<UserResponse>>> partialUpdateUser(
+            @PathVariable Long id,
+            @RequestBody PartialUpdateUserRequest request) {
+
+        logger.info("Partially updating user with ID: {}", id);
+
+        UserResponse updated = userService.partialUpdateUser(id, request);
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        HttpStatus.OK,
+                        "User partially updated successfully!",
+                        updated
+                )
+        );
     }
 
-    // DELETE user
+    // ---------------------------------------------------------
+    // DELETE USER
+    // ---------------------------------------------------------
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<ResponseEntity<ApiResponse<Object>>> deleteUser(@PathVariable Long id) {
         logger.warn("Deleting user with ID: {}", id);
-        String response = userService.deleteUser(id);
-        return ResponseEntity.ok(response);
+
+        userService.deleteUser(id);
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        HttpStatus.OK,
+                        "User deleted successfully!",
+                        null
+                )
+        );
     }
 
-    // Find user by username
+    // ---------------------------------------------------------
+    // SEARCH USER BY USERNAME
+
     @GetMapping("/search")
-    public ResponseEntity<Optional<User>> findUserByUsername(@RequestParam String username) {
-        logger.info("Searching user with username: {}", username);
-        Optional<User> user = userService.findByUsername(username);
-        return user.isPresent() ? ResponseEntity.ok(user)
-                : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity<ResponseEntity<ApiResponse<List<UserResponse>>>> findUserByUsername(
+            @RequestParam String username) {
+
+        logger.info("Searching for users with username containing: {}", username);
+
+        List<UserResponse> users = userService.findByUsernameContainingIgnoreCase(username);
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        HttpStatus.OK,
+                        "Search completed successfully!",
+                        users
+                )
+        );
     }
 }

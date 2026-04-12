@@ -1,79 +1,98 @@
 package com.express.inventory.service;
 
-import com.express.inventory.models.User;
+import com.express.inventory.dto.users.requests.CreateUserRequest;
+import com.express.inventory.dto.users.requests.UpdateUserRequest;
+import com.express.inventory.dto.users.requests.PartialUpdateUserRequest;
+import com.express.inventory.dto.users.responses.UserResponse;
+import com.express.inventory.models.UserEntity;
+import com.express.inventory.exceptions.UserNotFoundException;
 import com.express.inventory.repositories.UserRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    //  Create a new user
-    public User createUser(String username, String password) {
-        User user = new User(username, password);
-        return userRepository.save(user);
+    // CREATE
+    public UserResponse createUser(CreateUserRequest request) {
+        UserEntity user = UserEntity.builder()
+                .username(request.username())
+                .password(request.password())
+                .build();
+
+        UserEntity saved = userRepository.save(user);
+        return UserResponse.from(saved);
     }
 
-    //  Get all users
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    // GET ALL
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(UserResponse::from)
+                .toList();
     }
 
-    //  Get user by ID
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    // GET BY ID
+    public UserResponse getUserById(Long id) {
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
+
+        return UserResponse.from(user);
     }
 
-    //  Update user (FULL update, but allows null-safe fields)
-    public User updateUser(Long id, String username, String password) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
 
-        if (username != null) {
-            user.setUsername(username);
+    // FULL UPDATE
+    public UserResponse updateUser(Long id, UpdateUserRequest request) {
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
+
+        user.setUsername(request.username());
+        user.setPassword(request.password());
+
+        UserEntity updated = userRepository.save(user);
+        return UserResponse.from(updated);
+    }
+
+
+    // PARTIAL UPDATE
+    public UserResponse partialUpdateUser(Long id, PartialUpdateUserRequest request) {
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
+
+        if (request.username() != null) {
+            user.setUsername(request.username());
         }
-        if (password != null) {
-            user.setPassword(password);
+
+        if (request.password() != null) {
+            user.setPassword(request.password());
         }
 
-        return userRepository.save(user);
+        UserEntity updated = userRepository.save(user);
+        return UserResponse.from(updated);
     }
 
-    //  Partial update
-    public User partialUpdateUser(Long id, User partialUser) {
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
-
-        if (partialUser.getUsername() != null) {
-            existingUser.setUsername(partialUser.getUsername());
-        }
-
-        if (partialUser.getPassword() != null) {
-            existingUser.setPassword(partialUser.getPassword());
-        }
-
-        return userRepository.save(existingUser);
-    }
-
-    // Delete user
-    public String deleteUser(Long id) {
+    // DELETE
+    public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new RuntimeException("User not found with ID: " + id);
+            throw new UserNotFoundException("User not found with ID: " + id);
         }
 
         userRepository.deleteById(id);
-        return "User deleted successfully with ID: " + id;
     }
 
-    // Find user by username
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+
+    // SEARCH BY USERNAME
+    public List<UserResponse> findByUsernameContainingIgnoreCase(String username) {
+        return userRepository.findByUsernameContainingIgnoreCase(username)
+                .stream()
+                .map(UserResponse::from)
+                .toList();
     }
 }
