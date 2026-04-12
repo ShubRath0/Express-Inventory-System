@@ -22,4 +22,6 @@ dist-ssr
 *.sln
 *.sw?
 
+src/api/__generated__
+
 .env

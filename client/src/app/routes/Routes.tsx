@@ -1,4 +1,5 @@
 import { AppShell } from "@/components";
+import { OrvalTest } from "@/components/OrvalTest";
 import {
   DashboardPage,
   InventorySummaryPage,
@@ -15,6 +16,7 @@ export const AppRoutes = () => {
       {/* Anything outside of the route will NOT have an AppShell (login / anything else) */}
       <Route element={<AppShell />}>
         <Route path="/" element={<></>}></Route>
+        <Route path="/orval" element={<OrvalTest />}></Route>
         <Route
           path="/inventory/products"
           element={<ProductInventorySection />}
