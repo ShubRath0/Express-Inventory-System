@@ -31,7 +31,6 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final InventoryLogRepository inventoryLogRepository;
 
-    // Create Product
     @Transactional
     public ProductEntity createProduct(CreateProductRequest request) {
         ProductEntity product = ProductEntity.builder()
@@ -39,8 +38,20 @@ public class ProductService {
                 .category(request.category())
                 .lowStockThreshold(request.lowStockThreshold())
                 .price(request.price())
-                .stock(request.stock()).build();
-        return productRepository.save(product);
+                .stock(request.stock())
+                .build();
+
+        ProductEntity savedProduct = productRepository.save(product);
+
+        InventoryLogEntity log = new InventoryLogEntity();
+        log.setProduct(savedProduct);
+        log.setStockChange(savedProduct.getStock() != null ? savedProduct.getStock() : BigDecimal.ZERO);
+        log.setActionType(InventoryActionType.ADD);
+        log.setNote("Product created");
+
+        inventoryLogRepository.save(log);
+
+        return savedProduct;
     }
 
     @Transactional
@@ -52,13 +63,24 @@ public class ProductService {
                     .build()
                     .parse();
 
-            return productRepository.saveAll(products);
+            List<ProductEntity> savedProducts = productRepository.saveAll(products);
+
+            for (ProductEntity product : savedProducts) {
+                InventoryLogEntity log = new InventoryLogEntity();
+                log.setProduct(product);
+                log.setStockChange(product.getStock() != null ? product.getStock() : BigDecimal.ZERO);
+                log.setActionType(InventoryActionType.ADD);
+                log.setNote("Product imported from CSV");
+
+                inventoryLogRepository.save(log);
+            }
+
+            return savedProducts;
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse CSV file: " + e.getMessage());
         }
     }
 
-    // Read Product(s)
     @Transactional(readOnly = true)
     public List<ProductEntity> getAllProducts() {
         return productRepository.findAll();
@@ -80,15 +102,40 @@ public class ProductService {
         return product.get();
     }
 
-    // Update Product
     @Transactional
     public ProductEntity updateProduct(UpdateProductRequest request, Integer id) {
         ProductEntity product = getProductById(id);
+
+        BigDecimal oldStock = product.getStock() != null ? product.getStock() : BigDecimal.ZERO;
+
         Utilities.copyNonNullProperties(request, product);
-        return productRepository.save(product);
+        ProductEntity updatedProduct = productRepository.save(product);
+
+        BigDecimal newStock = updatedProduct.getStock() != null ? updatedProduct.getStock() : BigDecimal.ZERO;
+
+        InventoryLogEntity log = new InventoryLogEntity();
+        log.setProduct(updatedProduct);
+        log.setStockChange(newStock.subtract(oldStock));
+        log.setActionType(InventoryActionType.UPDATE);
+        log.setNote("Product updated");
+
+        inventoryLogRepository.save(log);
+
+        if (updatedProduct.getLowStockThreshold() != null
+                && newStock.compareTo(updatedProduct.getLowStockThreshold()) <= 0) {
+
+            InventoryLogEntity lowStockLog = new InventoryLogEntity();
+            lowStockLog.setProduct(updatedProduct);
+            lowStockLog.setStockChange(BigDecimal.ZERO);
+            lowStockLog.setActionType(InventoryActionType.UPDATE);
+            lowStockLog.setNote("Product is low in stock");
+
+            inventoryLogRepository.save(lowStockLog);
+        }
+
+        return updatedProduct;
     }
 
-    // Delete Product
     @Transactional
     public void deleteProduct(Integer id) {
         try {
@@ -103,25 +150,37 @@ public class ProductService {
         productRepository.deleteAll();
     }
 
-    // Stock Changes and Log Creation
+    @Transactional
     public void updateStock(Integer productId, BigDecimal stockChange, InventoryActionType actionType, String note) {
-
         ProductEntity product = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException());
+                .orElseThrow(ProductNotFoundException::new);
 
-        // Update stock
-        product.setStock(product.getStock().add(stockChange));
+        BigDecimal currentStock = product.getStock() != null ? product.getStock() : BigDecimal.ZERO;
+        BigDecimal change = stockChange != null ? stockChange : BigDecimal.ZERO;
 
-        productRepository.save(product);
+        product.setStock(currentStock.add(change));
+        ProductEntity updatedProduct = productRepository.save(product);
 
-        // Create log
         InventoryLogEntity log = new InventoryLogEntity();
-        log.setProduct(product);
-        log.setStockChange(stockChange);
+        log.setProduct(updatedProduct);
+        log.setStockChange(change);
         log.setActionType(actionType);
         log.setNote(note);
 
         inventoryLogRepository.save(log);
+
+        if (updatedProduct.getLowStockThreshold() != null
+                && updatedProduct.getStock() != null
+                && updatedProduct.getStock().compareTo(updatedProduct.getLowStockThreshold()) <= 0) {
+
+            InventoryLogEntity lowStockLog = new InventoryLogEntity();
+            lowStockLog.setProduct(updatedProduct);
+            lowStockLog.setStockChange(BigDecimal.ZERO);
+            lowStockLog.setActionType(InventoryActionType.UPDATE);
+            lowStockLog.setNote("Product is low in stock");
+
+            inventoryLogRepository.save(lowStockLog);
+        }
     }
 
     @Transactional(readOnly = true)
@@ -145,9 +204,11 @@ public class ProductService {
 
                     return switch (request.stockStatus()) {
                         case NO_STOCK -> stock.compareTo(BigDecimal.ZERO) == 0;
-                        case LOW_STOCK -> lowStockThreshold != null && stock.compareTo(BigDecimal.ZERO) > 0
+                        case LOW_STOCK -> lowStockThreshold != null
+                                && stock.compareTo(BigDecimal.ZERO) > 0
                                 && stock.compareTo(lowStockThreshold) <= 0;
-                        case ABOVE_THRESHOLD -> lowStockThreshold != null && stock.compareTo(lowStockThreshold) > 0;
+                        case ABOVE_THRESHOLD -> lowStockThreshold != null
+                                && stock.compareTo(lowStockThreshold) > 0;
                     };
                 })
                 .toList();

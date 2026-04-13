@@ -3,6 +3,7 @@ import { LogOut } from "lucide-react";
 import { ThemeSwitcher } from "@/components/ui";
 import { GenericNavbar, GenericBreadCrumbs } from "@/components";
 import { Items } from "./NavItemList";
+import NotificationsDropdown from "./NotificationDropdown";
 
 export const AppNavbar = () => {
   return (
@@ -10,8 +11,11 @@ export const AppNavbar = () => {
       <GenericNavbar.Start>
         <GenericBreadCrumbs />
       </GenericNavbar.Start>
+
       <GenericNavbar.End>
         <ThemeSwitcher />
+
+      <NotificationsDropdown /> 
         {Items.map((item) => (
           <Link key={item.key} href={item.href}>
             {item.icon}

@@ -1,11 +1,6 @@
 package com.express.inventory.api.logs;
 
 import java.math.BigDecimal;
-import java.security.Timestamp;
-import java.time.LocalDateTime;
-
-import org.hibernate.annotations.CreationTimestamp;
-
 import com.express.inventory.api.logs.enums.InventoryActionType;
 import com.express.inventory.api.products.ProductEntity;
 
@@ -34,7 +29,7 @@ public class InventoryLogEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer logId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
 
@@ -44,10 +39,4 @@ public class InventoryLogEntity {
     private InventoryActionType actionType;
 
     private String note;
-
-    @CreationTimestamp
-    private LocalDateTime changedAt;
-
-    @CreationTimestamp
-    private Timestamp createdAt;
 }

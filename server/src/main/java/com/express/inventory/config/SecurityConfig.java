@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -32,35 +31,26 @@ public class SecurityConfig {
      * @return the built SecurityFilterChain.
      * @throws Exception If an error occurs during configuration.
      */
-    @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                // Disables CSRF as we are using stateless JWT tokens in the future
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                // Define access rules for endpoints
-                .authorizeHttpRequests(auth -> auth
+@Bean
+SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/api/notifications", "/api/notifications/**").permitAll()
+            .requestMatchers(
+                "/api/v1/**",
+                "/v3/api-docs",
+                "/swagger-ui.html",
+                "/swagger-ui/**",
+                "/v3/api-docs/**",
+                "/swagger-resources/**"
+            ).permitAll()
+            .anyRequest().authenticated()
+        );
 
-                        // Allow public access to authentication API and Documentation
-                        .requestMatchers(
-                                "/api/v1/**",
-                                "/v3/api-docs",
-                                "/swagger-ui.html",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/swagger-resources/**",
-                                "/actuator/health")
-                        .permitAll()
-
-                        // All other requests require a valid JWT
-                        .anyRequest().authenticated())
-
-                // Set session management to STATELESS; no session cookies will be created or
-                // used.
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        return http.build();
-    }
+    return http.build();
+}
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {

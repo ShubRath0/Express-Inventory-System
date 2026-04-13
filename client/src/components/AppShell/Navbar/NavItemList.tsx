@@ -7,11 +7,6 @@ export interface NavbarProps {
 }
 export const Items: NavbarProps[] = [
     {
-        key: "notifications",
-        href: "notifications",
-        icon: <Bell size={18} color="var(--color-navbar-foreground)" />,
-    },
-    {
         key: "user",
         href: "user",
         icon: <User size={18} color="var(--color-navbar-foreground)" />,
