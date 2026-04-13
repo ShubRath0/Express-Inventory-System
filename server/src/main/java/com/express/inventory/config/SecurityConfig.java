@@ -31,23 +31,29 @@ public class SecurityConfig {
      * @return the built SecurityFilterChain.
      * @throws Exception If an error occurs during configuration.
      */
-@Bean
-SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-        .csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/notifications", "/api/notifications/**").permitAll()
-            .requestMatchers(
-                "/api/v1/**",
-                "/v3/api-docs",
-                "/swagger-ui.html",
-                "/swagger-ui/**",
-                "/v3/api-docs/**",
-                "/swagger-resources/**"
-            ).permitAll()
-            .anyRequest().authenticated()
-        );
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                // Disables CSRF as we are using stateless JWT tokens in the future
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
+                // Define access rules for endpoints
+                .authorizeHttpRequests(auth -> auth
+
+                        // Allow public access to authentication API and Documentation
+                        .requestMatchers(
+                                "/api/v1/**",
+                                "/api/**",
+                                "/v3/api-docs",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/actuator/health")
+                        .permitAll()
+
+                        // All other requests require a valid JWT
+                        .anyRequest().authenticated())
 
     return http.build();
 }
