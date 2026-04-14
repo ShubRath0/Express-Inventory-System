@@ -1,4 +1,4 @@
-package com.express.inventory.utility;
+package com.express.inventory.common.utility;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
@@ -12,7 +12,8 @@ public class Utilities {
         java.util.Set<String> nullProps = new java.util.HashSet<>();
         for (java.beans.PropertyDescriptor pd : pds) {
             Object value = srcWrap.getPropertyValue(pd.getName());
-            if (value == null) nullProps.add(pd.getName());
+            if (value == null)
+                nullProps.add(pd.getName());
         }
 
         BeanUtils.copyProperties(src, target, nullProps.toArray(new String[0]));

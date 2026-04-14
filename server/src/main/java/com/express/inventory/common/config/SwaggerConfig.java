@@ -1,4 +1,4 @@
-package com.express.inventory.config;
+package com.express.inventory.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

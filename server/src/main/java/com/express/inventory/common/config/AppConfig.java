@@ -1,7 +1,10 @@
-package com.express.inventory.config;
+package com.express.inventory.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -11,7 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * passwords.
  */
 @Configuration
-public class PasswordConfig {
+@EnableJpaAuditing
+public class AppConfig {
 
     /**
      * Defines the password encoding algorithm for the application.
@@ -22,5 +26,10 @@ public class PasswordConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 }
