@@ -104,16 +104,16 @@ export interface SortObject {
 
 export interface PageableObject {
   offset?: number;
-  paged?: boolean;
-  pageNumber?: number;
   pageSize?: number;
+  pageNumber?: number;
   sort?: SortObject;
+  paged?: boolean;
   unpaged?: boolean;
 }
 
 export interface PageProductResponse {
-  totalPages?: number;
   totalElements?: number;
+  totalPages?: number;
   size?: number;
   content?: ProductResponse[];
   number?: number;
@@ -148,6 +148,24 @@ export const GetFilteredRequestStockStatus = {
 export interface GetFilteredRequest {
   category?: string;
   stockStatus?: GetFilteredRequestStockStatus;
+}
+
+export interface NotificationDTO {
+  id?: number;
+  message?: string;
+  type?: string;
+  isRead?: boolean;
+}
+
+export interface ApiResponseListNotificationDTO {
+  timestamp?: string;
+  status?: number;
+  success?: boolean;
+  error?: string;
+  message?: string;
+  path?: string;
+  data?: NotificationDTO[];
+  fieldErrors?: FieldError[];
 }
 
 export type InventoryLogEntityActionType = typeof InventoryLogEntityActionType[keyof typeof InventoryLogEntityActionType];

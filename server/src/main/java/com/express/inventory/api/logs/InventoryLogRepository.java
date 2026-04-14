@@ -12,4 +12,6 @@ public interface InventoryLogRepository extends JpaRepository<InventoryLogEntity
 
     // An optional addition to display latest logs first
     List<InventoryLogEntity> findByProductOrderByCreatedAtDesc(ProductEntity product);
+
+    List<InventoryLogEntity> findTop5ByOrderByLogIdDesc();
 }
