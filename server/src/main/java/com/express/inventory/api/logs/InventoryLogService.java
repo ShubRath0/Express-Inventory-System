@@ -12,11 +12,11 @@ public class InventoryLogService {
 
     private final InventoryLogRepository inventoryLogRepository;
 
-    public List<InventoryLogEntity> getAllLogs() {
+    public List<InventoryTransaction> getAllLogs() {
         return inventoryLogRepository.findAll();
     }
 
-    public List<InventoryLogEntity> getRecentLogs() {
-        return inventoryLogRepository.findTop5ByOrderByLogIdDesc();
+    public List<InventoryTransaction> getRecentLogs() {
+        return inventoryLogRepository.findTop5ByOrderByIdDesc();
     }
 }

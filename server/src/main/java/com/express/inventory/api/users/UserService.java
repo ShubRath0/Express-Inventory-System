@@ -2,13 +2,13 @@ package com.express.inventory.api.users;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.express.inventory.api.users.dto.request.CreateUserRequest;
-import com.express.inventory.api.users.dto.request.PartialUpdateUserRequest;
 import com.express.inventory.api.users.dto.request.UpdateUserRequest;
-import com.express.inventory.api.users.dto.response.UserResponse;
+import com.express.inventory.api.users.dto.response.UserDTO;
 import com.express.inventory.common.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -20,62 +20,40 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     // CREATE
     @Transactional
-    public UserResponse createUser(CreateUserRequest request) {
-        User user = User.builder()
-                .username(request.username())
-                .password(request.password())
-                .build();
-
-        User saved = userRepository.save(user);
-        return UserResponse.from(saved);
+    public UserDTO createUser(CreateUserRequest request) {
+        User user = userMapper.toUser(request);
+        user.setPassword(passwordEncoder.encode(request.password()));
+        return userMapper.toDTO(userRepository.save(user));
     }
 
     // GET ALL
     @Transactional(readOnly = true)
-    public List<UserResponse> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(UserResponse::from)
+                .map(userMapper::toDTO)
                 .toList();
     }
 
     // GET BY ID
     @Transactional(readOnly = true)
-    public UserResponse getUser(Long id) {
+    public UserDTO getUser(Long id) {
         User user = getUserById(id);
-        return UserResponse.from(user);
+        return userMapper.toDTO(user);
     }
 
     // FULL UPDATE
     @Transactional
-    public UserResponse updateUser(Long id, UpdateUserRequest request) {
+    public UserDTO updateUser(Long id, UpdateUserRequest request) {
         User user = getUserById(id);
-
-        user.setUsername(request.username());
-        user.setPassword(request.password());
-
+        userMapper.updateUserFromRequest(request, user);
         User updated = userRepository.save(user);
-        return UserResponse.from(updated);
-    }
-
-    // PARTIAL UPDATE
-    @Transactional
-    public UserResponse partialUpdateUser(Long id, PartialUpdateUserRequest request) {
-        User user = getUserById(id);
-
-        if (request.username() != null) {
-            user.setUsername(request.username());
-        }
-
-        if (request.password() != null) {
-            user.setPassword(request.password());
-        }
-
-        User updated = userRepository.save(user);
-        return UserResponse.from(updated);
+        return userMapper.toDTO(updated);
     }
 
     // DELETE
@@ -85,21 +63,28 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    // SEARCH BY USERNAME
+    // SEARCH BY EMAIL
     @Transactional(readOnly = true)
-    public List<UserResponse> findByUsernameContainingIgnoreCase(String username) {
-        return userRepository.findByUsernameContainingIgnoreCase(username)
+    public List<UserDTO> findByEmail(String email) {
+        return userRepository.findByEmailContainingIgnoreCase(email)
                 .stream()
-                .map(UserResponse::from)
+                .map(userMapper::toDTO)
+                .toList();
+    }
+
+    // SEARCH BY NAME
+    @Transactional(readOnly = true)
+    public List<UserDTO> findByName(String name) {
+        return userRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(name, name)
+                .stream()
+                .map(userMapper::toDTO)
                 .toList();
     }
 
     // HELPERS
 
-    public User getUserById(Long id) {
-        User user = userRepository.findById(id)
+    private User getUserById(Long id) {
+        return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(User.class, id));
-
-        return user;
     }
 }

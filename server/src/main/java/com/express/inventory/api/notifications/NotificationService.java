@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.express.inventory.api.logs.InventoryLogEntity;
 import com.express.inventory.api.logs.InventoryLogService;
+import com.express.inventory.api.logs.InventoryTransaction;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,13 +19,13 @@ public class NotificationService {
         return inventoryLogService.getRecentLogs()
                 .stream()
                 .map(log -> {
-                    NotificationDTO dto = new NotificationDTO(log.getLogId(), buildMessage(log), "INFO", false);
+                    NotificationDTO dto = new NotificationDTO(log.getId(), buildMessage(log), "INFO", false);
                     return dto;
                 })
                 .toList();
     }
 
-    private String buildMessage(InventoryLogEntity log) {
+    private String buildMessage(InventoryTransaction log) {
         String action = log.getActionType().name();
         String note = log.getNote();
 

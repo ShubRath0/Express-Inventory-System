@@ -8,21 +8,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.express.inventory.api.users.dto.request.CreateUserRequest;
-import com.express.inventory.api.users.dto.request.PartialUpdateUserRequest;
 import com.express.inventory.api.users.dto.request.UpdateUserRequest;
-import com.express.inventory.api.users.dto.response.UserResponse;
+import com.express.inventory.api.users.dto.request.UserSearchRequest;
+import com.express.inventory.api.users.dto.response.UserDTO;
 import com.express.inventory.common.dto.ApiResponse;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -37,10 +36,10 @@ public class UserController {
     // GET ALL USERS
     // ---------------------------------------------------------
     @GetMapping
-    public ResponseEntity<ApiResponse<List<UserResponse>>> getAllUsers() {
+    public ResponseEntity<ApiResponse<List<UserDTO>>> getAllUsers() {
         logger.info("Fetching all users...");
 
-        List<UserResponse> users = userService.getAllUsers();
+        List<UserDTO> users = userService.getAllUsers();
         return ApiResponse.success(HttpStatus.OK, "Users retrieved successfully", users);
     }
 
@@ -48,23 +47,25 @@ public class UserController {
     // GET USER BY ID
     // ---------------------------------------------------------
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<UserDTO>> getUserById(@PathVariable Long id) {
         logger.info("Fetching user with ID: {}", id);
 
-        UserResponse user = userService.getUser(id);
+        UserDTO user = userService.getUser(id);
         return ApiResponse.success(HttpStatus.OK, "User retrieved successfully!", user);
     }
 
     // ---------------------------------------------------------
     // CREATE USER
     // ---------------------------------------------------------
+    // @PreAuthorize("hasRole('ADMIN')")
+    // We will PreAuthorize once we get JWT's established
     @PostMapping
-    public ResponseEntity<ApiResponse<UserResponse>> createUser(
+    public ResponseEntity<ApiResponse<UserDTO>> createUser(
             @Valid @RequestBody CreateUserRequest request) {
 
-        logger.info("Creating user with username: {}", request.username());
+        logger.info("Creating user with name: {}", request.firstName());
 
-        UserResponse newUser = userService.createUser(request);
+        UserDTO newUser = userService.createUser(request);
         return ApiResponse.success(HttpStatus.CREATED, "User created successfully!", newUser);
     }
 
@@ -72,28 +73,14 @@ public class UserController {
     // FULL UPDATE
     // ---------------------------------------------------------
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<UserResponse>> updateUser(
+    public ResponseEntity<ApiResponse<UserDTO>> updateUser(
             @PathVariable Long id,
             @Valid @RequestBody UpdateUserRequest request) {
 
         logger.info("Updating user with ID: {}", id);
 
-        UserResponse updated = userService.updateUser(id, request);
+        UserDTO updated = userService.updateUser(id, request);
         return ApiResponse.success(HttpStatus.OK, "User updated successfully!", updated);
-    }
-
-    // ---------------------------------------------------------
-    // PARTIAL UPDATE
-    // ---------------------------------------------------------
-    @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse<UserResponse>> partialUpdateUser(
-            @PathVariable Long id,
-            @RequestBody PartialUpdateUserRequest request) {
-
-        logger.info("Partially updating user with ID: {}", id);
-
-        UserResponse updated = userService.partialUpdateUser(id, request);
-        return ApiResponse.success(HttpStatus.OK, "User partially updated successfully!", updated);
     }
 
     // ---------------------------------------------------------
@@ -112,11 +99,14 @@ public class UserController {
     // ---------------------------------------------------------
 
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<UserResponse>>> findUserByUsername(
-            @RequestParam String username) {
-        logger.info("Searching for users with username containing: {}", username);
-
-        List<UserResponse> users = userService.findByUsernameContainingIgnoreCase(username);
-        return ApiResponse.success(HttpStatus.OK, "Search completed successfully!", users);
+    public ResponseEntity<ApiResponse<List<UserDTO>>> searchUsers(
+            @ModelAttribute UserSearchRequest request) {
+        if (request.email() != null) {
+            return ApiResponse.success(HttpStatus.OK, "Search completed", userService.findByEmail(request.email()));
+        }
+        if (request.name() != null) {
+            return ApiResponse.success(HttpStatus.OK, "Search completed", userService.findByName(request.name()));
+        }
+        return ApiResponse.success(HttpStatus.OK, "Search completed", userService.getAllUsers());
     }
 }

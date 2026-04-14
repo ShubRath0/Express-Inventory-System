@@ -4,14 +4,14 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.express.inventory.api.products.ProductEntity;
+import com.express.inventory.api.products.Product;
 
-public interface InventoryLogRepository extends JpaRepository<InventoryLogEntity, Integer> {
+public interface InventoryLogRepository extends JpaRepository<InventoryTransaction, Integer> {
     // Get logs for a specific product
-    List<InventoryLogEntity> findByProduct(ProductEntity product);
+    List<InventoryTransaction> findByProduct(Product product);
 
     // An optional addition to display latest logs first
-    List<InventoryLogEntity> findByProductOrderByCreatedAtDesc(ProductEntity product);
+    List<InventoryTransaction> findByProductOrderByCreatedAtDesc(Product product);
 
-    List<InventoryLogEntity> findTop5ByOrderByLogIdDesc();
+    List<InventoryTransaction> findTop5ByOrderByIdDesc();
 }

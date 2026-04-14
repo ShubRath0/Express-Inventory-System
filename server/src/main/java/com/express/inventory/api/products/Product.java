@@ -1,10 +1,8 @@
 package com.express.inventory.api.products;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 
-import org.hibernate.annotations.CreationTimestamp;
-
+import com.express.inventory.common.classes.Auditable;
 import com.opencsv.bean.CsvBindByName;
 
 import jakarta.persistence.Entity;
@@ -13,17 +11,19 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Data
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "products")
-public class ProductEntity {
+public class Product extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,10 +43,4 @@ public class ProductEntity {
 
     @CsvBindByName(column = "Price")
     private BigDecimal price;
-
-    @CreationTimestamp
-    private Timestamp createdAt;
-
-    @CreationTimestamp
-    private Timestamp lastUpdated;
 }
