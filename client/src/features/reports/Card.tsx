@@ -1,4 +1,5 @@
-import { Card, Link } from "@heroui/react";
+import { GenericCard } from "@/components/Generic/GenericCard";
+import { Button, Link } from "@heroui/react";
 import { FileDiff, Layers2, PackageCheck, UserCheck } from "lucide-react";
 
 interface CardProps {
@@ -17,46 +18,39 @@ const CardItems: CardProps[] = [
     href: "/inventory-summary",
   },
   {
-    icon: <FileDiff color="var(--blue)" />,
+    icon: <FileDiff className="text-green-500" />,
     title: "Audit",
     description:
       "Tracks changes made to inventory items, including additions, deletions, and modifications, along with timestamps and user information.",
   },
   {
-    icon: <UserCheck color="var(--blue)" />,
+    icon: <UserCheck className="text-yellow-500" />,
     title: "User Activity",
     description:
       "Monitors and reports on user activities within the system, including login attempts, actions performed, and access patterns.",
   },
   {
-    icon: <PackageCheck color="var(--blue)" />,
+    icon: <PackageCheck className="text-purple-500" />,
     title: "Purchase Orders",
     description:
       "Generates reports on purchase orders, including order status, supplier information, and order history.",
   },
 ];
 
-const CardItem = (props: CardProps) => {
+export const ReportsList = () => {
   return (
-    <Card className="w-full h-full flex items-start gap-4 p-4 hover:scale-[1.02] transition-transform cursor-pointer">
-      {props.icon}
-      <div className="flex flex-col gap-1">
-        <h3 className="font-bold text-lg">{props.title}</h3>
-        <p className="text-sm text-muted-foreground">{props.description}</p>
-      </div>
-    </Card>
-  );
-};
-
-export const CardList = () => {
-  return (
-    <div className="grid grid-cols-2 gap-4 w-260 h-120">
+    <div className="grid grid-cols-3 gap-4 w-full h-120" aria-label="Reports List">
       {CardItems.map((item, index) => (
         <Link href={item.href} key={index}>
-          <CardItem
-            icon={item.icon}
-            title={item.title}
-            description={item.description}
+          <GenericCard 
+            className="h-full hover:scale-105 transition-transform duration-300"
+            header={<div className="flex flex-col gap-3 justify-center">{item.icon}<span className="font-semibold">{item.title}</span></div>}
+            body={
+              <div className="flex flex-col gap-1">
+                <p className="text-sm text-muted-foreground">{item.description}</p>
+              </div>
+            }
+            footer={<Button color="primary" size="sm" radius="full">View</Button>}
           />
         </Link>
       ))}

@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.express.inventory.api.logs.InventoryLogEntity;
 import com.express.inventory.api.logs.InventoryLogRepository;
+import com.express.inventory.api.logs.InventoryTransaction;
 import com.express.inventory.api.logs.enums.InventoryActionType;
 import com.express.inventory.api.products.dto.request.CreateProductRequest;
 import com.express.inventory.api.products.dto.request.GetFilteredRequest;
@@ -23,7 +23,7 @@ import com.express.inventory.api.products.dto.request.UpdateProductRequest;
 import com.express.inventory.api.products.dto.response.ProductResponse;
 import com.express.inventory.api.products.dto.response.ProductSummaryResponse;
 import com.express.inventory.api.products.exception.ProductNotFoundException;
-import com.express.inventory.utility.Utilities;
+import com.express.inventory.common.utility.Utilities;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 import lombok.AllArgsConstructor;
@@ -37,8 +37,8 @@ public class ProductService {
 
     // Create Product
     @Transactional
-    public ProductEntity createProduct(CreateProductRequest request) {
-        ProductEntity product = ProductEntity.builder()
+    public Product createProduct(CreateProductRequest request) {
+        Product product = Product.builder()
                 .name(request.name())
                 .category(request.category())
                 .lowStockThreshold(request.lowStockThreshold())
@@ -48,10 +48,10 @@ public class ProductService {
     }
 
     @Transactional
-    public List<ProductEntity> createProductsFromCsv(MultipartFile file) {
+    public List<Product> createProductsFromCsv(MultipartFile file) {
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-            List<ProductEntity> products = new CsvToBeanBuilder<ProductEntity>(reader)
-                    .withType(ProductEntity.class)
+            List<Product> products = new CsvToBeanBuilder<Product>(reader)
+                    .withType(Product.class)
                     .withIgnoreLeadingWhiteSpace(true)
                     .build()
                     .parse();
@@ -63,21 +63,21 @@ public class ProductService {
     }
 
     // Read Product(s)
-    // first getAllProducts could be changed to private since pagination handles it, 
+    // first getAllProducts could be changed to private since pagination handles it,
     // still here just in case and because of java app test
     @Transactional(readOnly = true)
-    public List<ProductEntity> getAllProducts() {
+    public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public List<ProductEntity> searchProduct(String keyword) {
+    public List<Product> searchProduct(String keyword) {
         return productRepository.findByNameContainingIgnoreCase(keyword);
     }
 
     @Transactional(readOnly = true)
-    public ProductEntity getProductById(Integer id) {
-        Optional<ProductEntity> product = productRepository.findById(id);
+    public Product getProductById(Integer id) {
+        Optional<Product> product = productRepository.findById(id);
 
         if (product.isEmpty()) {
             throw new ProductNotFoundException();
@@ -88,8 +88,8 @@ public class ProductService {
 
     // Update Product
     @Transactional
-    public ProductEntity updateProduct(UpdateProductRequest request, Integer id) {
-        ProductEntity product = getProductById(id);
+    public Product updateProduct(UpdateProductRequest request, Integer id) {
+        Product product = getProductById(id);
         Utilities.copyNonNullProperties(request, product);
         return productRepository.save(product);
     }
@@ -112,18 +112,17 @@ public class ProductService {
     // Stock Changes and Log Creation
     @Transactional
     public void updateStock(Integer productId, BigDecimal stockChange, InventoryActionType actionType, String note) {
-        ProductEntity product = productRepository.findById(productId)
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException());
 
         // Update stock
-        BigDecimal currentStock = product.getStock() != null 
-            ? product.getStock() 
-            : BigDecimal.ZERO;
+        BigDecimal currentStock = product.getStock() != null
+                ? product.getStock()
+                : BigDecimal.ZERO;
         product.setStock(currentStock.add(stockChange));
-        // productRepository.save(product); <-- not fully required anymore, might delete later
 
         // Create log
-        InventoryLogEntity log = new InventoryLogEntity();
+        InventoryTransaction log = new InventoryTransaction();
         log.setProduct(product);
         log.setStockChange(stockChange);
         log.setActionType(actionType);
@@ -133,8 +132,8 @@ public class ProductService {
 
     // Filter Products
     @Transactional(readOnly = true)
-    public List<ProductEntity> filterProducts(GetFilteredRequest request) {
-        List<ProductEntity> products = (request.category() != null && !request.category().isBlank())
+    public List<Product> filterProducts(GetFilteredRequest request) {
+        List<Product> products = (request.category() != null && !request.category().isBlank())
                 ? productRepository.findByCategory(request.category())
                 : productRepository.findAll();
 
@@ -169,34 +168,33 @@ public class ProductService {
     }
 
     @Transactional
-    private ProductResponse mapToResponse(ProductEntity product) {
+    private ProductResponse mapToResponse(Product product) {
         return new ProductResponse(
-            product.getId(),
-            product.getName(),
-            product.getCategory(),
-            product.getPrice(),
-            product.getStock(),
-            product.getLowStockThreshold()
-        );
+                product.getId(),
+                product.getName(),
+                product.getCategory(),
+                product.getPrice(),
+                product.getStock(),
+                product.getLowStockThreshold());
     }
 
     // Product Summary
     @Transactional(readOnly = true)
     public ProductSummaryResponse getProductSummary() {
-        List<ProductEntity> products = productRepository.findAll();
+        List<Product> products = productRepository.findAll();
         long totalProducts = products.size();
         BigDecimal totalStock = BigDecimal.ZERO;
         BigDecimal totalUnitPrice = BigDecimal.ZERO;
         BigDecimal totalInventoryValue = BigDecimal.ZERO;
 
         // Enhanced for loop || For-each loop
-        for (ProductEntity product : products) {
-            BigDecimal stock = product.getStock() != null 
-                    ? product.getStock() 
+        for (Product product : products) {
+            BigDecimal stock = product.getStock() != null
+                    ? product.getStock()
                     : BigDecimal.ZERO;
 
-            BigDecimal price = product.getPrice() != null 
-                    ? product.getPrice() 
+            BigDecimal price = product.getPrice() != null
+                    ? product.getPrice()
                     : BigDecimal.ZERO;
 
             totalStock = totalStock.add(stock);
@@ -207,10 +205,23 @@ public class ProductService {
         }
 
         return new ProductSummaryResponse(
-            totalProducts,
-            totalStock,
-            totalUnitPrice,
-            totalInventoryValue
-        );
+                totalProducts,
+                totalStock,
+                totalUnitPrice,
+                totalInventoryValue);
+    }
+
+    // List Category Name
+    @Transactional(readOnly = true)
+    public List<Product> getAllCategories() {
+        List<Product> products = productRepository.findAllCategories();
+        return products;
+    }
+
+    // List Recently Added Products
+    @Transactional(readOnly = true)
+    public List<Product> getRecentlyAddedProducts() {
+        List<Product> products = productRepository.findTop5ByOrderByCreatedAtDesc();
+        return products;
     }
 }

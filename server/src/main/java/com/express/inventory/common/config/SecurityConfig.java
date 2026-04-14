@@ -1,4 +1,4 @@
-package com.express.inventory.config;
+package com.express.inventory.common.config;
 
 import java.util.Arrays;
 import java.util.List;
