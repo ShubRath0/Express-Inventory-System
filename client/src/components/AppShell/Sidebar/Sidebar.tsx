@@ -27,6 +27,8 @@ export const Sidebar = () => {
                     startContent={item.startContent}
                     onClick={() => toggleIsExpanded(item.key)}
                     textValue={item.label}
+                    variant="solid"
+                    color="primary"
                     
                 >
                     {item.label}
@@ -38,6 +40,7 @@ export const Sidebar = () => {
                                 key={subItem.key}
                                 href={subItem.href}
                                 className={`${subItem.className} text-sidebar-foreground`}
+                                color="primary"
                             >
                                 {subItem.label}
                             </ListboxItem>
