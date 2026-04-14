@@ -5,14 +5,14 @@ export const InventoryNav = () => {
   return (
     <div className="flex flex-row justify-between items-baseline">
       <Input
-        startContent={<Search />}
+        startContent={<Search size={16} />}
         label="Search items"
-        className="w-[340px]"
+        className="w-85"
       />
 
       <div className="flex justify-between gap-1">
         <DateRangePicker variant="bordered" />
-        <Button color="primary" startContent={<Download size={64} />}>
+        <Button color="primary" startContent={<Download className="w-16 h-16" />} variant="shadow" size="md">
           Export
         </Button>
       </div>

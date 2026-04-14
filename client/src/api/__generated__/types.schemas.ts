@@ -172,8 +172,8 @@ export interface ProductResponse {
 
 export interface SortObject {
   empty?: boolean;
-  sorted?: boolean;
   unsorted?: boolean;
+  sorted?: boolean;
 }
 
 export interface PageableObject {
@@ -186,15 +186,15 @@ export interface PageableObject {
 }
 
 export interface PageProductResponse {
-  totalPages?: number;
   totalElements?: number;
+  totalPages?: number;
   size?: number;
   content?: ProductResponse[];
   number?: number;
+  numberOfElements?: number;
   first?: boolean;
   last?: boolean;
   sort?: SortObject;
-  numberOfElements?: number;
   pageable?: PageableObject;
   empty?: boolean;
 }
