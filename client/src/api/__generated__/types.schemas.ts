@@ -172,30 +172,30 @@ export interface ProductResponse {
 
 export interface SortObject {
   empty?: boolean;
-  sorted?: boolean;
   unsorted?: boolean;
+  sorted?: boolean;
 }
 
 export interface PageableObject {
   offset?: number;
-  paged?: boolean;
-  sort?: SortObject;
   pageNumber?: number;
   pageSize?: number;
+  sort?: SortObject;
   unpaged?: boolean;
+  paged?: boolean;
 }
 
 export interface PageProductResponse {
-  totalPages?: number;
   totalElements?: number;
+  totalPages?: number;
   size?: number;
   content?: ProductResponse[];
   number?: number;
   first?: boolean;
   last?: boolean;
-  sort?: SortObject;
   numberOfElements?: number;
   pageable?: PageableObject;
+  sort?: SortObject;
   empty?: boolean;
 }
 
