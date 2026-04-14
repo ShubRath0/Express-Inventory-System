@@ -115,4 +115,18 @@ public class ProductController {
         ProductSummaryResponse summary = productService.getProductSummary();
         return ApiResponse.success(HttpStatus.OK, "Product summary retrieved successfully!", summary);
     }
+
+    // List Category Name
+    @GetMapping("/every_category_name")
+    public ResponseEntity<ApiResponse<List<ProductEntity>>> getAllCategories() {
+        List<ProductEntity> listCategoryName = productService.getAllCategories();
+        return ApiResponse.success(HttpStatus.OK, "Category names retrieved successfully!", listCategoryName);
+    }
+
+    // Get 5 Most Recent Added Products
+    @GetMapping("/recently_added_products")
+    public ResponseEntity<ApiResponse<List<ProductEntity>>> getRecentlyAddedProducts() {
+        List<ProductEntity> listRecentlyAddedProducts = productService.getRecentlyAddedProducts();
+        return ApiResponse.success(HttpStatus.OK, "5 most recently added products retrieved successfully!", listRecentlyAddedProducts);
+    }
 }

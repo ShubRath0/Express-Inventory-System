@@ -120,7 +120,6 @@ public class ProductService {
             ? product.getStock() 
             : BigDecimal.ZERO;
         product.setStock(currentStock.add(stockChange));
-        // productRepository.save(product); <-- not fully required anymore, might delete later
 
         // Create log
         InventoryLogEntity log = new InventoryLogEntity();
@@ -212,5 +211,19 @@ public class ProductService {
             totalUnitPrice,
             totalInventoryValue
         );
+    }
+
+    // List Category Name
+    @Transactional(readOnly = true)
+    public List<ProductEntity> getAllCategories() {
+        List<ProductEntity> products = productRepository.findAllCategories();
+        return products;
+    }
+
+    // List Recently Added Products
+    @Transactional(readOnly = true)
+    public List<ProductEntity> getRecentlyAddedProducts() {
+        List<ProductEntity> products = productRepository.findTop5ByOrderByCreatedAtDesc();
+        return products;
     }
 }
