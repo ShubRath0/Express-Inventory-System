@@ -1,10 +1,12 @@
 import { AppShell } from "@/components";
 import { OrvalTest } from "@/components/OrvalTest";
 import {
+  CreatePurchaseOrderPage,
   DashboardPage,
   InventorySummaryPage,
   Login,
   ProductInventorySection,
+  PurchaseOrdersPage,
   Reports,
 } from "@/features";
 import { Route, Routes } from "react-router-dom";
@@ -26,8 +28,9 @@ export const AppRoutes = () => {
           path="/inventory-summary"
           element={<InventorySummaryPage />}
         ></Route>
+        <Route path="/purchasing" element={<PurchaseOrdersPage />} />
+        <Route path="/purchasing/create" element={<CreatePurchaseOrderPage />} />
         <Route path="/dashboard" element={<DashboardPage />}></Route>
-        <Route path="/purchasing"></Route>
         <Route path="/admin"></Route>
         <Route path="/help"></Route>
         <Route path="/notifications"></Route>

@@ -62,6 +62,48 @@ export interface CreateUserRequest {
   role: CreateUserRequestRole;
 }
 
+export interface PurchaseOrderRecordDTO {
+  productId: number;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface CreatePurchaseOrderRequest {
+  orderStatus: string;
+  orderPrice: number;
+  totalQuantity: number;
+  records: PurchaseOrderRecordDTO[];
+}
+
+export interface Product {
+  createdAt?: string;
+  updatedAt?: string;
+  id?: number;
+  name?: string;
+  category?: string;
+  stock?: number;
+  lowStockThreshold?: number;
+  price?: number;
+}
+
+export interface PurchaseOrderRecord {
+  id?: number;
+  purchaseOrder?: PurchaseOrder;
+  product?: Product;
+  quantity?: number;
+  unitPrice?: number;
+}
+
+export interface PurchaseOrder {
+  purchaseOrderId?: number;
+  records?: PurchaseOrderRecord[];
+  userId?: number;
+  orderStatus?: string;
+  orderPrice?: number;
+  purchaseDate?: string;
+  totalQuantity?: number;
+}
+
 export interface CreateProductRequest {
   name: string;
   category: string;
@@ -90,17 +132,6 @@ export interface ApiResponseProductResponse {
   fieldErrors?: FieldError[];
 }
 
-export interface Product {
-  createdAt?: string;
-  updatedAt?: string;
-  id?: number;
-  name?: string;
-  category?: string;
-  stock?: number;
-  lowStockThreshold?: number;
-  price?: number;
-}
-
 export interface ApiResponseListProduct {
   timestamp?: string;
   status?: number;
@@ -115,16 +146,6 @@ export interface ApiResponseListProduct {
 export interface LoginRequest {
   email?: string;
   password: string;
-}
-
-export interface PurchaseEntity {
-  purchaseId?: number;
-  productId?: number;
-  userId?: number;
-  orderStatus?: string;
-  orderPrice?: number;
-  purchaseDate?: string;
-  quantity?: number;
 }
 
 export interface UpdateProductRequest {
@@ -189,24 +210,24 @@ export interface SortObject {
 
 export interface PageableObject {
   offset?: number;
-  paged?: boolean;
-  unpaged?: boolean;
-  sort?: SortObject;
   pageNumber?: number;
   pageSize?: number;
+  paged?: boolean;
+  sort?: SortObject;
+  unpaged?: boolean;
 }
 
 export interface PageProductResponse {
-  totalElements?: number;
   totalPages?: number;
+  totalElements?: number;
   size?: number;
   content?: ProductResponse[];
   number?: number;
   first?: boolean;
   last?: boolean;
   numberOfElements?: number;
-  sort?: SortObject;
   pageable?: PageableObject;
+  sort?: SortObject;
   empty?: boolean;
 }
 
@@ -311,16 +332,16 @@ export interface AuditLog {
 }
 
 export interface PageAuditLog {
-  totalElements?: number;
   totalPages?: number;
+  totalElements?: number;
   size?: number;
   content?: AuditLog[];
   number?: number;
   first?: boolean;
   last?: boolean;
   numberOfElements?: number;
-  sort?: SortObject;
   pageable?: PageableObject;
+  sort?: SortObject;
   empty?: boolean;
 }
 
