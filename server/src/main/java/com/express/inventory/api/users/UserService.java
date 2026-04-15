@@ -6,9 +6,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.express.inventory.api.audit.enums.Action;
 import com.express.inventory.api.users.dto.request.CreateUserRequest;
 import com.express.inventory.api.users.dto.request.UpdateUserRequest;
 import com.express.inventory.api.users.dto.response.UserDTO;
+import com.express.inventory.common.aspects.audit.Audit;
 import com.express.inventory.common.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class UserService {
 
     // CREATE
     @Transactional
+    @Audit(action = Action.CREATE, entity = User.class)
     public UserDTO createUser(CreateUserRequest request) {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.password()));
@@ -49,6 +52,7 @@ public class UserService {
 
     // FULL UPDATE
     @Transactional
+    @Audit(action = Action.UPDATE, entity = User.class)
     public UserDTO updateUser(Long id, UpdateUserRequest request) {
         User user = getUserById(id);
         userMapper.updateUserFromRequest(request, user);
@@ -58,6 +62,7 @@ public class UserService {
 
     // DELETE
     @Transactional
+    @Audit(action = Action.DELETE, entity = User.class)
     public void deleteUser(Long id) {
         User user = getUserById(id);
         userRepository.delete(user);

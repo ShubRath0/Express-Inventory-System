@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.express.inventory.api.audit.enums.Action;
 import com.express.inventory.api.logs.InventoryLogRepository;
 import com.express.inventory.api.logs.InventoryTransaction;
 import com.express.inventory.api.logs.enums.InventoryActionType;
@@ -23,6 +24,7 @@ import com.express.inventory.api.products.dto.request.UpdateProductRequest;
 import com.express.inventory.api.products.dto.response.ProductResponse;
 import com.express.inventory.api.products.dto.response.ProductSummaryResponse;
 import com.express.inventory.api.products.exception.ProductNotFoundException;
+import com.express.inventory.common.aspects.audit.Audit;
 import com.express.inventory.common.utility.Utilities;
 import com.opencsv.bean.CsvToBeanBuilder;
 
@@ -34,20 +36,23 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final InventoryLogRepository inventoryLogRepository;
+    private final ProductMapper productMapper;
 
     // Create Product
     @Transactional
-    public Product createProduct(CreateProductRequest request) {
+    @Audit(action = Action.CREATE, entity = Product.class)
+    public ProductResponse createProduct(CreateProductRequest request) {
         Product product = Product.builder()
                 .name(request.name())
                 .category(request.category())
                 .lowStockThreshold(request.lowStockThreshold())
                 .price(request.price())
                 .stock(request.stock()).build();
-        return productRepository.save(product);
+        return productMapper.toDTO(productRepository.save(product));
     }
 
     @Transactional
+    @Audit(action = Action.BULK_CREATE, entity = Product.class)
     public List<Product> createProductsFromCsv(MultipartFile file) {
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             List<Product> products = new CsvToBeanBuilder<Product>(reader)
@@ -88,6 +93,7 @@ public class ProductService {
 
     // Update Product
     @Transactional
+    @Audit(action = Action.UPDATE, entity = Product.class)
     public Product updateProduct(UpdateProductRequest request, Integer id) {
         Product product = getProductById(id);
         Utilities.copyNonNullProperties(request, product);
@@ -96,6 +102,7 @@ public class ProductService {
 
     // Delete Product
     @Transactional
+    @Audit(action = Action.DELETE, entity = Product.class)
     public void deleteProduct(Integer id) {
         try {
             productRepository.deleteById(id);
@@ -105,6 +112,7 @@ public class ProductService {
     }
 
     @Transactional
+    @Audit(action = Action.BULK_DELETE, entity = Product.class)
     public void deleteAllProducts() {
         productRepository.deleteAll();
     }
