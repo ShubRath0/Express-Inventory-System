@@ -5,11 +5,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.express.inventory.api.audit.enums.Action;
 import com.express.inventory.api.auth.dto.request.LoginRequest;
 import com.express.inventory.api.users.User;
 import com.express.inventory.api.users.UserMapper;
 import com.express.inventory.api.users.UserRepository;
 import com.express.inventory.api.users.dto.response.UserDTO;
+import com.express.inventory.common.aspects.audit.Audit;
 import com.express.inventory.common.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class AuthService {
     private final UserMapper userMapper;
 
     @Transactional
+    @Audit(action = Action.LOGIN, entity = User.class)
     public UserDTO login(LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(), request.password()));

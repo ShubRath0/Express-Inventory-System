@@ -39,9 +39,9 @@ public class ProductController {
 
     // Create Product
     @PostMapping
-    public ResponseEntity<ApiResponse<Product>> createProduct(
+    public ResponseEntity<ApiResponse<ProductResponse>> createProduct(
             @Valid @RequestBody CreateProductRequest request) {
-        Product createdProduct = productService.createProduct(request);
+        ProductResponse createdProduct = productService.createProduct(request);
         return ApiResponse.success(HttpStatus.CREATED, "Product created successfully!", createdProduct);
     }
 
