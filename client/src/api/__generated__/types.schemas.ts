@@ -191,11 +191,11 @@ export interface PageProductResponse {
   size?: number;
   content?: ProductResponse[];
   number?: number;
+  numberOfElements?: number;
   first?: boolean;
   last?: boolean;
-  numberOfElements?: number;
-  pageable?: PageableObject;
   sort?: SortObject;
+  pageable?: PageableObject;
   empty?: boolean;
 }
 

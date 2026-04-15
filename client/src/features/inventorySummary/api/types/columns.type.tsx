@@ -4,10 +4,12 @@ interface Columns {
 }
 
 export const ColumnsList: Columns[] = [
-  { key: "totalProducts", label: "Total Products" },
-  { key: "totalStock", label: "Total Stock" },
-  { key: "unitPrice", label: "Total Unit Price" },
-  { key: "inventoryPrice", label: "Total Inventory Price" },
+  { key: "name", label: "Product Name" },
+  { key: "category", label: "Category" },
+  { key: "stock", label: "Stock" },
+  { key: "price", label: "Price" },
+  { key: "createdAt", label: "Created At" },
+  { key: "updatedAt", label: "Updated At" },
 ];
 
 
