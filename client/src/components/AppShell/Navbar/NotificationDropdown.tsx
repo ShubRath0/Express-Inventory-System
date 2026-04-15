@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Bell } from "lucide-react";
 
 type NotificationItem = {
   id: number;
@@ -58,7 +59,7 @@ const NotificationDropdown = () => {
           position: "relative",
         }}
       >
-        🔔
+        <Bell size={22} />
         {unreadCount > 0 && (
           <span
             style={{
