@@ -1,10 +1,6 @@
 package com.express.inventory.api.logs;
 
 import java.math.BigDecimal;
-<<<<<<< HEAD:server/src/main/java/com/express/inventory/api/logs/InventoryLogEntity.java
-=======
-
->>>>>>> master:server/src/main/java/com/express/inventory/api/logs/InventoryTransaction.java
 import com.express.inventory.api.logs.enums.InventoryActionType;
 import com.express.inventory.api.products.Product;
 import com.express.inventory.common.classes.Auditable;

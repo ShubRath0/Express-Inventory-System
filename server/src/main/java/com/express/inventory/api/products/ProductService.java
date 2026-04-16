@@ -95,12 +95,6 @@ public class ProductService {
         }
     }
 
-<<<<<<< HEAD
-=======
-    // Read Product(s)
-    // first getAllProducts could be changed to private since pagination handles it,
-    // still here just in case and because of java app test
->>>>>>> master
     @Transactional(readOnly = true)
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -123,17 +117,11 @@ public class ProductService {
     }
 
     @Transactional
-<<<<<<< HEAD
     public ProductEntity updateProduct(UpdateProductRequest request, Integer id) {
         ProductEntity product = getProductById(id);
 
         BigDecimal oldStock = product.getStock() != null ? product.getStock() : BigDecimal.ZERO;
 
-=======
-    @Audit(action = Action.UPDATE, entity = Product.class)
-    public Product updateProduct(UpdateProductRequest request, Integer id) {
-        Product product = getProductById(id);
->>>>>>> master
         Utilities.copyNonNullProperties(request, product);
         ProductEntity updatedProduct = productRepository.save(product);
 

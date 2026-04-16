@@ -1,11 +1,7 @@
 package com.express.inventory.api.logs;
 
-<<<<<<< HEAD
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-=======
-import java.util.List;
->>>>>>> master
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

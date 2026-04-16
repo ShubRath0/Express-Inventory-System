@@ -15,12 +15,8 @@ export const AppNavbar = () => {
 
       <GenericNavbar.End>
         <ThemeSwitcher />
-<<<<<<< HEAD
 
       <NotificationsDropdown /> 
-=======
-        <NotificationDropdown />
->>>>>>> master
         {Items.map((item) => (
           <Link key={item.key} href={item.href}>
             {item.icon}
