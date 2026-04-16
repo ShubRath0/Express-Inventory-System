@@ -12,6 +12,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
+import com.express.inventory.api.products.ProductEntity;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -26,8 +28,10 @@ public class PurchaseOrderRecord {
     @JoinColumn(name = "purchaseOrderId")
     private PurchaseOrder purchaseOrder;
 
-    private Integer product;
-    private Double quantity;
+    @ManyToOne
+    @JoinColumn(name = "productId")
+    private ProductEntity product;
+    private BigDecimal quantity;
     private BigDecimal unitPrice;
 
 }

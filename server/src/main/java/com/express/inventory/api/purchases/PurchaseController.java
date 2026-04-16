@@ -29,6 +29,11 @@ public class PurchaseController {
         return purchaseService.getPurchaseById(id);
     }
 
+    @GetMapping("/product/{id}")
+    public PurchaseOrder getPurchaseOrderByProductId(@PathVariable Integer productId) {
+        return purchaseService.getPurchaseByProductId(productId);
+    }
+
     @PostMapping
     public PurchaseOrder createPurchaseOrder(@RequestBody PurchaseOrder purchase) {
         return purchaseService.createPurchase(purchase);

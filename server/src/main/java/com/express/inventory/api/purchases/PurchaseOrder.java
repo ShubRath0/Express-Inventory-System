@@ -31,6 +31,6 @@ public class PurchaseOrder {
     private String orderStatus;
     private BigDecimal orderPrice;
     private String purchaseDate;
-    private Double totalQuantity;
+    private BigDecimal totalQuantity;
 
 }

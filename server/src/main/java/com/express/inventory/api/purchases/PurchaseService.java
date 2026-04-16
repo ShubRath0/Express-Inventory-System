@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.express.inventory.api.products.ProductEntity;
+import com.express.inventory.api.products.ProductRepository;
+import com.express.inventory.api.products.ProductService;
 import com.express.inventory.api.purchases.dto.CreatePurchaseOrderRequest;
-import com.express.inventory.api.purchases.exception.InvalidPurchaseException;
 import com.express.inventory.api.purchases.exception.PurchaseNotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 public class PurchaseService {
 
     private final PurchaseRepository purchaseRepository;
+    private final ProductRepository productRepository;
+    private final ProductService productService;
 
     public List<PurchaseOrder> getAllPurchases() {
         return purchaseRepository.findAll();
@@ -25,26 +29,27 @@ public class PurchaseService {
                 .orElseThrow(() -> new PurchaseNotFoundException("Purchase not found with id: " + id));
     }
 
+    public List<PurchaseOrder> getPurchaseByProductId(Integer productId) {
+        return purchaseRepository.findPurchaseByProductId(productId)
+                .orElseThrow(() -> new PurchaseNotFoundException("Purchase not found with product id: " + productId));
+    }
+
     public PurchaseOrder createPurchase(CreatePurchaseOrderRequest request) {
         PurchaseOrder purchase = PurchaseOrder.builder()
-                .userId(request.userId())
                 .orderStatus(request.orderStatus())
                 .orderPrice(request.orderPrice())
-                .purchaseDate(request.purchaseDate())
                 .totalQuantity(request.totalQuantity()).build();
-                records(request.records().stream(
-                    record -> PurchaseOrderRecord.builder()
-                        .productId(record.productId())
-                        .quantity(record.quantity())
-                        .price(record.price())
-                        .build()
-                ).toList());
+                List<PurchaseOrderRecord> records = request.records().stream().map(record -> {
+                    ProductEntity product = productService.getProductById(record.productId());
+                    product.setStock(product.getStock().add(record.quantity()));
+                    productRepository.save(product);
+                    return PurchaseOrderRecord.builder()
+                    .product(productService.getProductById(record.productId()))
+                    .quantity(record.quantity())
+                    .unitPrice(record.unitPrice()).build();
+                }).toList();
+                purchase.setRecords(records);
         return purchaseRepository.save(purchase);
-        // if (request.getTotalQuantity() == null || request.getTotalQuantity() <= 0) {
-        //     throw new InvalidPurchaseException("Quantity must be greater than 0");
-        // }
-
-        // return purchaseRepository.save(request);
     }
 
     public void deletePurchase(Integer id) {
