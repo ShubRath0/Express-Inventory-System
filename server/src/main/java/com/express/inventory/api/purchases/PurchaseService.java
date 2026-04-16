@@ -30,8 +30,7 @@ public class PurchaseService {
     }
 
     public List<PurchaseOrder> getPurchaseByProductId(Integer productId) {
-        return purchaseRepository.findPurchaseByProductId(productId)
-                .orElseThrow(() -> new PurchaseNotFoundException("Purchase not found with product id: " + productId));
+        return purchaseRepository.findByRecords_ProductId(productId);
     }
 
     public PurchaseOrder createPurchase(CreatePurchaseOrderRequest request) {
