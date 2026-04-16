@@ -70,6 +70,26 @@ export interface CreateProductRequest {
   price: number;
 }
 
+export interface ProductResponse {
+  id?: number;
+  name?: string;
+  category?: string;
+  price?: number;
+  stock?: number;
+  lowStockThreshold?: number;
+}
+
+export interface ApiResponseProductResponse {
+  timestamp?: string;
+  status?: number;
+  success?: boolean;
+  error?: string;
+  message?: string;
+  path?: string;
+  data?: ProductResponse;
+  fieldErrors?: FieldError[];
+}
+
 export interface Product {
   createdAt?: string;
   updatedAt?: string;
@@ -79,17 +99,6 @@ export interface Product {
   stock?: number;
   lowStockThreshold?: number;
   price?: number;
-}
-
-export interface ApiResponseProduct {
-  timestamp?: string;
-  status?: number;
-  success?: boolean;
-  error?: string;
-  message?: string;
-  path?: string;
-  data?: Product;
-  fieldErrors?: FieldError[];
 }
 
 export interface ApiResponseListProduct {
@@ -127,6 +136,17 @@ export interface UpdateProductRequest {
   price?: number;
 }
 
+export interface ApiResponseProduct {
+  timestamp?: string;
+  status?: number;
+  success?: boolean;
+  error?: string;
+  message?: string;
+  path?: string;
+  data?: Product;
+  fieldErrors?: FieldError[];
+}
+
 export interface ApiResponseListUserDTO {
   timestamp?: string;
   status?: number;
@@ -161,28 +181,19 @@ export interface ApiResponseProductSummaryResponse {
   fieldErrors?: FieldError[];
 }
 
-export interface ProductResponse {
-  id?: number;
-  name?: string;
-  category?: string;
-  price?: number;
-  stock?: number;
-  lowStockThreshold?: number;
-}
-
 export interface SortObject {
   empty?: boolean;
-  unsorted?: boolean;
   sorted?: boolean;
+  unsorted?: boolean;
 }
 
 export interface PageableObject {
   offset?: number;
+  paged?: boolean;
+  unpaged?: boolean;
+  sort?: SortObject;
   pageNumber?: number;
   pageSize?: number;
-  sort?: SortObject;
-  unpaged?: boolean;
-  paged?: boolean;
 }
 
 export interface PageProductResponse {
@@ -191,9 +202,9 @@ export interface PageProductResponse {
   size?: number;
   content?: ProductResponse[];
   number?: number;
-  numberOfElements?: number;
   first?: boolean;
   last?: boolean;
+  numberOfElements?: number;
   sort?: SortObject;
   pageable?: PageableObject;
   empty?: boolean;
@@ -261,6 +272,69 @@ export interface InventoryTransaction {
   note?: string;
 }
 
+export interface Pageable {
+  /** @minimum 0 */
+  page?: number;
+  /** @minimum 1 */
+  size?: number;
+  sort?: string[];
+}
+
+export type AuditLogAction = typeof AuditLogAction[keyof typeof AuditLogAction];
+
+
+export const AuditLogAction = {
+  CREATE: 'CREATE',
+  UPDATE: 'UPDATE',
+  DELETE: 'DELETE',
+  LOGIN: 'LOGIN',
+  LOGOUT: 'LOGOUT',
+  EXPORT: 'EXPORT',
+  BULK_CREATE: 'BULK_CREATE',
+  BULK_DELETE: 'BULK_DELETE',
+} as const;
+
+export type AuditLogOldValue = {[key: string]: { [key: string]: unknown }};
+
+export type AuditLogNewValue = {[key: string]: { [key: string]: unknown }};
+
+export interface AuditLog {
+  createdAt?: string;
+  updatedAt?: string;
+  id?: number;
+  userId?: number;
+  action?: AuditLogAction;
+  entity?: string;
+  entityId?: string;
+  oldValue?: AuditLogOldValue;
+  newValue?: AuditLogNewValue;
+}
+
+export interface PageAuditLog {
+  totalElements?: number;
+  totalPages?: number;
+  size?: number;
+  content?: AuditLog[];
+  number?: number;
+  first?: boolean;
+  last?: boolean;
+  numberOfElements?: number;
+  sort?: SortObject;
+  pageable?: PageableObject;
+  empty?: boolean;
+}
+
+export interface ApiResponsePageAuditLog {
+  timestamp?: string;
+  status?: number;
+  success?: boolean;
+  error?: string;
+  message?: string;
+  path?: string;
+  data?: PageAuditLog;
+  fieldErrors?: FieldError[];
+}
+
 export type ApiResponseObjectData = { [key: string]: unknown };
 
 export interface ApiResponseObject {
@@ -306,5 +380,9 @@ size?: number;
 
 export type FilterProductsParams = {
 request: GetFilteredRequest;
+};
+
+export type GetAuditLogsParams = {
+pageable: Pageable;
 };
 
