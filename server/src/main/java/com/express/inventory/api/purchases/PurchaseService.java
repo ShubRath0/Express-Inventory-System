@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.express.inventory.api.products.ProductEntity;
+import com.express.inventory.api.products.Product;
 import com.express.inventory.api.products.ProductRepository;
 import com.express.inventory.api.products.ProductService;
 import com.express.inventory.api.purchases.dto.CreatePurchaseOrderRequest;
@@ -40,7 +40,7 @@ public class PurchaseService {
                 .orderPrice(request.orderPrice())
                 .totalQuantity(request.totalQuantity()).build();
                 List<PurchaseOrderRecord> records = request.records().stream().map(record -> {
-                    ProductEntity product = productService.getProductById(record.productId());
+                    Product product = productService.getProductById(record.productId());
                     product.setStock(product.getStock().add(record.quantity()));
                     productRepository.save(product);
                     return PurchaseOrderRecord.builder()

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.express.inventory.api.purchases.dto.CreatePurchaseOrderRequest;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -30,12 +32,12 @@ public class PurchaseController {
     }
 
     @GetMapping("/product/{id}")
-    public PurchaseOrder getPurchaseOrderByProductId(@PathVariable Integer productId) {
+    public List<PurchaseOrder> getPurchaseOrderByProductId(@PathVariable Integer productId) {
         return purchaseService.getPurchaseByProductId(productId);
     }
 
     @PostMapping
-    public PurchaseOrder createPurchaseOrder(@RequestBody PurchaseOrder purchase) {
+    public PurchaseOrder createPurchaseOrder(@RequestBody CreatePurchaseOrderRequest purchase) {
         return purchaseService.createPurchase(purchase);
     }
 
