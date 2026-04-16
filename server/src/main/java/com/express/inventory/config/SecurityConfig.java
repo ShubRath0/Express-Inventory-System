@@ -40,9 +40,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 // Define access rules for endpoints
                 .authorizeHttpRequests(auth -> auth
+                 
 
                         // Allow public access to authentication API and Documentation
                         .requestMatchers(
+                                "/api/**",
+                                "/api/users/**",
                                 "/api/v1/**",
                                 "/v3/api-docs",
                                 "/swagger-ui.html",
@@ -52,8 +55,12 @@ public class SecurityConfig {
                                 "/actuator/health")
                         .permitAll()
 
+                    // TEMPORARY: allow everything else
+                       .anyRequest().permitAll())
+
+
                         // All other requests require a valid JWT
-                        .anyRequest().authenticated())
+                       // .anyRequest().authenticated())
 
                 // Set session management to STATELESS; no session cookies will be created or
                 // used.
