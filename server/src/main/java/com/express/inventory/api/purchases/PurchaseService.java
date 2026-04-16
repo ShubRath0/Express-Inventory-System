@@ -25,7 +25,7 @@ public class PurchaseService {
     }
 
     public PurchaseEntity createPurchase(PurchaseEntity purchase) {
-        if (purchase.getQuantity() == null || purchase.getQuantity() <= 0) {
+        if (purchase.getTotalQuantity() == null || purchase.getTotalQuantity() <= 0) {
             throw new InvalidPurchaseException("Quantity must be greater than 0");
         }
 
