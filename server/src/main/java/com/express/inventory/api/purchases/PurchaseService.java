@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.express.inventory.api.purchases.dto.CreatePurchaseOrderRequest;
 import com.express.inventory.api.purchases.exception.InvalidPurchaseException;
 import com.express.inventory.api.purchases.exception.PurchaseNotFoundException;
 
@@ -15,21 +16,35 @@ public class PurchaseService {
 
     private final PurchaseRepository purchaseRepository;
 
-    public List<PurchaseEntity> getAllPurchases() {
+    public List<PurchaseOrder> getAllPurchases() {
         return purchaseRepository.findAll();
     }
 
-    public PurchaseEntity getPurchaseById(Integer id) {
+    public PurchaseOrder getPurchaseById(Integer id) {
         return purchaseRepository.findById(id)
                 .orElseThrow(() -> new PurchaseNotFoundException("Purchase not found with id: " + id));
     }
 
-    public PurchaseEntity createPurchase(PurchaseEntity purchase) {
-        if (purchase.getTotalQuantity() == null || purchase.getTotalQuantity() <= 0) {
-            throw new InvalidPurchaseException("Quantity must be greater than 0");
-        }
-
+    public PurchaseOrder createPurchase(CreatePurchaseOrderRequest request) {
+        PurchaseOrder purchase = PurchaseOrder.builder()
+                .userId(request.userId())
+                .orderStatus(request.orderStatus())
+                .orderPrice(request.orderPrice())
+                .purchaseDate(request.purchaseDate())
+                .totalQuantity(request.totalQuantity()).build();
+                records(request.records().stream(
+                    record -> PurchaseOrderRecord.builder()
+                        .productId(record.productId())
+                        .quantity(record.quantity())
+                        .price(record.price())
+                        .build()
+                ).toList());
         return purchaseRepository.save(purchase);
+        // if (request.getTotalQuantity() == null || request.getTotalQuantity() <= 0) {
+        //     throw new InvalidPurchaseException("Quantity must be greater than 0");
+        // }
+
+        // return purchaseRepository.save(request);
     }
 
     public void deletePurchase(Integer id) {

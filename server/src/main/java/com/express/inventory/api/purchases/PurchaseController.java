@@ -20,17 +20,17 @@ public class PurchaseController {
     private final PurchaseService purchaseService;
 
     @GetMapping
-    public List<PurchaseEntity> getPurchaseOrders() {
+    public List<PurchaseOrder> getPurchaseOrders() {
         return purchaseService.getAllPurchases();
     }
 
     @GetMapping("{id}")
-    public PurchaseEntity getPurchaseOrder(@PathVariable Integer id) {
+    public PurchaseOrder getPurchaseOrder(@PathVariable Integer id) {
         return purchaseService.getPurchaseById(id);
     }
 
     @PostMapping
-    public PurchaseEntity createPurchaseOrder(@RequestBody PurchaseEntity purchase) {
+    public PurchaseOrder createPurchaseOrder(@RequestBody PurchaseOrder purchase) {
         return purchaseService.createPurchase(purchase);
     }
 

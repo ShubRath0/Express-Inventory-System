@@ -2,6 +2,6 @@ package com.express.inventory.api.purchases;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrderRecord, Integer> {
+public interface PurchaseOrderRecordRepository extends JpaRepository<PurchaseOrderRecord, Integer> {
     
 }

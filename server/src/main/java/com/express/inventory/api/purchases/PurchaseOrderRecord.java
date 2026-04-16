@@ -2,6 +2,10 @@ package com.express.inventory.api.purchases;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,9 +19,14 @@ import java.math.BigDecimal;
 @Builder
 public class PurchaseOrderRecord {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer purchaseId;
-    private Integer productId;
+
+    @ManyToOne
+    @JoinColumn(name = "purchaseOrderId")
+    private PurchaseOrder purchaseOrder;
+
+    private Integer product;
     private Double quantity;
     private BigDecimal unitPrice;
 
