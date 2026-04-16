@@ -28,6 +28,7 @@ import type {
   ApiResponseListProduct,
   ApiResponsePageProductResponse,
   ApiResponseProduct,
+  ApiResponseProductResponse,
   ApiResponseProductSummaryResponse,
   ApiResponseVoid,
   CreateProductRequest,
@@ -135,7 +136,7 @@ export const createProduct = (
 ) => {
 
 
-      return axiosInstance<ApiResponseProduct>(
+      return axiosInstance<ApiResponseProductResponse>(
       {url: `/api/v1/products`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: createProductRequest, signal
