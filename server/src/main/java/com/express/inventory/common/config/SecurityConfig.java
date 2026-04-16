@@ -1,4 +1,4 @@
-package com.express.inventory.config;
+package com.express.inventory.common.config;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,8 +49,32 @@ SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
             .anyRequest().authenticated()
         );
 
+<<<<<<< HEAD:server/src/main/java/com/express/inventory/config/SecurityConfig.java
     return http.build();
 }
+=======
+                        // Allow public access to authentication API and Documentation
+                        .requestMatchers(
+                                "/api/v1/**",
+                                "/api/**",
+                                "/v3/api-docs",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/actuator/health")
+                        .permitAll()
+
+                        // All other requests require a valid JWT
+                        .anyRequest().authenticated())
+
+                // Set session management to STATELESS; no session cookies will be created or
+                // used.
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        return http.build();
+    }
+>>>>>>> master:server/src/main/java/com/express/inventory/common/config/SecurityConfig.java
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {

@@ -1,7 +1,8 @@
+import { GenericBreadCrumbs, GenericNavbar } from "@/components";
+import NotificationDropdown from "@/components/AppShell/Navbar/NotificationDropdown";
+import { ThemeSwitcher } from "@/components/ui";
 import { Button, Link } from "@heroui/react";
 import { LogOut } from "lucide-react";
-import { ThemeSwitcher } from "@/components/ui";
-import { GenericNavbar, GenericBreadCrumbs } from "@/components";
 import { Items } from "./NavItemList";
 import NotificationsDropdown from "./NotificationDropdown";
 
@@ -14,8 +15,12 @@ export const AppNavbar = () => {
 
       <GenericNavbar.End>
         <ThemeSwitcher />
+<<<<<<< HEAD
 
       <NotificationsDropdown /> 
+=======
+        <NotificationDropdown />
+>>>>>>> master
         {Items.map((item) => (
           <Link key={item.key} href={item.href}>
             {item.icon}

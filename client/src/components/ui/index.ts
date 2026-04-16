@@ -5,4 +5,5 @@ export * from './StatCard'
 export * from './ThemeSwitcher'
 export * from './ScrollContainer'
 export * from './Section'
-export * from './SectionContainer'
+export * from './SectionContainer';
+export * from './Header';

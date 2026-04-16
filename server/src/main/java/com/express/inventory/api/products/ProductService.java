@@ -8,18 +8,24 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.express.inventory.api.logs.InventoryLogEntity;
+import com.express.inventory.api.audit.enums.Action;
 import com.express.inventory.api.logs.InventoryLogRepository;
+import com.express.inventory.api.logs.InventoryTransaction;
 import com.express.inventory.api.logs.enums.InventoryActionType;
 import com.express.inventory.api.products.dto.request.CreateProductRequest;
 import com.express.inventory.api.products.dto.request.GetFilteredRequest;
 import com.express.inventory.api.products.dto.request.UpdateProductRequest;
+import com.express.inventory.api.products.dto.response.ProductResponse;
+import com.express.inventory.api.products.dto.response.ProductSummaryResponse;
 import com.express.inventory.api.products.exception.ProductNotFoundException;
-import com.express.inventory.utility.Utilities;
+import com.express.inventory.common.aspects.audit.Audit;
+import com.express.inventory.common.utility.Utilities;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 import lombok.AllArgsConstructor;
@@ -30,14 +36,17 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final InventoryLogRepository inventoryLogRepository;
+    private final ProductMapper productMapper;
 
     @Transactional
-    public ProductEntity createProduct(CreateProductRequest request) {
-        ProductEntity product = ProductEntity.builder()
+    @Audit(action = Action.CREATE, entity = Product.class)
+    public ProductResponse createProduct(CreateProductRequest request) {
+        Product product = Product.builder()
                 .name(request.name())
                 .category(request.category())
                 .lowStockThreshold(request.lowStockThreshold())
                 .price(request.price())
+<<<<<<< HEAD
                 .stock(request.stock())
                 .build();
 
@@ -52,13 +61,18 @@ public class ProductService {
         inventoryLogRepository.save(log);
 
         return savedProduct;
+=======
+                .stock(request.stock()).build();
+        return productMapper.toDTO(productRepository.save(product));
+>>>>>>> master
     }
 
     @Transactional
-    public List<ProductEntity> createProductsFromCsv(MultipartFile file) {
+    @Audit(action = Action.BULK_CREATE, entity = Product.class)
+    public List<Product> createProductsFromCsv(MultipartFile file) {
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-            List<ProductEntity> products = new CsvToBeanBuilder<ProductEntity>(reader)
-                    .withType(ProductEntity.class)
+            List<Product> products = new CsvToBeanBuilder<Product>(reader)
+                    .withType(Product.class)
                     .withIgnoreLeadingWhiteSpace(true)
                     .build()
                     .parse();
@@ -81,19 +95,25 @@ public class ProductService {
         }
     }
 
+<<<<<<< HEAD
+=======
+    // Read Product(s)
+    // first getAllProducts could be changed to private since pagination handles it,
+    // still here just in case and because of java app test
+>>>>>>> master
     @Transactional(readOnly = true)
-    public List<ProductEntity> getAllProducts() {
+    public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public List<ProductEntity> searchProduct(String keyword) {
+    public List<Product> searchProduct(String keyword) {
         return productRepository.findByNameContainingIgnoreCase(keyword);
     }
 
     @Transactional(readOnly = true)
-    public ProductEntity getProductById(Integer id) {
-        Optional<ProductEntity> product = productRepository.findById(id);
+    public Product getProductById(Integer id) {
+        Optional<Product> product = productRepository.findById(id);
 
         if (product.isEmpty()) {
             throw new ProductNotFoundException();
@@ -103,11 +123,17 @@ public class ProductService {
     }
 
     @Transactional
+<<<<<<< HEAD
     public ProductEntity updateProduct(UpdateProductRequest request, Integer id) {
         ProductEntity product = getProductById(id);
 
         BigDecimal oldStock = product.getStock() != null ? product.getStock() : BigDecimal.ZERO;
 
+=======
+    @Audit(action = Action.UPDATE, entity = Product.class)
+    public Product updateProduct(UpdateProductRequest request, Integer id) {
+        Product product = getProductById(id);
+>>>>>>> master
         Utilities.copyNonNullProperties(request, product);
         ProductEntity updatedProduct = productRepository.save(product);
 
@@ -137,6 +163,7 @@ public class ProductService {
     }
 
     @Transactional
+    @Audit(action = Action.DELETE, entity = Product.class)
     public void deleteProduct(Integer id) {
         try {
             productRepository.deleteById(id);
@@ -146,10 +173,12 @@ public class ProductService {
     }
 
     @Transactional
+    @Audit(action = Action.BULK_DELETE, entity = Product.class)
     public void deleteAllProducts() {
         productRepository.deleteAll();
     }
 
+<<<<<<< HEAD
     @Transactional
     public void updateStock(Integer productId, BigDecimal stockChange, InventoryActionType actionType, String note) {
         ProductEntity product = productRepository.findById(productId)
@@ -164,9 +193,26 @@ public class ProductService {
         InventoryLogEntity log = new InventoryLogEntity();
         log.setProduct(updatedProduct);
         log.setStockChange(change);
+=======
+    // Stock Changes and Log Creation
+    @Transactional
+    public void updateStock(Integer productId, BigDecimal stockChange, InventoryActionType actionType, String note) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException());
+
+        // Update stock
+        BigDecimal currentStock = product.getStock() != null
+                ? product.getStock()
+                : BigDecimal.ZERO;
+        product.setStock(currentStock.add(stockChange));
+
+        // Create log
+        InventoryTransaction log = new InventoryTransaction();
+        log.setProduct(product);
+        log.setStockChange(stockChange);
+>>>>>>> master
         log.setActionType(actionType);
         log.setNote(note);
-
         inventoryLogRepository.save(log);
 
         if (updatedProduct.getLowStockThreshold() != null
@@ -183,9 +229,10 @@ public class ProductService {
         }
     }
 
+    // Filter Products
     @Transactional(readOnly = true)
-    public List<ProductEntity> filterProducts(GetFilteredRequest request) {
-        List<ProductEntity> products = (request.category() != null && !request.category().isBlank())
+    public List<Product> filterProducts(GetFilteredRequest request) {
+        List<Product> products = (request.category() != null && !request.category().isBlank())
                 ? productRepository.findByCategory(request.category())
                 : productRepository.findAll();
 
@@ -213,4 +260,73 @@ public class ProductService {
                 })
                 .toList();
     }
+<<<<<<< HEAD
 }
+=======
+
+    // Pagination
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(this::mapToResponse);
+    }
+
+    @Transactional
+    private ProductResponse mapToResponse(Product product) {
+        return new ProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getCategory(),
+                product.getPrice(),
+                product.getStock(),
+                product.getLowStockThreshold());
+    }
+
+    // Product Summary
+    @Transactional(readOnly = true)
+    public ProductSummaryResponse getProductSummary() {
+        List<Product> products = productRepository.findAll();
+        long totalProducts = products.size();
+        BigDecimal totalStock = BigDecimal.ZERO;
+        BigDecimal totalUnitPrice = BigDecimal.ZERO;
+        BigDecimal totalInventoryValue = BigDecimal.ZERO;
+
+        // Enhanced for loop || For-each loop
+        for (Product product : products) {
+            BigDecimal stock = product.getStock() != null
+                    ? product.getStock()
+                    : BigDecimal.ZERO;
+
+            BigDecimal price = product.getPrice() != null
+                    ? product.getPrice()
+                    : BigDecimal.ZERO;
+
+            totalStock = totalStock.add(stock);
+            totalUnitPrice = totalUnitPrice.add(price);
+
+            // total inventory value = price * stock
+            totalInventoryValue = totalInventoryValue.add(price.multiply(stock));
+        }
+
+        return new ProductSummaryResponse(
+                totalProducts,
+                totalStock,
+                totalUnitPrice,
+                totalInventoryValue);
+    }
+
+    // List Category Name
+    @Transactional(readOnly = true)
+    public List<Product> getAllCategories() {
+        List<Product> products = productRepository.findAllCategories();
+        return products;
+    }
+
+    // List Recently Added Products
+    @Transactional(readOnly = true)
+    public List<Product> getRecentlyAddedProducts() {
+        List<Product> products = productRepository.findTop5ByOrderByCreatedAtDesc();
+        return products;
+    }
+}
+>>>>>>> master
