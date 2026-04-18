@@ -11,9 +11,9 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/v1/logs")
 @RequiredArgsConstructor
-public class InventoryLogController {
+public class InventoryTransactionController {
 
-    private final InventoryLogService inventoryLogService;
+    private final InventoryTransactionService inventoryLogService;
 
     @GetMapping
     public List<InventoryTransaction> getAllLogs() {
