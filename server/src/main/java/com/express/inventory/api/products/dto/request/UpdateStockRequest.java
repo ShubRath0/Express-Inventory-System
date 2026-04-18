@@ -4,9 +4,11 @@ import java.math.BigDecimal;
 
 import com.express.inventory.api.logs.enums.InventoryActionType;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public record UpdateStockRequest(
-        Integer productId,
-        BigDecimal stockChange,
-        InventoryActionType actionType,
-        String note) {
+        @NotNull BigDecimal stockChange,
+        @NotNull InventoryActionType actionType,
+        @NotBlank String note) {
 }

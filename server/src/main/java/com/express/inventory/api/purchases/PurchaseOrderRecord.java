@@ -29,11 +29,11 @@ public class PurchaseOrderRecord extends Auditable {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "purchase_order_id")
     private PurchaseOrder purchaseOrder;
 
     @ManyToOne
-    @JoinColumn(name = "productId")
+    @JoinColumn(name = "product_id")
     private Product product;
     private BigDecimal quantity;
     private BigDecimal unitPrice;

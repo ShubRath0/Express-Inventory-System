@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.express.inventory.api.products.dto.request.CreateProductRequest;
 import com.express.inventory.api.products.dto.request.GetFilteredRequest;
 import com.express.inventory.api.products.dto.request.UpdateProductRequest;
+import com.express.inventory.api.products.dto.request.UpdateStockRequest;
 import com.express.inventory.api.products.dto.response.ProductResponse;
 import com.express.inventory.api.products.dto.response.ProductSummaryResponse;
 import com.express.inventory.common.dto.ApiResponse;
@@ -68,6 +69,13 @@ public class ProductController {
             @PathVariable Integer id, @RequestBody UpdateProductRequest request) {
         Product updatedProduct = productService.updateProduct(request, id);
         return ApiResponse.success(HttpStatus.OK, "Product updated successfully!", updatedProduct);
+    }
+
+    @PatchMapping("/{id}/update-stock")
+    public ResponseEntity<ApiResponse<Void>> updateStock(
+            @PathVariable Integer id, @RequestBody @Valid UpdateStockRequest request) {
+        productService.updateStock(id, request);
+        return ApiResponse.success(HttpStatus.OK, "Product updated successfully!", null);
     }
 
     // Delete Product

@@ -130,8 +130,8 @@ public class ProductService {
 
     // UPDATE only stock / create inventory log
     @Transactional
-    public void updateStock(UpdateStockRequest request) {
-        Product product = getProductById(request.productId());
+    public void updateStock(Integer id, UpdateStockRequest request) {
+        Product product = getProductById(id);
 
         // Update stock
         BigDecimal currentStock = product.getStock() != null

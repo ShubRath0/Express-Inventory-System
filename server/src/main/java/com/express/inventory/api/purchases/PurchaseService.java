@@ -11,6 +11,7 @@ import com.express.inventory.api.purchases.dto.CreatePurchaseOrderRequest;
 import com.express.inventory.common.exception.ResourceNotFoundException;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -20,6 +21,8 @@ public class PurchaseService {
     private final PurchaseRepository purchaseRepository;
     private final PurchaseOrderMapper purchaseOrderMapper;
     private final ApplicationEventPublisher eventPublisher;
+
+    @PersistenceContext
     private final EntityManager entityManager;
 
     public List<PurchaseOrder> getAllPurchases() {
