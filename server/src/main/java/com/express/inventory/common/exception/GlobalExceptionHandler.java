@@ -11,9 +11,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.express.inventory.api.products.exception.ProductNotFoundException;
-import com.express.inventory.api.purchases.exception.InvalidPurchaseException;
-import com.express.inventory.api.purchases.exception.PurchaseNotFoundException;
 import com.express.inventory.common.dto.ApiResponse;
 import com.express.inventory.common.dto.FieldError;
 
@@ -84,29 +81,6 @@ public class GlobalExceptionHandler {
                 .toList();
 
         return ApiResponse.error(HttpStatus.BAD_REQUEST, "Validation failed", fieldErrors);
-    }
-
-    /**
-     * 
-     * @param ex
-     * @return
-     *
-     */
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<ApiResponse<Void>> handleValidationExceptions(ProductNotFoundException ex) {
-        return ApiResponse.error(HttpStatus.BAD_REQUEST, ex.getMessage());
-    }
-
-    @ExceptionHandler(InvalidPurchaseException.class)
-    public ResponseEntity<ApiResponse<Void>> handleInvalidPurchase(InvalidPurchaseException ex) {
-        logger.error("Invalid purchase data", ex);
-        return ApiResponse.error(HttpStatus.BAD_REQUEST, ex.getMessage(), null);
-    }
-
-    @ExceptionHandler(PurchaseNotFoundException.class)
-    public ResponseEntity<ApiResponse<Void>> handlePurchaseNotFound(PurchaseNotFoundException ex) {
-        logger.error("Purchase not found", ex);
-        return ApiResponse.error(HttpStatus.NOT_FOUND, ex.getMessage(), null);
     }
 
     // GENERAL

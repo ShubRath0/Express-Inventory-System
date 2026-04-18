@@ -2,14 +2,16 @@ package com.express.inventory.api.purchases;
 
 import java.util.List;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import com.express.inventory.api.purchases.exception.PurchaseNotFoundException;
 import com.express.inventory.api.products.Product;
-import com.express.inventory.api.products.ProductRepository;
-import com.express.inventory.api.products.ProductService;
+import com.express.inventory.api.products.events.StockUpdatedEvent;
 import com.express.inventory.api.purchases.dto.CreatePurchaseOrderRequest;
+import com.express.inventory.common.exception.ResourceNotFoundException;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -17,8 +19,11 @@ import lombok.RequiredArgsConstructor;
 public class PurchaseService {
 
     private final PurchaseRepository purchaseRepository;
-    private final ProductRepository productRepository;
-    private final ProductService productService;
+    private final PurchaseOrderMapper purchaseOrderMapper;
+    private final ApplicationEventPublisher eventPublisher;
+
+    @PersistenceContext
+    private final EntityManager entityManager;
 
     public List<PurchaseOrder> getAllPurchases() {
         return purchaseRepository.findAll();
@@ -26,7 +31,7 @@ public class PurchaseService {
 
     public PurchaseOrder getPurchaseById(Integer id) {
         return purchaseRepository.findById(id)
-                .orElseThrow(() -> new PurchaseNotFoundException("Purchase not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(PurchaseOrder.class, id));
     }
 
     public List<PurchaseOrder> getPurchaseByProductId(Integer productId) {
@@ -34,21 +39,24 @@ public class PurchaseService {
     }
 
     public PurchaseOrder createPurchase(CreatePurchaseOrderRequest request) {
-        PurchaseOrder purchase = PurchaseOrder.builder()
-                .orderStatus(request.orderStatus())
-                .orderPrice(request.orderPrice())
-                .totalQuantity(request.totalQuantity()).build();
-                List<PurchaseOrderRecord> records = request.records().stream().map(record -> {
-                    Product product = productService.getProductById(record.productId());
-                    product.setStock(product.getStock().add(record.quantity()));
-                    productRepository.save(product);
-                    return PurchaseOrderRecord.builder()
-                    .product(productService.getProductById(record.productId()))
+        PurchaseOrder purchase = purchaseOrderMapper.toPurchaseOrder(request);
+
+        List<PurchaseOrderRecord> records = request.records().stream().map(record -> {
+            Product productRef = entityManager.getReference(Product.class, record.productId());
+            return PurchaseOrderRecord.builder()
+                    .product(productRef)
                     .quantity(record.quantity())
                     .unitPrice(record.unitPrice()).build();
-                }).toList();
-                purchase.setRecords(records);
-        return purchaseRepository.save(purchase);
+        }).toList();
+
+        purchase.setRecords(records);
+        PurchaseOrder saved = purchaseRepository.save(purchase);
+
+        saved.getRecords().forEach(record -> {
+            eventPublisher.publishEvent(new StockUpdatedEvent(record.getProduct().getId(), record.getQuantity()));
+        });
+
+        return saved;
     }
 
     public void deletePurchase(Integer id) {

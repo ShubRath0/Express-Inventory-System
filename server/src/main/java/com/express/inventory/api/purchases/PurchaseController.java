@@ -26,14 +26,14 @@ public class PurchaseController {
         return purchaseService.getAllPurchases();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public PurchaseOrder getPurchaseOrder(@PathVariable Integer id) {
         return purchaseService.getPurchaseById(id);
     }
 
     @GetMapping("/product/{id}")
-    public List<PurchaseOrder> getPurchaseOrderByProductId(@PathVariable Integer productId) {
-        return purchaseService.getPurchaseByProductId(productId);
+    public List<PurchaseOrder> getPurchaseOrderByProductId(@PathVariable Integer id) {
+        return purchaseService.getPurchaseByProductId(id);
     }
 
     @PostMapping
@@ -41,7 +41,7 @@ public class PurchaseController {
         return purchaseService.createPurchase(purchase);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public void deletePurchaseOrder(@PathVariable Integer id) {
         purchaseService.deletePurchase(id);
     }

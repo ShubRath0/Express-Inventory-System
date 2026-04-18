@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.express.inventory.api.logs.InventoryLogService;
 import com.express.inventory.api.logs.InventoryTransaction;
+import com.express.inventory.api.logs.InventoryTransactionService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NotificationService {
 
-    private final InventoryLogService inventoryLogService;
+    private final InventoryTransactionService inventoryLogService;
 
     public List<NotificationDTO> getNotifications() {
         return inventoryLogService.getRecentLogs()
