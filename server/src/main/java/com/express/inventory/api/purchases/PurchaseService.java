@@ -5,11 +5,12 @@ import java.util.List;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import com.express.inventory.api.products.ProductService;
+import com.express.inventory.api.products.Product;
 import com.express.inventory.api.products.events.StockUpdatedEvent;
 import com.express.inventory.api.purchases.dto.CreatePurchaseOrderRequest;
 import com.express.inventory.common.exception.ResourceNotFoundException;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -17,8 +18,9 @@ import lombok.RequiredArgsConstructor;
 public class PurchaseService {
 
     private final PurchaseRepository purchaseRepository;
+    private final PurchaseOrderMapper purchaseOrderMapper;
     private final ApplicationEventPublisher eventPublisher;
-    private final ProductService productService;
+    private final EntityManager entityManager;
 
     public List<PurchaseOrder> getAllPurchases() {
         return purchaseRepository.findAll();
@@ -34,13 +36,12 @@ public class PurchaseService {
     }
 
     public PurchaseOrder createPurchase(CreatePurchaseOrderRequest request) {
-        PurchaseOrder purchase = PurchaseOrder.builder()
-                .orderStatus(request.orderStatus())
-                .orderPrice(request.orderPrice())
-                .totalQuantity(request.totalQuantity()).build();
+        PurchaseOrder purchase = purchaseOrderMapper.toPurchaseOrder(request);
+
         List<PurchaseOrderRecord> records = request.records().stream().map(record -> {
+            Product productRef = entityManager.getReference(Product.class, record.productId());
             return PurchaseOrderRecord.builder()
-                    .product(productService.getProductById(record.productId()))
+                    .product(productRef)
                     .quantity(record.quantity())
                     .unitPrice(record.unitPrice()).build();
         }).toList();
