@@ -1,23 +1,23 @@
 package com.express.inventory.service;
 
-import com.express.inventory.dto.products.request.CreateProductRequest;
-import com.express.inventory.dto.products.request.UpdateProductRequest;
 import com.express.inventory.dto.users.requests.CreateUserRequest;
 import com.express.inventory.dto.users.requests.UpdateUserRequest;
 import com.express.inventory.dto.users.requests.PartialUpdateUserRequest;
 import com.express.inventory.dto.users.responses.UserResponse;
-import com.express.inventory.models.ProductEntity;
 import com.express.inventory.models.UserEntity;
 import com.express.inventory.repositories.UserRepository;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.opencsv.bean.CsvToBeanBuilder;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
-
-import javax.swing.text.Utilities;
 
 @Service
 public class UserService {
@@ -28,82 +28,99 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-     // Read Product(s)
+    // ✅ GET ALL
     @Transactional(readOnly = true)
-    public List<UserEntity> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(UserResponse::from)
+                .toList();
     }
 
+    // ✅ GET BY ID
     public UserResponse getUserById(Long id) {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
         return UserResponse.from(user);
     }
 
-     // Create Product
+    // ✅ CREATE
     @Transactional
-    public UserEntity createUser(CreateUserRequest request) {
+    public UserResponse createUser(CreateUserRequest request) {
         UserEntity user = UserEntity.builder()
-                .username(request.username())
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .email(request.email())
                 .password(request.password())
+                .role(request.role())
                 .build();
 
-        return userRepository.save(user);
+        return UserResponse.from(userRepository.save(user));
     }
 
-     @Transactional
-    public List<UserEntity> createUsersFromCsv(MultipartFile file) {
+    // ✅ CSV IMPORT
+    @Transactional
+    public List<UserResponse> createUsersFromCsv(MultipartFile file) {
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-            List<UserEntity> Users = new CsvToBeanBuilder<UserEntity>(reader)
+
+            List<UserEntity> users = new CsvToBeanBuilder<UserEntity>(reader)
                     .withType(UserEntity.class)
                     .withIgnoreLeadingWhiteSpace(true)
                     .build()
                     .parse();
 
-            return userRepository.saveAll(Users);
+            return userRepository.saveAll(users)
+                    .stream()
+                    .map(UserResponse::from)
+                    .toList();
+
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse CSV file: " + e.getMessage());
         }
     }
 
+    // ✅ UPDATE
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        user.setUsername(request.username());
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
+        user.setEmail(request.email());
         user.setPassword(request.password());
+        user.setRole(request.role());
 
         return UserResponse.from(userRepository.save(user));
     }
-      // Update Product
-    @Transactional
-    public UserEntity updateUser(UpdateUserRequest request, Integer id) {
-        UserEntity product = getUserById(id);
-        Utilities.copyNonNullProperties(request, user);
-        return userRepository.save(user);
-    }
 
+    // ✅ PARTIAL UPDATE
     public UserResponse partialUpdateUser(Long id, PartialUpdateUserRequest request) {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (request.username() != null) user.setUsername(request.username());
+        if (request.firstName() != null) user.setFirstName(request.firstName());
+        if (request.lastName() != null) user.setLastName(request.lastName());
+        if (request.email() != null) user.setEmail(request.email());
         if (request.password() != null) user.setPassword(request.password());
+        if (request.role() != null) user.setRole(request.role());
 
         return UserResponse.from(userRepository.save(user));
     }
 
+    // ✅ DELETE
     @Transactional
-    public void deleteUser(Integer id) {
+    public void deleteUser(Long id) {
         try {
             userRepository.deleteById(id);
         } catch (EmptyResultDataAccessException ex) {
-            throw new UserNotFoundException();
+            throw new RuntimeException("User not found");
         }
     }
 
-    public List<UserResponse> findByUsernameContainingIgnoreCase(String username) {
-        return userRepository.findByUsernameContainingIgnoreCase(username)
+    // ✅ SEARCH (UPDATED)
+    public List<UserResponse> findByEmailContainingIgnoreCase(String email) {
+        return userRepository.findByEmailContainingIgnoreCase(email)
                 .stream()
                 .map(UserResponse::from)
                 .toList();

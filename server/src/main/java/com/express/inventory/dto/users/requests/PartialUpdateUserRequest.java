@@ -1,6 +1,9 @@
 package com.express.inventory.dto.users.requests;
-
+import com.express.inventory.models.Role;
 public record PartialUpdateUserRequest(
-        String username,
-        String password
+        String firstName,
+        String lastName,
+        String email,
+        String password,
+        Role role
 ) {}
