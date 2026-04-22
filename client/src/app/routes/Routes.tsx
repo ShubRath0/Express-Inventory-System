@@ -15,7 +15,7 @@ export const AppRoutes = () => {
       {/* Every single route inside of this will have an "AppShell" (Sidebar + Navbar) */}
       {/* Anything outside of the route will NOT have an AppShell (login / anything else) */}
       <Route element={<AppShell />}>
-        <Route path="/" element={<></>}></Route>
+        <Route path="/" element={<DashboardPage />}></Route>
         <Route path="/orval" element={<OrvalTest />}></Route>
         <Route
           path="/inventory/products"
@@ -26,7 +26,7 @@ export const AppRoutes = () => {
           path="/inventory-summary"
           element={<InventorySummaryPage />}
         ></Route>
-        <Route path="/dashboard" element={<DashboardPage />}></Route>
+        {/* <Route path="/dashboard" element={<DashboardPage />}></Route> */}
         <Route path="/purchasing"></Route>
         <Route path="/admin"></Route>
         <Route path="/help"></Route>
