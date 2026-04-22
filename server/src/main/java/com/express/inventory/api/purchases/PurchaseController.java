@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.express.inventory.api.purchases.dto.CreatePurchaseOrderRequest;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -20,21 +22,26 @@ public class PurchaseController {
     private final PurchaseService purchaseService;
 
     @GetMapping
-    public List<PurchaseEntity> getPurchaseOrders() {
+    public List<PurchaseOrder> getPurchaseOrders() {
         return purchaseService.getAllPurchases();
     }
 
-    @GetMapping("{id}")
-    public PurchaseEntity getPurchaseOrder(@PathVariable Integer id) {
+    @GetMapping("/{id}")
+    public PurchaseOrder getPurchaseOrder(@PathVariable Integer id) {
         return purchaseService.getPurchaseById(id);
     }
 
+    @GetMapping("/product/{id}")
+    public List<PurchaseOrder> getPurchaseOrderByProductId(@PathVariable Integer id) {
+        return purchaseService.getPurchaseByProductId(id);
+    }
+
     @PostMapping
-    public PurchaseEntity createPurchaseOrder(@RequestBody PurchaseEntity purchase) {
+    public PurchaseOrder createPurchaseOrder(@RequestBody CreatePurchaseOrderRequest purchase) {
         return purchaseService.createPurchase(purchase);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public void deletePurchaseOrder(@PathVariable Integer id) {
         purchaseService.deletePurchase(id);
     }

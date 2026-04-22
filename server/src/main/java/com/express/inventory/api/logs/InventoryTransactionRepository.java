@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.express.inventory.api.products.Product;
 
-public interface InventoryLogRepository extends JpaRepository<InventoryTransaction, Integer> {
+public interface InventoryTransactionRepository extends JpaRepository<InventoryTransaction, Integer> {
     // Get logs for a specific product
     List<InventoryTransaction> findByProduct(Product product);
 

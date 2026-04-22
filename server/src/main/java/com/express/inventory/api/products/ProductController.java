@@ -3,7 +3,6 @@ package com.express.inventory.api.products;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.express.inventory.api.products.dto.request.CreateProductRequest;
 import com.express.inventory.api.products.dto.request.GetFilteredRequest;
 import com.express.inventory.api.products.dto.request.UpdateProductRequest;
+import com.express.inventory.api.products.dto.request.UpdateStockRequest;
 import com.express.inventory.api.products.dto.response.ProductResponse;
 import com.express.inventory.api.products.dto.response.ProductSummaryResponse;
 import com.express.inventory.common.dto.ApiResponse;
@@ -52,12 +52,6 @@ public class ProductController {
         return ApiResponse.success(HttpStatus.CREATED, "Products created successfully!", products);
     }
 
-    // Read Product
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<Product>>> getAllProducts() {
-        return ApiResponse.success(HttpStatus.OK, "Products retreived successfully!", productService.getAllProducts());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Product>> getProductById(@PathVariable Integer id) {
         return ApiResponse.success(HttpStatus.OK, "Product retrieved successfully!", productService.getProductById(id));
@@ -75,6 +69,13 @@ public class ProductController {
             @PathVariable Integer id, @RequestBody UpdateProductRequest request) {
         Product updatedProduct = productService.updateProduct(request, id);
         return ApiResponse.success(HttpStatus.OK, "Product updated successfully!", updatedProduct);
+    }
+
+    @PatchMapping("/{id}/update-stock")
+    public ResponseEntity<ApiResponse<Void>> updateStock(
+            @PathVariable Integer id, @RequestBody @Valid UpdateStockRequest request) {
+        productService.updateStock(id, request);
+        return ApiResponse.success(HttpStatus.OK, "Product updated successfully!", null);
     }
 
     // Delete Product
@@ -97,12 +98,9 @@ public class ProductController {
         return ApiResponse.success(HttpStatus.OK, "Products retrieved successfully!", filteredProducts);
     }
 
-    // Pagination
-    @GetMapping("/pagination")
-    public ResponseEntity<ApiResponse<Page<ProductResponse>>> getAllProducts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    // Get products
+    @GetMapping
+    public ResponseEntity<ApiResponse<Page<ProductResponse>>> getAllProducts(Pageable pageable) {
         Page<ProductResponse> products = productService.getAllProducts(pageable);
         return ApiResponse.success(HttpStatus.OK, "Products retrieved successfully!", products);
     }
