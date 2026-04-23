@@ -59,10 +59,10 @@ public class ProductService {
     // METHODS / CRUD
     // -------------------
 
-    // GET products
+    // GET products (with FILTERING)
     @Transactional(readOnly = true)
-    public Page<ProductResponse> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable)
+    public Page<ProductResponse> getAllProducts(Pageable pageable, GetFilteredRequest request) {
+        return productRepository.findAll(ProductSpecifications.filter(request), pageable)
                 .map(productMapper::toDTO);
     }
 
@@ -89,12 +89,6 @@ public class ProductService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse CSV file: " + e.getMessage());
         }
-    }
-
-    // FILTERING
-    @Transactional(readOnly = true)
-    public List<Product> searchProduct(String keyword) {
-        return productRepository.findByNameContainingIgnoreCase(keyword);
     }
 
     // GET by ID
@@ -143,44 +137,14 @@ public class ProductService {
                 new InventoryTransactionEvent(product, request.stockChange(), request.actionType(), request.note()));
     }
 
-    // FILTER Products
-    @Transactional(readOnly = true)
-    public List<Product> filterProducts(GetFilteredRequest request) {
-        List<Product> products = (request.category() != null && !request.category().isBlank())
-                ? productRepository.findByCategory(request.category())
-                : productRepository.findAll();
-
-        if (request.stockStatus() == null) {
-            return products;
-        }
-
-        return products.stream()
-                .filter(product -> {
-                    BigDecimal stock = product.getStock();
-                    BigDecimal lowStockThreshold = product.getLowStockThreshold();
-
-                    if (stock == null) {
-                        return false;
-                    }
-
-                    return switch (request.stockStatus()) {
-                        case NO_STOCK -> stock.compareTo(BigDecimal.ZERO) == 0;
-                        case LOW_STOCK -> lowStockThreshold != null && stock.compareTo(BigDecimal.ZERO) > 0
-                                && stock.compareTo(lowStockThreshold) <= 0;
-                        case ABOVE_THRESHOLD -> lowStockThreshold != null && stock.compareTo(lowStockThreshold) > 0;
-                    };
-                })
-                .toList();
-    }
-
     // -------------------
     // DERIVED DATA
     // -------------------
 
     // Product Summary
     @Transactional(readOnly = true)
-    public ProductSummaryResponse getProductSummary() {
-        List<Product> products = productRepository.findAll();
+    public ProductSummaryResponse getProductSummary(GetFilteredRequest request) {
+        List<Product> products = productRepository.findAll(ProductSpecifications.filter(request));
         long totalProducts = products.size();
         BigDecimal totalStock = BigDecimal.ZERO;
         BigDecimal totalUnitPrice = BigDecimal.ZERO;

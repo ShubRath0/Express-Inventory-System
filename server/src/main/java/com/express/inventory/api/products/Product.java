@@ -2,10 +2,13 @@ package com.express.inventory.api.products;
 
 import java.math.BigDecimal;
 
+import com.express.inventory.api.products.enums.Category;
 import com.express.inventory.common.classes.Auditable;
 import com.opencsv.bean.CsvBindByName;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,8 +35,9 @@ public class Product extends Auditable {
     @CsvBindByName(column = "Name")
     private String name;
 
+    @Enumerated(EnumType.STRING)
     @CsvBindByName(column = "Category")
-    private String category;
+    private Category category;
 
     @CsvBindByName(column = "Stock")
     private BigDecimal stock;
