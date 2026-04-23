@@ -1,65 +1,60 @@
-import { useProducts } from '@/features/products/hooks';
-import { setSelectedCategories } from '@/features/products/state';
+import { Loading } from '@/components';
+import { useGetAllProducts } from '@/features/products/hooks';
 import { useMemo } from 'react';
-import { useDispatch } from 'react-redux';
 import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
-interface StockChart {
-    onChartClick: () => void;
-}
+export const StockChart = () => {
+  const { data, isLoading } = useGetAllProducts();
 
-export const StockChart = ({ onChartClick }: StockChart) => {
-    const { products } = useProducts();
+  const response = data?.products;
 
-    const dispatch = useDispatch();
+  const chartData = useMemo(() => {
+    if (!response) return [];
 
-    const chartData = useMemo(() => {
-        const produce = products
-            .filter(p => p.category === "PRODUCE")
-            .reduce((acc, p) => acc + p.stock, 0);
+    const produce = response
+      .filter(p => p.category === "PRODUCE")
+      .reduce((acc, p) => acc + p.stock!, 0);
 
-        const plastic = products
-            .filter(p => p.category === "PLASTIC")
-            .reduce((acc, p) => acc + p.stock, 0);
+    const plastic = response
+      .filter(p => p.category === "PLASTIC")
+      .reduce((acc, p) => acc + p.stock!, 0);
 
-        return [
-            { name: "Produce", value: produce, fill: 'var(--chart-produce)' },
-            { name: "Plastic", value: plastic, fill: 'var(--chart-plastic)' }
-        ];
-    }, [products]);
+    return [
+      { name: "Produce", value: produce, fill: 'var(--chart-produce)' },
+      { name: "Plastic", value: plastic, fill: 'var(--chart-plastic)' }
+    ];
+  }, [data]);
 
-    return (
-        <ResponsiveContainer>
-            <PieChart>
-                <Tooltip
-                    cursor={{ strokeOpacity: 0, fillOpacity: 0 }}
-                    contentStyle={{
-                        backgroundColor: "var(--card)",
-                        border: 'none',
-                        borderRadius: '12px',
-                    }}
-                />
-                <Pie
-                    data={chartData}
-                    dataKey="value"
-                    nameKey="name"
-                    innerRadius={70}
-                    outerRadius={100}
-                    paddingAngle={5}
-                    stroke="none"
-                    cornerRadius={6}
-                    label={({ name, percent }) =>
-                        percent && percent > 0 ? `${name} ${(percent * 100).toFixed(0)}%` : null
-                    }
-                    labelLine={false}
-                    onClick={(a) => {
-                        dispatch(setSelectedCategories([a.payload.name]));
-                        onChartClick();
-                    }}
-                >
-                </Pie>
-                <Legend />
-            </PieChart>
-        </ResponsiveContainer>
-    );
+  if (isLoading) return <Loading label='Fetching data...' />;
+
+  return (
+    <ResponsiveContainer>
+      <PieChart>
+        <Tooltip
+          cursor={{ strokeOpacity: 0, fillOpacity: 0 }}
+          contentStyle={{
+            backgroundColor: "var(--card)",
+            border: 'none',
+            borderRadius: '12px',
+          }}
+        />
+        <Pie
+          data={chartData}
+          dataKey="value"
+          nameKey="name"
+          innerRadius={70}
+          outerRadius={100}
+          paddingAngle={5}
+          stroke="none"
+          cornerRadius={6}
+          label={({ name, percent }) =>
+            percent && percent > 0 ? `${name} ${(percent * 100).toFixed(0)}%` : null
+          }
+          labelLine={false}
+        >
+        </Pie>
+        <Legend />
+      </PieChart>
+    </ResponsiveContainer>
+  );
 };
