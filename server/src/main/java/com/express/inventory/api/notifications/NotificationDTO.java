@@ -1,8 +1,10 @@
 package com.express.inventory.api.notifications;
 
+import jakarta.validation.constraints.NotNull;
+
 public record NotificationDTO(
-        Integer id,
-        String message,
-        String type,
-        boolean isRead) {
+        @NotNull Integer id,
+        @NotNull String message,
+        @NotNull String type,
+        @NotNull boolean isRead) {
 }
