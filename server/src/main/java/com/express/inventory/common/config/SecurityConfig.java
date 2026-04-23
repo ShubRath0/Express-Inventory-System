@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -24,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JWTAuthenticationFilter JWTAuthenticationFilter;
 
     /**
      * Configures the security filter chain.
@@ -50,8 +53,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
-                                "/actuator/health",
-                                "/test/**")
+                                "/actuator/health")
                         .permitAll()
 
                         // All other requests require a valid JWT
@@ -59,7 +61,8 @@ public class SecurityConfig {
 
                 // Set session management to STATELESS; no session cookies will be created or
                 // used.
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(JWTAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

@@ -2,7 +2,6 @@ package com.express.inventory.api.auth;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.express.inventory.api.auth.dto.request.LoginRequest;
 import com.express.inventory.api.auth.dto.response.LoginResponse;
 import com.express.inventory.api.users.User;
-import com.express.inventory.api.users.dto.response.UserDTO;
 import com.express.inventory.common.dto.ApiResponse;
 import com.express.inventory.common.dto.RegisterUserDto;
 import com.express.inventory.common.security.JWTService;
@@ -36,7 +34,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest loginUserDto) {
-        UserDTO authenticatedUser = authService.login(loginUserDto);
+        User authenticatedUser = authService.login(loginUserDto);
 
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
