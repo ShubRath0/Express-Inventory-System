@@ -9,7 +9,8 @@ export const api = Axios.create({
 });
 
 export const apiClient = Axios.create({
-  baseURL: "https://express-inventory-system-uhrv.onrender.com",
+  // baseURL: "https://express-inventory-system-uhrv.onrender.com",
+  baseURL: "http://localhost:8080",
   headers: {
     "Content-Type": "application/json"
   },
