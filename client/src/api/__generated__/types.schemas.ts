@@ -77,6 +77,8 @@ export interface ProductResponse {
   price: number;
   stock: number;
   lowStockThreshold: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ApiResponseProductResponse {

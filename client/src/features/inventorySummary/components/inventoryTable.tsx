@@ -1,4 +1,4 @@
-import type { Product } from "@/api/__generated__/types.schemas";
+import type { ProductResponse } from "@/api/__generated__/types.schemas";
 import { ColumnsList } from "@/features/inventorySummary/api/types/columns.type";
 import { usePagination } from "@/hooks/usePagination";
 import {
@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@heroui/react";
 
-export const InventoryTable = ({ data }: { data: Product[] }) => {
+export const InventoryTable = ({ data }: { data: ProductResponse[]; }) => {
   const { items, page, totalPages, setPage } = usePagination({
     data: data,
     rowsPerPage: 10,
