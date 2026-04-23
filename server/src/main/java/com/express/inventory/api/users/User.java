@@ -57,6 +57,10 @@ public class User extends Auditable implements UserDetails {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     @Override
     public String getUsername() {
         return email;
