@@ -7,6 +7,7 @@ import {
   ProductInventorySection,
   Reports,
 } from "@/features";
+import { UsersPage } from "@/features/admin/users/UsersPage";
 import { Route, Routes } from "react-router-dom";
 
 export const AppRoutes = () => {
@@ -28,7 +29,7 @@ export const AppRoutes = () => {
         ></Route>
         {/* <Route path="/dashboard" element={<DashboardPage />}></Route> */}
         <Route path="/purchasing"></Route>
-        <Route path="/admin"></Route>
+        <Route path="/admin" element={<UsersPage />}></Route>
         <Route path="/help"></Route>
         <Route path="/notifications"></Route>
         <Route path="/user"></Route>

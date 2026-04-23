@@ -23,7 +23,7 @@ export const UserDTORole = {
 export interface UserDTO {
   id: number;
   firstName: string;
-  lastName: string;
+  lastName: string ;
   email: string;
   role: UserDTORole;
 }
