@@ -13,6 +13,7 @@ public class ExpressInventoryApplication {
         setEnvIfPresent("DB_URL", dotenv);
         setEnvIfPresent("DB_USERNAME", dotenv);
         setEnvIfPresent("DB_PASSWORD", dotenv);
+        setEnvIfPresent("JWT_SECRET_KEY", dotenv);
         SpringApplication.run(ExpressInventoryApplication.class, args);
     }
 
