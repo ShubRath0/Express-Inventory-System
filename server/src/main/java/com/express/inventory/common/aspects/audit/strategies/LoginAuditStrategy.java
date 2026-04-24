@@ -8,7 +8,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.express.inventory.api.audit.enums.Action;
-import com.express.inventory.api.users.dto.response.UserDTO;
+import com.express.inventory.api.users.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,11 +31,11 @@ public class LoginAuditStrategy extends BaseAuditStrategy {
 
     @Override
     public Map<String, Object> resolveNewValue(Object result, Class<?> entity) throws Exception {
-        UserDTO user = (UserDTO) result;
+        User user = (User) result;
         return Map.of(
                 "status", "SUCCESS",
-                "userId", user.id(),
-                "username", user.email(),
+                "userId", user.getId(),
+                "username", user.getEmail(),
                 "ip", getClientIp());
     }
 

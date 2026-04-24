@@ -62,7 +62,7 @@ jobs:
           DB_URL: jdbc:postgresql://localhost:5432/inventory_db
           DB_USERNAME: user
           DB_PASSWORD: password
-          JWT_SECRET: 30589a7102717088929e58315a6b093375c320d3648085a66270404391e4e3f1
+          JWT_SECRET_KEY: de880e64fcda88375eb3647d376c3659ae33a1d0dd9358764cbbe889dd2c4b2d
         run: |
           chmod +x mvnw
           ./mvnw test
