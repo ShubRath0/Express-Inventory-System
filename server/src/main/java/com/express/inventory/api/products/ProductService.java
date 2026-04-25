@@ -5,26 +5,28 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.express.inventory.api.audit.enums.Action;
-import com.express.inventory.api.logs.InventoryLogRepository;
-import com.express.inventory.api.logs.InventoryTransaction;
-import com.express.inventory.api.logs.enums.InventoryActionType;
+import com.express.inventory.api.logs.events.InventoryTransactionEvent;
 import com.express.inventory.api.products.dto.request.CreateProductRequest;
 import com.express.inventory.api.products.dto.request.GetFilteredRequest;
 import com.express.inventory.api.products.dto.request.UpdateProductRequest;
+import com.express.inventory.api.products.dto.request.UpdateStockRequest;
 import com.express.inventory.api.products.dto.response.ProductResponse;
 import com.express.inventory.api.products.dto.response.ProductSummaryResponse;
-import com.express.inventory.api.products.exception.ProductNotFoundException;
+import com.express.inventory.api.products.events.StockUpdatedEvent;
 import com.express.inventory.common.aspects.audit.Audit;
+import com.express.inventory.common.exception.ResourceNotFoundException;
 import com.express.inventory.common.utility.Utilities;
 import com.opencsv.bean.CsvToBeanBuilder;
 
@@ -35,22 +37,44 @@ import lombok.AllArgsConstructor;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final InventoryLogRepository inventoryLogRepository;
+    private final ApplicationEventPublisher eventPublisher;
     private final ProductMapper productMapper;
 
-    // Create Product
+    // -------------------
+    // EVENTS
+    // -------------------
+
+    // Event listener, listens to the StockUpdatedEvent
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void updateStockEvent(StockUpdatedEvent event) {
+        Product product = productRepository.findById(event.productId())
+                .orElseThrow(() -> new ResourceNotFoundException(Product.class, event.productId()));
+
+        product.setStock(product.getStock().add(event.quantity()));
+        productRepository.save(product);
+    }
+
+    // -------------------
+    // METHODS / CRUD
+    // -------------------
+
+    // GET products (with FILTERING)
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> getAllProducts(Pageable pageable, GetFilteredRequest request) {
+        return productRepository.findAll(ProductSpecifications.filter(request), pageable)
+                .map(productMapper::toDTO);
+    }
+
+    // CREATE products
     @Transactional
     @Audit(action = Action.CREATE, entity = Product.class)
     public ProductResponse createProduct(CreateProductRequest request) {
-        Product product = Product.builder()
-                .name(request.name())
-                .category(request.category())
-                .lowStockThreshold(request.lowStockThreshold())
-                .price(request.price())
-                .stock(request.stock()).build();
+        Product product = productMapper.toProduct(request);
         return productMapper.toDTO(productRepository.save(product));
     }
 
+    // BULK CREATE products
     @Transactional
     @Audit(action = Action.BULK_CREATE, entity = Product.class)
     public List<Product> createProductsFromCsv(MultipartFile file) {
@@ -67,31 +91,14 @@ public class ProductService {
         }
     }
 
-    // Read Product(s)
-    // first getAllProducts could be changed to private since pagination handles it,
-    // still here just in case and because of java app test
-    @Transactional(readOnly = true)
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
-    }
-
-    @Transactional(readOnly = true)
-    public List<Product> searchProduct(String keyword) {
-        return productRepository.findByNameContainingIgnoreCase(keyword);
-    }
-
+    // GET by ID
     @Transactional(readOnly = true)
     public Product getProductById(Integer id) {
-        Optional<Product> product = productRepository.findById(id);
-
-        if (product.isEmpty()) {
-            throw new ProductNotFoundException();
-        }
-
-        return product.get();
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Product.class, id));
     }
 
-    // Update Product
+    // UPDATE product
     @Transactional
     @Audit(action = Action.UPDATE, entity = Product.class)
     public Product updateProduct(UpdateProductRequest request, Integer id) {
@@ -100,96 +107,44 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    // Delete Product
+    // DELETE Product
     @Transactional
     @Audit(action = Action.DELETE, entity = Product.class)
     public void deleteProduct(Integer id) {
-        try {
-            productRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException ex) {
-            throw new ProductNotFoundException();
-        }
+        Product product = getProductById(id);
+        productRepository.delete(product);
     }
 
+    // DELETE all products
     @Transactional
     @Audit(action = Action.BULK_DELETE, entity = Product.class)
     public void deleteAllProducts() {
         productRepository.deleteAll();
     }
 
-    // Stock Changes and Log Creation
+    // UPDATE only stock / create inventory log
     @Transactional
-    public void updateStock(Integer productId, BigDecimal stockChange, InventoryActionType actionType, String note) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException());
+    public void updateStock(Integer id, UpdateStockRequest request) {
+        Product product = getProductById(id);
 
         // Update stock
         BigDecimal currentStock = product.getStock() != null
                 ? product.getStock()
                 : BigDecimal.ZERO;
-        product.setStock(currentStock.add(stockChange));
+        product.setStock(currentStock.add(request.stockChange()));
 
-        // Create log
-        InventoryTransaction log = new InventoryTransaction();
-        log.setProduct(product);
-        log.setStockChange(stockChange);
-        log.setActionType(actionType);
-        log.setNote(note);
-        inventoryLogRepository.save(log);
+        eventPublisher.publishEvent(
+                new InventoryTransactionEvent(product, request.stockChange(), request.actionType(), request.note()));
     }
 
-    // Filter Products
-    @Transactional(readOnly = true)
-    public List<Product> filterProducts(GetFilteredRequest request) {
-        List<Product> products = (request.category() != null && !request.category().isBlank())
-                ? productRepository.findByCategory(request.category())
-                : productRepository.findAll();
-
-        if (request.stockStatus() == null) {
-            return products;
-        }
-
-        return products.stream()
-                .filter(product -> {
-                    BigDecimal stock = product.getStock();
-                    BigDecimal lowStockThreshold = product.getLowStockThreshold();
-
-                    if (stock == null) {
-                        return false;
-                    }
-
-                    return switch (request.stockStatus()) {
-                        case NO_STOCK -> stock.compareTo(BigDecimal.ZERO) == 0;
-                        case LOW_STOCK -> lowStockThreshold != null && stock.compareTo(BigDecimal.ZERO) > 0
-                                && stock.compareTo(lowStockThreshold) <= 0;
-                        case ABOVE_THRESHOLD -> lowStockThreshold != null && stock.compareTo(lowStockThreshold) > 0;
-                    };
-                })
-                .toList();
-    }
-
-    // Pagination
-    @Transactional(readOnly = true)
-    public Page<ProductResponse> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable)
-                .map(this::mapToResponse);
-    }
-
-    @Transactional
-    private ProductResponse mapToResponse(Product product) {
-        return new ProductResponse(
-                product.getId(),
-                product.getName(),
-                product.getCategory(),
-                product.getPrice(),
-                product.getStock(),
-                product.getLowStockThreshold());
-    }
+    // -------------------
+    // DERIVED DATA
+    // -------------------
 
     // Product Summary
     @Transactional(readOnly = true)
-    public ProductSummaryResponse getProductSummary() {
-        List<Product> products = productRepository.findAll();
+    public ProductSummaryResponse getProductSummary(GetFilteredRequest request) {
+        List<Product> products = productRepository.findAll(ProductSpecifications.filter(request));
         long totalProducts = products.size();
         BigDecimal totalStock = BigDecimal.ZERO;
         BigDecimal totalUnitPrice = BigDecimal.ZERO;

@@ -2,13 +2,17 @@ package com.express.inventory.api.products;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.express.inventory.api.products.dto.request.CreateProductRequest;
 import com.express.inventory.api.products.dto.request.GetFilteredRequest;
 import com.express.inventory.api.products.dto.request.UpdateProductRequest;
+import com.express.inventory.api.products.dto.request.UpdateStockRequest;
 import com.express.inventory.api.products.dto.response.ProductResponse;
 import com.express.inventory.api.products.dto.response.ProductSummaryResponse;
 import com.express.inventory.common.dto.ApiResponse;
@@ -37,6 +42,8 @@ public class ProductController {
         this.productService = productService;
     }
 
+    private static final Logger log = LoggerFactory.getLogger(ProductController.class);
+
     // Create Product
     @PostMapping
     public ResponseEntity<ApiResponse<ProductResponse>> createProduct(
@@ -52,21 +59,9 @@ public class ProductController {
         return ApiResponse.success(HttpStatus.CREATED, "Products created successfully!", products);
     }
 
-    // Read Product
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<Product>>> getAllProducts() {
-        return ApiResponse.success(HttpStatus.OK, "Products retreived successfully!", productService.getAllProducts());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Product>> getProductById(@PathVariable Integer id) {
         return ApiResponse.success(HttpStatus.OK, "Product retrieved successfully!", productService.getProductById(id));
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<Product>>> searchProduct(@RequestParam String keyword) {
-        return ApiResponse.success(HttpStatus.OK, "Products retrieved successfully!",
-                productService.searchProduct(keyword));
     }
 
     // Update Product
@@ -75,6 +70,13 @@ public class ProductController {
             @PathVariable Integer id, @RequestBody UpdateProductRequest request) {
         Product updatedProduct = productService.updateProduct(request, id);
         return ApiResponse.success(HttpStatus.OK, "Product updated successfully!", updatedProduct);
+    }
+
+    @PatchMapping("/{id}/update-stock")
+    public ResponseEntity<ApiResponse<Void>> updateStock(
+            @PathVariable Integer id, @RequestBody @Valid UpdateStockRequest request) {
+        productService.updateStock(id, request);
+        return ApiResponse.success(HttpStatus.OK, "Product updated successfully!", null);
     }
 
     // Delete Product
@@ -90,27 +92,21 @@ public class ProductController {
         return ApiResponse.success(HttpStatus.OK, "All products have been deleted!", null);
     }
 
-    // Filter Products
-    @GetMapping("/filter")
-    public ResponseEntity<ApiResponse<List<Product>>> filterProducts(GetFilteredRequest request) {
-        List<Product> filteredProducts = productService.filterProducts(request);
-        return ApiResponse.success(HttpStatus.OK, "Products retrieved successfully!", filteredProducts);
-    }
-
-    // Pagination
-    @GetMapping("/pagination")
+    // Get products
+    @GetMapping
     public ResponseEntity<ApiResponse<Page<ProductResponse>>> getAllProducts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<ProductResponse> products = productService.getAllProducts(pageable);
+            @PageableDefault(page = 0, size = 10) @ParameterObject Pageable pageable,
+            @ParameterObject @ModelAttribute GetFilteredRequest request) {
+        Page<ProductResponse> products = productService.getAllProducts(pageable, request);
+        log.info("getAllProducts pageable={}, request={}", pageable, request);
         return ApiResponse.success(HttpStatus.OK, "Products retrieved successfully!", products);
     }
 
     // Product Summary
     @GetMapping("/summary")
-    public ResponseEntity<ApiResponse<ProductSummaryResponse>> getProductSummary() {
-        ProductSummaryResponse summary = productService.getProductSummary();
+    public ResponseEntity<ApiResponse<ProductSummaryResponse>> getProductSummary(
+            @ParameterObject @ModelAttribute GetFilteredRequest request) {
+        ProductSummaryResponse summary = productService.getProductSummary(request);
         return ApiResponse.success(HttpStatus.OK, "Product summary retrieved successfully!", summary);
     }
 
