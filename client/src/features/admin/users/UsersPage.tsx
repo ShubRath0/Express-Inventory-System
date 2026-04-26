@@ -1,9 +1,24 @@
+import { UserDTORole } from "@/api/__generated__/types.schemas";
 import { Header } from "@/components";
-import { UsersTableNav } from "@/features/admin/components/UsersTableNav";
-import { DisplayUsers } from "@/features/admin/users/DisplayUsers";
+import { SearchBar } from "@/components/ui";
+import { UsersTable } from "@/features/admin/users/components/UsersTable";
+import { DropDownFilter } from "@/features/admin/users/components/DropDown";
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 export const UsersPage = () => {
+  const userRoles: UserDTORole[] = [
+    "ADMIN",
+    "MANAGER",
+    "VIEWER",
+    "STOCK_COUNTER",
+  ];
+  const [selectedRole, setSelectedRole] = useState<UserDTORole>();
+
+  const handleRoleChange = (role?: UserDTORole) => {
+    setSelectedRole(role);
+  };
+
   return (
     <motion.section
       initial={{ opacity: 0, x: 20 }}
@@ -11,9 +26,21 @@ export const UsersPage = () => {
       transition={{ duration: 0.8, ease: "easeInOut" }}
       className="w-full h-full p-6 flex flex-col gap-6"
     >
-        <Header title="Users & Roles" />
-        <UsersTableNav />
-      <DisplayUsers />
+      <Header title="User Management" />
+      <div className="flex justify-between">
+        <SearchBar
+          onChange={() => {}}
+          placeholder="Search Users"
+          className="w-[20%] h-1.5"
+        />
+        <DropDownFilter
+          selectedRole={selectedRole}
+          userRoles={userRoles}
+          handleRoleChange={handleRoleChange}
+        />
+      
+      </div>
+      <UsersTable selectedRole={selectedRole} />
     </motion.section>
   );
 };
