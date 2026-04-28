@@ -16,8 +16,10 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
-  ApiResponseUserDTO,
-  LoginRequest
+  ApiResponseLoginResponse,
+  ApiResponseUser,
+  LoginRequest,
+  RegisterUserDto
 } from '../types.schemas';
 
 import { axiosInstance } from '../../../lib/axios';
@@ -25,13 +27,70 @@ import { axiosInstance } from '../../../lib/axios';
 
 
 
-export const login = (
+export const register = (
+    registerUserDto: RegisterUserDto,
+ signal?: AbortSignal
+) => {
+
+
+      return axiosInstance<ApiResponseUser>(
+      {url: `/api/v1/auth/signup`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: registerUserDto, signal
+    },
+      );
+    }
+
+
+
+export const getRegisterMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof register>>, TError,{data: RegisterUserDto}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof register>>, TError,{data: RegisterUserDto}, TContext> => {
+
+const mutationKey = ['register'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof register>>, {data: RegisterUserDto}> = (props) => {
+          const {data} = props ?? {};
+
+          return  register(data,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RegisterMutationResult = NonNullable<Awaited<ReturnType<typeof register>>>
+    export type RegisterMutationBody = RegisterUserDto
+    export type RegisterMutationError = unknown
+
+    export const useRegister = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof register>>, TError,{data: RegisterUserDto}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof register>>,
+        TError,
+        {data: RegisterUserDto},
+        TContext
+      > => {
+      return useMutation(getRegisterMutationOptions(options), queryClient);
+    }
+    export const login = (
     loginRequest: LoginRequest,
  signal?: AbortSignal
 ) => {
 
 
-      return axiosInstance<ApiResponseUserDTO>(
+      return axiosInstance<ApiResponseLoginResponse>(
       {url: `/api/v1/auth/login`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: loginRequest, signal
