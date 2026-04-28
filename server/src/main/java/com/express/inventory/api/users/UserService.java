@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.express.inventory.api.audit.enums.Action;
 import com.express.inventory.api.users.dto.request.CreateUserRequest;
 import com.express.inventory.api.users.dto.request.UpdateUserRequest;
+import com.express.inventory.api.users.dto.request.UserSearchRequest;
 import com.express.inventory.api.users.dto.response.UserDTO;
 import com.express.inventory.common.aspects.audit.Audit;
 import com.express.inventory.common.exception.ResourceNotFoundException;
@@ -70,17 +71,10 @@ public class UserService {
 
     // SEARCH BY EMAIL
     @Transactional(readOnly = true)
-    public List<UserDTO> findByEmail(String email) {
-        return userRepository.findByEmailContainingIgnoreCase(email)
-                .stream()
-                .map(userMapper::toDTO)
-                .toList();
-    }
+    public List<UserDTO> filter(UserSearchRequest request) {
 
-    // SEARCH BY NAME
-    @Transactional(readOnly = true)
-    public List<UserDTO> findByName(String name) {
-        return userRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(name, name)
+        return userRepository
+                .findAll(UserSpecifications.filter(request))
                 .stream()
                 .map(userMapper::toDTO)
                 .toList();
