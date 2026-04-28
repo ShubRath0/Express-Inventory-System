@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -100,13 +101,7 @@ public class UserController {
 
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<UserDTO>>> searchUsers(
-            @ModelAttribute UserSearchRequest request) {
-        if (request.email() != null) {
-            return ApiResponse.success(HttpStatus.OK, "Search completed", userService.findByEmail(request.email()));
-        }
-        if (request.name() != null) {
-            return ApiResponse.success(HttpStatus.OK, "Search completed", userService.findByName(request.name()));
-        }
-        return ApiResponse.success(HttpStatus.OK, "Search completed", userService.getAllUsers());
-    }
+            @ModelAttribute @ParameterObject UserSearchRequest request) {
+        return ApiResponse.success(HttpStatus.OK, "Success", userService.filter(request));
+    };
 }

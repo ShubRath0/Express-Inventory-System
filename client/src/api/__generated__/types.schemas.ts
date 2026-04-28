@@ -44,6 +44,54 @@ export interface ApiResponseUserDTO {
   fieldErrors?: FieldError[];
 }
 
+export type CreateTicketRequestPriority = typeof CreateTicketRequestPriority[keyof typeof CreateTicketRequestPriority];
+
+
+export const CreateTicketRequestPriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT',
+} as const;
+
+export interface CreateTicketRequest {
+  title: string;
+  description: string;
+  priority: CreateTicketRequestPriority;
+}
+
+export type TicketResponseStatus = typeof TicketResponseStatus[keyof typeof TicketResponseStatus];
+
+
+export const TicketResponseStatus = {
+  OPEN: 'OPEN',
+  IN_PROGRESS: 'IN_PROGRESS',
+  PENDING: 'PENDING',
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED',
+} as const;
+
+export type TicketResponsePriority = typeof TicketResponsePriority[keyof typeof TicketResponsePriority];
+
+
+export const TicketResponsePriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT',
+} as const;
+
+export interface TicketResponse {
+  id?: number;
+  title?: string;
+  description?: string;
+  status?: TicketResponseStatus;
+  priority?: TicketResponsePriority;
+  userId?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export type CreateUserRequestRole = typeof CreateUserRequestRole[keyof typeof CreateUserRequestRole];
 
 
@@ -122,9 +170,74 @@ export interface ApiResponseListProduct {
   fieldErrors?: FieldError[];
 }
 
+export interface RegisterUserDto {
+  email?: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+export type UserRole = typeof UserRole[keyof typeof UserRole];
+
+
+export const UserRole = {
+  ADMIN: 'ADMIN',
+  MANAGER: 'MANAGER',
+  VIEWER: 'VIEWER',
+  STOCK_COUNTER: 'STOCK_COUNTER',
+} as const;
+
+export interface GrantedAuthority {
+  authority?: string;
+}
+
+export interface User {
+  createdAt?: string;
+  updatedAt?: string;
+  id?: number;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  role?: UserRole;
+  enabled?: boolean;
+  username?: string;
+  authorities?: GrantedAuthority[];
+  accountNonExpired?: boolean;
+  accountNonLocked?: boolean;
+  credentialsNonExpired?: boolean;
+}
+
+export interface ApiResponseUser {
+  timestamp?: string;
+  status?: number;
+  success?: boolean;
+  error?: string;
+  message?: string;
+  path?: string;
+  data?: User;
+  fieldErrors?: FieldError[];
+}
+
 export interface LoginRequest {
   email?: string;
   password: string;
+}
+
+export interface LoginResponse {
+  token?: string;
+  expiresIn?: number;
+}
+
+export interface ApiResponseLoginResponse {
+  timestamp?: string;
+  status?: number;
+  success?: boolean;
+  error?: string;
+  message?: string;
+  path?: string;
+  data?: LoginResponse;
+  fieldErrors?: FieldError[];
 }
 
 export interface PurchaseOrderRecordDTO {
@@ -159,6 +272,21 @@ export interface PurchaseOrder {
   orderStatus?: string;
   orderPrice?: number;
   totalQuantity?: number;
+}
+
+export type UpdateTicketStatusRequestStatus = typeof UpdateTicketStatusRequestStatus[keyof typeof UpdateTicketStatusRequestStatus];
+
+
+export const UpdateTicketStatusRequestStatus = {
+  OPEN: 'OPEN',
+  IN_PROGRESS: 'IN_PROGRESS',
+  PENDING: 'PENDING',
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED',
+} as const;
+
+export interface UpdateTicketStatusRequest {
+  status: UpdateTicketStatusRequestStatus;
 }
 
 export interface UpdateProductRequest {
@@ -220,37 +348,32 @@ export interface ApiResponseListUserDTO {
   fieldErrors?: FieldError[];
 }
 
-export interface UserSearchRequest {
-  email?: string;
-  name?: string;
-}
-
 export interface SortObject {
   empty?: boolean;
-  sorted?: boolean;
   unsorted?: boolean;
+  sorted?: boolean;
 }
 
 export interface PageableObject {
   offset?: number;
+  pageNumber?: number;
+  pageSize?: number;
   sort?: SortObject;
   paged?: boolean;
   unpaged?: boolean;
-  pageNumber?: number;
-  pageSize?: number;
 }
 
 export interface PageProductResponse {
-  totalPages?: number;
   totalElements?: number;
+  totalPages?: number;
   size?: number;
   content?: ProductResponse[];
   number?: number;
   first?: boolean;
   last?: boolean;
   numberOfElements?: number;
-  sort?: SortObject;
   pageable?: PageableObject;
+  sort?: SortObject;
   empty?: boolean;
 }
 
@@ -359,16 +482,16 @@ export interface AuditLog {
 }
 
 export interface PageAuditLog {
-  totalPages?: number;
   totalElements?: number;
+  totalPages?: number;
   size?: number;
   content?: AuditLog[];
   number?: number;
   first?: boolean;
   last?: boolean;
   numberOfElements?: number;
-  sort?: SortObject;
   pageable?: PageableObject;
+  sort?: SortObject;
   empty?: boolean;
 }
 
@@ -438,7 +561,8 @@ export type CreateProductsWithCsvBody = {
 };
 
 export type SearchUsersParams = {
-request: UserSearchRequest;
+email?: string;
+name?: string;
 };
 
 export type GetProductSummaryParams = {
