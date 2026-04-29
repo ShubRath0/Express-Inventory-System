@@ -1,22 +1,14 @@
 import { UserDTORole } from "@/api/__generated__/types.schemas";
-// import { useSearchUsers } from "@/api/__generated__/user-controller/user-controller";
 import { Header } from "@/components";
-import { Plus } from "lucide-react";
 import { SearchBar } from "@/components/ui";
 import { DropDownFilter } from "@/features/admin/users/components/DropDown";
 import { UsersTable } from "@/features/admin/users/components/UsersTable";
 import { Button } from "@heroui/react";
 import { motion } from "framer-motion";
+import { Plus } from "lucide-react";
 import { useState } from "react";
 
 export const UsersPage = () => {
-  // const { data, isLoading, isError } = useSearchUsers({
-  //   request: { email: "jdoe@example.com", name: "John" },
-  // });
-
-  // console.log(data)
-  
-
   const userRoles: UserDTORole[] = [
     "ADMIN",
     "MANAGER",
@@ -49,7 +41,11 @@ export const UsersPage = () => {
             userRoles={userRoles}
             handleRoleChange={handleRoleChange}
           />
-          <Button variant="solid" color="primary" startContent={<Plus size={16}/>}>
+          <Button
+            variant="solid"
+            color="primary"
+            startContent={<Plus size={16} />}
+          >
             Add User
           </Button>
         </div>
