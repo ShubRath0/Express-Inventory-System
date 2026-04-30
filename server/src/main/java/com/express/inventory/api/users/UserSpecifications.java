@@ -25,17 +25,25 @@ public class UserSpecifications {
 
             // Name filter (matches firstName OR lastName)
             if (request.name() != null && !request.name().isBlank()) {
-                String name = "%" + request.name().toLowerCase() + "%";
+
+                String[] names = request.name().trim().toLowerCase().split("\\s+");
+
+                String firstName = names[0];
+                String lastName = names.length > 1 ? names[1] : null;
 
                 Predicate firstNameMatch = cb.like(
                         cb.lower(root.get("firstName")),
-                        name);
+                        "%" + firstName + "%");
 
-                Predicate lastNameMatch = cb.like(
-                        cb.lower(root.get("lastName")),
-                        name);
+                Predicate lastNameMatch = lastName != null
+                        ? cb.like(cb.lower(root.get("lastName")), "%" + lastName + "%")
+                        : cb.like(cb.lower(root.get("lastName")), "%" + firstName + "%");
 
-                predicates.add(cb.or(firstNameMatch, lastNameMatch));
+                if (lastName != null) {
+                    predicates.add(cb.and(firstNameMatch, lastNameMatch));
+                } else {
+                    predicates.add(cb.or(firstNameMatch, lastNameMatch));
+                }
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));
