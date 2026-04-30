@@ -23,7 +23,7 @@ export const UserDTORole = {
 export interface UserDTO {
   id: number;
   firstName: string;
-  lastName: string ;
+  lastName: string;
   email: string;
   role: UserDTORole;
 }
@@ -201,11 +201,11 @@ export interface User {
   password?: string;
   role?: UserRole;
   enabled?: boolean;
-  username?: string;
-  authorities?: GrantedAuthority[];
   accountNonExpired?: boolean;
   accountNonLocked?: boolean;
   credentialsNonExpired?: boolean;
+  authorities?: GrantedAuthority[];
+  username?: string;
 }
 
 export interface ApiResponseUser {
@@ -356,24 +356,24 @@ export interface SortObject {
 
 export interface PageableObject {
   offset?: number;
+  unpaged?: boolean;
+  paged?: boolean;
+  sort?: SortObject;
   pageNumber?: number;
   pageSize?: number;
-  sort?: SortObject;
-  paged?: boolean;
-  unpaged?: boolean;
 }
 
 export interface PageProductResponse {
-  totalElements?: number;
   totalPages?: number;
+  totalElements?: number;
   size?: number;
   content?: ProductResponse[];
   number?: number;
   first?: boolean;
   last?: boolean;
   numberOfElements?: number;
-  pageable?: PageableObject;
   sort?: SortObject;
+  pageable?: PageableObject;
   empty?: boolean;
 }
 
@@ -482,16 +482,16 @@ export interface AuditLog {
 }
 
 export interface PageAuditLog {
-  totalElements?: number;
   totalPages?: number;
+  totalElements?: number;
   size?: number;
   content?: AuditLog[];
   number?: number;
   first?: boolean;
   last?: boolean;
   numberOfElements?: number;
-  pageable?: PageableObject;
   sort?: SortObject;
+  pageable?: PageableObject;
   empty?: boolean;
 }
 
