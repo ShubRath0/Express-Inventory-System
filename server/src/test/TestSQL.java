@@ -1,5 +1,6 @@
 package test;
 
+
 public class TestSQL {
     public static final String GET_ALL = "SELECT * FROM test_entity";
     public static final String CREATE_ENTITY = "INSERT INTO test_entity (name) VALUES (?)";

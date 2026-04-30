@@ -1,6 +1,7 @@
 
 package com.express.inventory.service;
 
+
 import com.express.inventory.models.User;
 import com.express.inventory.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
