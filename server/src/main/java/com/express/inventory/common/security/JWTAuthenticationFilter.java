@@ -1,6 +1,4 @@
-package com.express.inventory.common.config;
-
-import com.express.inventory.common.security.JWTService;
+package com.express.inventory.common.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

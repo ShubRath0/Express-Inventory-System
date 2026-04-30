@@ -63,6 +63,7 @@ jobs:
           DB_USERNAME: user
           DB_PASSWORD: password
           JWT_SECRET_KEY: de880e64fcda88375eb3647d376c3659ae33a1d0dd9358764cbbe889dd2c4b2d
+          REDIS_HOST: localhost
         run: |
           chmod +x mvnw
           ./mvnw test

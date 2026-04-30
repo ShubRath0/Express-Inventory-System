@@ -14,6 +14,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.express.inventory.common.security.JWTAuthenticationFilter;
+import com.express.inventory.common.security.RateLimitFilter;
+
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -27,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
     private final JWTAuthenticationFilter JWTAuthenticationFilter;
+    private final RateLimitFilter rateLimitFilter;
 
     /**
      * Configures the security filter chain.
@@ -62,6 +66,7 @@ public class SecurityConfig {
                 // Set session management to STATELESS; no session cookies will be created or
                 // used.
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(JWTAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
