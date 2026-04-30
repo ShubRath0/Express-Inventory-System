@@ -7,13 +7,15 @@ import { Header } from "@/components";
 import { SearchBar } from "@/components/ui";
 import { DropDownFilter } from "@/features/admin/users/components/DropDown";
 import { UsersTable } from "@/features/admin/users/components/UsersTable";
-import { Button } from "@heroui/react";
+import { Button, useDisclosure } from "@heroui/react";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { AddUser } from "./components/AddUserModal";
 
 export const UsersPage = () => {
   const [searchTerm, setSearchTerm] = useState<SearchUsersParams>();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const handleSearch = (value: string) => {
     if (!value) {
@@ -65,10 +67,13 @@ export const UsersPage = () => {
           <Button
             variant="solid"
             color="primary"
+            size="md"
+            onPress={onOpen}
             startContent={<Plus size={16} />}
           >
             Add User
           </Button>
+          {isOpen && <AddUser isOpen={isOpen} onOpenChange={onOpenChange} />}
         </div>
       </div>
       <UsersTable
