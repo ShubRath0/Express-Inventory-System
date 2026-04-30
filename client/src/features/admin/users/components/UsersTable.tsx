@@ -1,5 +1,7 @@
-import type { UserDTORole } from "@/api/__generated__/types.schemas";
-import { useGetAllUsers } from "@/api/__generated__/user-controller/user-controller";
+import type {
+  ApiResponseListUserDTO,
+  UserDTORole,
+} from "@/api/__generated__/types.schemas";
 import { Loading } from "@/components";
 import { usePagination } from "@/hooks";
 import {
@@ -15,11 +17,15 @@ import { ColumnsList } from "../types/columns.types";
 
 export const UsersTable = ({
   selectedRole,
+  data,
+  isLoading,
+  isError,
 }: {
   selectedRole?: UserDTORole;
+  data: ApiResponseListUserDTO | undefined;
+  isLoading: boolean;
+  isError: boolean;
 }) => {
-  const { data, isLoading, isError } = useGetAllUsers();
-
   const filteredUserRoles = (data?.data || []).filter(
     (item) => !selectedRole || item.role === selectedRole,
   );

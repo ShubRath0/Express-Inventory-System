@@ -201,9 +201,9 @@ export interface User {
   password?: string;
   role?: UserRole;
   enabled?: boolean;
+  credentialsNonExpired?: boolean;
   accountNonExpired?: boolean;
   accountNonLocked?: boolean;
-  credentialsNonExpired?: boolean;
   authorities?: GrantedAuthority[];
   username?: string;
 }
@@ -357,10 +357,10 @@ export interface SortObject {
 export interface PageableObject {
   offset?: number;
   unpaged?: boolean;
-  paged?: boolean;
-  sort?: SortObject;
   pageNumber?: number;
   pageSize?: number;
+  sort?: SortObject;
+  paged?: boolean;
 }
 
 export interface PageProductResponse {
@@ -372,8 +372,8 @@ export interface PageProductResponse {
   first?: boolean;
   last?: boolean;
   numberOfElements?: number;
-  sort?: SortObject;
   pageable?: PageableObject;
+  sort?: SortObject;
   empty?: boolean;
 }
 
@@ -490,8 +490,8 @@ export interface PageAuditLog {
   first?: boolean;
   last?: boolean;
   numberOfElements?: number;
-  sort?: SortObject;
   pageable?: PageableObject;
+  sort?: SortObject;
   empty?: boolean;
 }
 

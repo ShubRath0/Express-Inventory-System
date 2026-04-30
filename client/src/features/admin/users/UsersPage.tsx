@@ -1,4 +1,8 @@
-import { UserDTORole } from "@/api/__generated__/types.schemas";
+import {
+  UserDTORole,
+  type SearchUsersParams,
+} from "@/api/__generated__/types.schemas";
+import { useSearchUsers } from "@/api/__generated__/user-controller/user-controller";
 import { Header } from "@/components";
 import { SearchBar } from "@/components/ui";
 import { DropDownFilter } from "@/features/admin/users/components/DropDown";
@@ -9,12 +13,29 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 
 export const UsersPage = () => {
+  const [searchTerm, setSearchTerm] = useState<SearchUsersParams>();
+
+  const handleSearch = (value: string) => {
+    if (!value) {
+      setSearchTerm({});
+      return;
+    }
+    if (value.includes("@")) {
+      setSearchTerm({ email: value });
+    } else {
+      setSearchTerm({ name: value });
+    }
+  };
+
+  const { data, isLoading, isError } = useSearchUsers(searchTerm);
+
   const userRoles: UserDTORole[] = [
     "ADMIN",
     "MANAGER",
     "VIEWER",
     "STOCK_COUNTER",
   ];
+
   const [selectedRole, setSelectedRole] = useState<UserDTORole>();
 
   const handleRoleChange = (role?: UserDTORole) => {
@@ -31,7 +52,7 @@ export const UsersPage = () => {
       <Header title="User Management" />
       <div className="flex justify-between">
         <SearchBar
-          onChange={() => {}}
+          onChange={handleSearch}
           placeholder="Search by name or email"
           className="w-[20%] h-1.5"
         />
@@ -50,7 +71,12 @@ export const UsersPage = () => {
           </Button>
         </div>
       </div>
-      <UsersTable selectedRole={selectedRole} />
+      <UsersTable
+        selectedRole={selectedRole}
+        isLoading={isLoading}
+        isError={isError}
+        data={data}
+      />
     </motion.section>
   );
 };
