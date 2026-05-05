@@ -1,22 +1,23 @@
 package com.express.inventory.common.security;
 
 import java.io.IOException;
-import java.time.Duration;
-
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import io.github.bucket4j.Bucket;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 
 @Component
-@RequiredArgsConstructor
-public class RateLimitFilter extends OncePerRequestFilter{
-    private final StringRedisTemplate redisTemplate;
+public class RateLimitFilter extends OncePerRequestFilter {
+    private final RateLimitingService rateLimitingService;
+
+    public RateLimitFilter(RateLimitingService rateLimitingService) {
+        this.rateLimitingService = rateLimitingService;
+    }
 
     @Override
     protected void doFilterInternal(
@@ -24,19 +25,40 @@ public class RateLimitFilter extends OncePerRequestFilter{
         HttpServletResponse response,
         FilterChain filterChain
     ) throws ServletException, IOException {
-        String key = "rate_limit:" + request.getRemoteAddr();
-        Long count = redisTemplate.opsForValue().increment(key);
+        String clientIp = getClientIp(request);
+        Bucket tokenBucket = rateLimitingService.resolveBucket(clientIp);
 
-        if (count == 1) {
-            redisTemplate.expire(key, Duration.ofMinutes(1));
+        var probe = tokenBucket.tryConsumeAndReturnRemaining(1);
+
+        if (probe.isConsumed()) {
+            response.addHeader("X-Rate-Limit-Remaining", String.valueOf(probe.getRemainingTokens()));
+            filterChain.doFilter(request, response);
+        } else {
+            var waitForRefill = probe.getNanosToWaitForRefill() / 1_000_000_000;
+            response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+            response.addHeader("X-Rate-Limit-Retry-After-Seconds", String.valueOf(waitForRefill));
+            response.setContentType("application/json");
+
+            String jsonResponse = """
+                    {
+                        "status": %s,
+                        "error": "Too Many Requests",
+                        "message": "You have exhausted your API Request Quota",
+                        "retryAfterSeconds": %s
+                    }
+                    """.formatted(HttpStatus.TOO_MANY_REQUESTS.value(), waitForRefill);
+            
+            response.getWriter().write(jsonResponse);
+        }
+    }
+
+    private String getClientIp(HttpServletRequest request) {
+        String xfHeader = request.getHeader("X-Forwarded-For");
+
+        if (xfHeader == null || xfHeader.isEmpty()) {
+            return request.getRemoteAddr();
         }
 
-        if (count > 100) {
-            response.setStatus(429);
-            response.getWriter().write("Too Many Requests");
-            return;
-        }
-        
-        filterChain.doFilter(request, response);
+        return xfHeader.split(",")[0].trim();
     }
 }

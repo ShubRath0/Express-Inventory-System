@@ -15,6 +15,7 @@ public class ExpressInventoryApplication {
         setEnvIfPresent("DB_PASSWORD", dotenv);
         setEnvIfPresent("JWT_SECRET_KEY", dotenv);
         setEnvIfPresent("REDIS_HOST", dotenv);
+        setEnvIfPresent("REDIS_PORT", dotenv);
         SpringApplication.run(ExpressInventoryApplication.class, args);
     }
 
