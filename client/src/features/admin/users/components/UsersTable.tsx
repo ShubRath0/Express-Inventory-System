@@ -51,7 +51,6 @@ export const UsersTable = ({
           <div className="flex justify-center">
             <Pagination
               isCompact
-              showControls
               showShadow
               color="primary"
               page={page}
