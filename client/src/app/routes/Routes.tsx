@@ -7,7 +7,7 @@ import {
   ProductInventorySection,
   Reports,
 } from "@/features";
-import { UsersPage } from "@/features/admin/users/UsersPage";
+import { UsersPage } from "@/features/admin/users/UserManagement";
 import { Route, Routes } from "react-router-dom";
 
 export const AppRoutes = () => {

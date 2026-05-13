@@ -9,7 +9,9 @@ export const Login = () => {
   const { mutateAsync, isError, isPending } = useLogin();
 
   const handleSubmit = async (data: LoginRequest) => {
-    await mutateAsync({ data });
+    // await mutateAsync({ data });
+    const res = await mutateAsync({ data });
+    console.log(res);
     navigate("/dashboard");
   };
 
