@@ -1,5 +1,3 @@
-import { useGetUserById } from "@/api/__generated__/user-controller/user-controller";
-
 export const UserProfile = () => {
     return (
         <div>
