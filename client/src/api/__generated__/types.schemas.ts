@@ -201,11 +201,11 @@ export interface User {
   password?: string;
   role?: UserRole;
   enabled?: boolean;
-  username?: string;
-  authorities?: GrantedAuthority[];
+  credentialsNonExpired?: boolean;
   accountNonExpired?: boolean;
   accountNonLocked?: boolean;
-  credentialsNonExpired?: boolean;
+  authorities?: GrantedAuthority[];
+  username?: string;
 }
 
 export interface ApiResponseUser {
@@ -356,16 +356,16 @@ export interface SortObject {
 
 export interface PageableObject {
   offset?: number;
+  unpaged?: boolean;
   pageNumber?: number;
   pageSize?: number;
   sort?: SortObject;
   paged?: boolean;
-  unpaged?: boolean;
 }
 
 export interface PageProductResponse {
-  totalElements?: number;
   totalPages?: number;
+  totalElements?: number;
   size?: number;
   content?: ProductResponse[];
   number?: number;
@@ -482,8 +482,8 @@ export interface AuditLog {
 }
 
 export interface PageAuditLog {
-  totalElements?: number;
   totalPages?: number;
+  totalElements?: number;
   size?: number;
   content?: AuditLog[];
   number?: number;
