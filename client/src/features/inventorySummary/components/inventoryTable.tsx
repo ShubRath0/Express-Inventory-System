@@ -36,7 +36,6 @@ export const InventoryTable = ({ data }: { data: ProductResponse[]; }) => {
           <div className="flex justify-center">
             <Pagination
               isCompact
-              showControls
               showShadow
               color="primary"
               page={page}

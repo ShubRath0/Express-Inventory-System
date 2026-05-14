@@ -59,7 +59,7 @@ const NotificationDropdown = () => {
           position: "relative",
         }}
       >
-        <Bell size={22} />
+        <Bell size={18} />
         {unreadCount > 0 && (
           <span
             style={{
