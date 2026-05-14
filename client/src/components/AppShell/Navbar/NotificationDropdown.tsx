@@ -6,8 +6,6 @@ import { useState } from "react";
 
 const NotificationDropdown = () => {
   const { data, isLoading } = useGetNotifications();
-
-  console.log(data);
   const notifications = data?.data ?? [
     {
       id: 1,
