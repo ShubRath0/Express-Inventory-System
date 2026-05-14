@@ -16,28 +16,32 @@ export const FilteredStatsBanner = () => {
     {
       statName: "Total Filtered Items",
       statValue: totalItems,
-      icon: Package
+      icon: Package,
+      className: "bg-cyan50 text-cyan-500 p-2 rounded-md",
     },
     {
       statName: "Total Filtered Stock",
       statValue: totalStock,
       icon: Boxes,
-      render: (v) => v.toLocaleString(undefined, { minimumFractionDigits: 2 })
+      render: (v) => v.toLocaleString(undefined, { minimumFractionDigits: 2 }),
+      className: "bg-green50 text-green-500 p-2 rounded-md",
     },
     {
       statName: "Total Filtered Unit Price",
       statValue: totalUnitPrice,
       icon: Ticket,
-      render: (v) => `$${v.toLocaleString(undefined, { minimumFractionDigits: 2 })}`
+      render: (v) =>
+        `$${v.toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
+      className: "bg-indigo50 text-indigo-500 p-2 rounded-md",
     },
     {
       statName: "Total Filtered Value",
       statValue: totalValue,
       icon: CircleDollarSign,
-      render: (v) => `$${v.toLocaleString(undefined, { minimumFractionDigits: 2 })}`
-    }
+      render: (v) =>
+        `$${v.toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
+      className: "bg-yellow50 text-yellow-500 p-2 rounded-md",
+    },
   ];
-  return (
-    <GenericStatBanner stats={stats} />
-  );
+  return <GenericStatBanner stats={stats} />;
 };

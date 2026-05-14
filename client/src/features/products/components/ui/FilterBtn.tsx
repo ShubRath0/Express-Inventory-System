@@ -2,6 +2,7 @@ import type { RootState } from "@/app/Store";
 import { setCategory, setStockStatuses } from "@/features/products/state";
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, type SharedSelection } from "@heroui/react";
 import { useDispatch, useSelector } from "react-redux";
+import {ListFilter} from "lucide-react";
 
 export const FilterBtn = () => {
 
@@ -24,7 +25,7 @@ export const FilterBtn = () => {
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button color="primary" variant="flat" size="lg">
+        <Button className="font-normal" color="primary" variant="flat" size="lg" startContent={<ListFilter size={16} />}>
           Filter
         </Button>
       </DropdownTrigger>
