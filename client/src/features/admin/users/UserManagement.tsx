@@ -56,7 +56,7 @@ export const UsersPage = () => {
         <SearchBar
           onChange={handleSearch}
           placeholder="Search by name or email"
-          className="w-[20%] h-1.5"
+          className="w-[20%] h-2"
         />
         <div className="flex gap-4">
           <DropDownFilter
