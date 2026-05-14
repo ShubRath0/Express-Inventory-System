@@ -1,5 +1,5 @@
 // COMPONENTS
-import { ScrollContainer, SectionContainer } from "@/components";
+import { Header, ScrollContainer, SectionContainer } from "@/components";
 import { CreateByCsvBtn, CreateProductBtn, CreateProductModal, DeleteAlert, FilterBtn, FilteredStatsBanner, InventorySearchbar, ProductTable, UpdateStockModal } from "@/features/products/components";
 import { ExportBtn } from "@/features/products/components/Export/ExportBtn";
 import { NukeBtn } from "@/features/products/components/ui/NukeBtn";
@@ -15,8 +15,8 @@ export const ProductInventorySection = () => {
     // CONTAINER
     <div className="flex flex-col h-full p-4 overflow-y-auto bg-background">
 
-      <ScrollContainer id="main-content-viewport">
-
+      <ScrollContainer>
+        <Header title="Products" />
         {/* FILTERED KPIs */}
         <motion.div
           initial={{ opacity: 0, x: -100 }}

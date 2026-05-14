@@ -1,15 +1,17 @@
 package com.express.inventory.common.security;
 
 import java.time.Duration;
+import java.util.function.Supplier;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.BucketConfiguration;
 import io.github.bucket4j.distributed.proxy.ProxyManager;
-import java.util.function.Supplier;
 
+@Profile("redis")
 @Service
 public class RateLimitingService {
     private static final int REQUEST_PER_MINUTE = 10;

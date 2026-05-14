@@ -34,6 +34,7 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -48,6 +49,7 @@ public class ProductService {
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     @Transactional(propagation = Propagation.REQUIRED)
     public void updateStockEvent(StockUpdatedEvent event) {
+        System.out.println("EVENT REACHED");
         Product product = productRepository.findById(event.productId())
                 .orElseThrow(() -> new ResourceNotFoundException(Product.class, event.productId()));
 
