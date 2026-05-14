@@ -6,16 +6,16 @@ export interface StatCardProps {
   statName: string;
   statValue: number;
   render?: (statValue: number) => React.ReactNode;
-  icon?: LucideIcon,
-  className?: string
-};
+  icon?: LucideIcon;
+  className?: string;
+}
 
 export const StatCard = ({
   statName,
   statValue,
   render,
   icon: Icon = FileText,
-  className
+  className,
 }: StatCardProps) => {
   return (
     <Section>
@@ -33,7 +33,7 @@ export const StatCard = ({
       <CardFooter className="flex-col items-start">
         <p className="text-gray-500 text-sm font-normal">{statName}</p>
         <div className="flex items-center gap-2">
-          <h3 className="text-4xl font-bold">
+          <h3 className="text-4xl font-normal">
             {statValue == null && <Spinner />}
             {render ? render(statValue) : `${statValue.toLocaleString()}`}
           </h3>

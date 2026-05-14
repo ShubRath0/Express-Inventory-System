@@ -3,7 +3,6 @@ import { Header, ScrollContainer, SectionContainer } from "@/components";
 import { CreateByCsvBtn, CreateProductBtn, CreateProductModal, DeleteAlert, FilterBtn, FilteredStatsBanner, InventorySearchbar, ProductTable, UpdateStockModal } from "@/features/products/components";
 import { ExportBtn } from "@/features/products/components/Export/ExportBtn";
 import { NukeBtn } from "@/features/products/components/ui/NukeBtn";
-import { Divider } from "@heroui/react";
 import { motion } from 'framer-motion';
 import { useRef } from "react";
 
@@ -49,8 +48,6 @@ export const ProductInventorySection = () => {
             </div>
           </section>
         </motion.div>
-
-        <Divider />
 
         {/* TABLE */}
         <section id="inventory-table" className="pb-10">
