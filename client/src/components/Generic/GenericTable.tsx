@@ -13,7 +13,7 @@ export type ColumnDef<T> = {
   sortAccessor?: (item: T) => string | number;
 };
 
-export type GenericTableProps<T extends { id: string | number; }> = {
+export type GenericTableProps<T> = {
   items: T[],
   columns: ColumnDef<T>[],
   className?: string,
@@ -21,12 +21,13 @@ export type GenericTableProps<T extends { id: string | number; }> = {
   sortDirection: "ascending" | "descending";
   setSortColumn: (column: keyof T | undefined) => void;
   setSortDirection: (direction: "ascending" | "descending") => void;
-  page?: number,
-  pages?: number,
-  onChange?: (page: number) => void,
+  page?: number;
+  pages?: number;
+  onChange?: (page: number) => void;
+  getRowId: (item: T) => string | number;
 };
 
-export const GenericTable = <T extends { id: string | number; }>({
+export const GenericTable = <T,>({
   items,
   columns,
   className,
@@ -36,7 +37,8 @@ export const GenericTable = <T extends { id: string | number; }>({
   setSortDirection,
   page,
   pages,
-  onChange
+  onChange,
+  getRowId
 }: GenericTableProps<T>) => {
   const sortedItems = useMemo(() => {
     if (!sortColumn) return items;
@@ -67,10 +69,10 @@ export const GenericTable = <T extends { id: string | number; }>({
         setSortDirection(descriptor.direction as "ascending" | "descending");
       }}
       className={className}
-      bottomContent={pages && pages > 1 && (
+      bottomContent={page !== undefined && pages !== undefined && pages > 0 && (
         <div className="flex justify-center">
           <Pagination
-            page={(page ?? 0) + 1}
+            page={page + 1}
             total={pages}
             onChange={(p) => onChange?.(p - 1)}
           />
@@ -88,9 +90,9 @@ export const GenericTable = <T extends { id: string | number; }>({
       </TableHeader>
 
       {/* BODY */}
-      <TableBody items={sortedItems} emptyContent="No data found.">
+      <TableBody items={sortedItems} emptyContent="No data found">
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow key={getRowId(item)}>
             {columns.map((col) => {
 
               if (col.virtual) {

@@ -1,9 +1,14 @@
 import { Loading } from "@/components";
 
+import { useAuth } from "@/features/auth";
 import { useLogin } from "@/features/auth/useLogin";
+import { Navigate } from "react-router-dom";
 import { LoginFooter, LoginForm, LoginHeader } from "./index";
 
 export const Login = () => {
+  const { isAuthenticated } = useAuth();
+  if (isAuthenticated) return <Navigate to="/dashboard" replace />;
+
   const { login, isLoading: isPending, isError } = useLogin();
 
   if (isPending) {

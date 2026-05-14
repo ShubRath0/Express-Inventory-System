@@ -42,7 +42,7 @@ export const ReportsList = () => {
     <div className="grid grid-cols-3 gap-4 w-full h-120" aria-label="Reports List">
       {CardItems.map((item, index) => (
         <Link href={item.href} key={index}>
-          <GenericCard 
+          <GenericCard
             className="h-full hover:scale-105 transition-transform duration-300"
             header={<div className="flex flex-col gap-3 justify-center">{item.icon}<span className="font-semibold">{item.title}</span></div>}
             body={

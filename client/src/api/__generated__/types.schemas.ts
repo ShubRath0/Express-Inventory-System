@@ -201,11 +201,11 @@ export interface User {
   password?: string;
   role?: UserRole;
   enabled?: boolean;
+  accountNonLocked?: boolean;
   credentialsNonExpired?: boolean;
   accountNonExpired?: boolean;
-  accountNonLocked?: boolean;
-  authorities?: GrantedAuthority[];
   username?: string;
+  authorities?: GrantedAuthority[];
 }
 
 export interface ApiResponseUser {
@@ -242,6 +242,7 @@ export interface ApiResponseLoginResponse {
 
 export interface PurchaseOrderRecordDTO {
   productId: number;
+  productName: string;
   quantity: number;
   unitPrice: number;
 }
@@ -253,25 +254,15 @@ export interface CreatePurchaseOrderRequest {
   records: PurchaseOrderRecordDTO[];
 }
 
-export interface PurchaseOrderRecord {
-  createdAt?: string;
-  updatedAt?: string;
-  id?: number;
-  purchaseOrder?: PurchaseOrder;
-  product?: Product;
-  quantity?: number;
-  unitPrice?: number;
-}
-
-export interface PurchaseOrder {
-  createdAt?: string;
-  updatedAt?: string;
-  id?: number;
-  records?: PurchaseOrderRecord[];
-  userId?: number;
-  orderStatus?: string;
-  orderPrice?: number;
-  totalQuantity?: number;
+export interface PurchaseOrderResponse {
+  id: number;
+  userId: number;
+  records: PurchaseOrderRecordDTO[];
+  orderStatus: string;
+  orderPrice: number;
+  totalQuantity: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type UpdateTicketStatusRequestStatus = typeof UpdateTicketStatusRequestStatus[keyof typeof UpdateTicketStatusRequestStatus];
@@ -335,6 +326,22 @@ export interface ApiResponseVoid {
   path?: string;
   data?: ApiResponseVoidData;
   fieldErrors?: FieldError[];
+}
+
+export type UpdateStatusRequestStatus = typeof UpdateStatusRequestStatus[keyof typeof UpdateStatusRequestStatus];
+
+
+export const UpdateStatusRequestStatus = {
+  PENDING: 'PENDING',
+  SHIPPED: 'SHIPPED',
+  ARRIVED: 'ARRIVED',
+  CANCELLED: 'CANCELLED',
+  RETURNED: 'RETURNED',
+} as const;
+
+export interface UpdateStatusRequest {
+  status: UpdateStatusRequestStatus;
+  purchaseId: number;
 }
 
 export interface ApiResponseListUserDTO {

@@ -19,13 +19,13 @@ export const AppNavbar = () => {
         <DropdownMenu>
           {item.subItems
             ? item.subItems.map((subItem) => (
-                <DropdownItem key={subItem.key}>
-                  <Link href={subItem.href} className="flex gap-3">
-                    {subItem.icon}
-                    <p className="text-gray-400">{subItem.label}</p>
-                  </Link>
-                </DropdownItem>
-              ))
+              <DropdownItem key={subItem.key}>
+                <Link href={subItem.href} className="flex gap-3">
+                  {subItem.icon}
+                  <p className="text-gray-400">{subItem.label}</p>
+                </Link>
+              </DropdownItem>
+            ))
             : null}
         </DropdownMenu>
       </Dropdown>

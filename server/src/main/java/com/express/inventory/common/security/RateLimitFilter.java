@@ -1,6 +1,8 @@
 package com.express.inventory.common.security;
 
 import java.io.IOException;
+
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -11,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@Profile("redis")
 @Component
 public class RateLimitFilter extends OncePerRequestFilter {
     private final RateLimitingService rateLimitingService;
@@ -21,10 +24,9 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-        HttpServletRequest request,
-        HttpServletResponse response,
-        FilterChain filterChain
-    ) throws ServletException, IOException {
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
         String clientIp = getClientIp(request);
         Bucket tokenBucket = rateLimitingService.resolveBucket(clientIp);
 
@@ -47,7 +49,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
                         "retryAfterSeconds": %s
                     }
                     """.formatted(HttpStatus.TOO_MANY_REQUESTS.value(), waitForRefill);
-            
+
             response.getWriter().write(jsonResponse);
         }
     }

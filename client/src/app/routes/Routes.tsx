@@ -1,4 +1,6 @@
 import { AppShell } from "@/components";
+import { Logout } from "@/components/auth/Logout";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { OrvalTest } from "@/components/OrvalTest";
 import {
   DashboardPage,
@@ -8,6 +10,9 @@ import {
   Reports,
 } from "@/features";
 import { UsersPage } from "@/features/admin/users/UserManagement";
+import { CreatePoPage } from "@/features/purchases/CreatePoPage";
+import { InvoicePage } from "@/features/purchases/InvoicePage";
+import { PurchaseOrdersPage } from "@/features/purchases/PurchaseOrderPage";
 import { Route, Routes } from "react-router-dom";
 
 export const AppRoutes = () => {
@@ -15,27 +20,33 @@ export const AppRoutes = () => {
     <Routes>
       {/* Every single route inside of this will have an "AppShell" (Sidebar + Navbar) */}
       {/* Anything outside of the route will NOT have an AppShell (login / anything else) */}
-      <Route element={<AppShell />}>
-        <Route path="/dashboard" element={<DashboardPage />}></Route>
-        <Route path="/orval" element={<OrvalTest />}></Route>
-        <Route
-          path="/inventory/products"
-          element={<ProductInventorySection />}
-        ></Route>
-        <Route path="/reports" element={<Reports />}></Route>
-        <Route
-          path="/inventory-summary"
-          element={<InventorySummaryPage />}
-        ></Route>
-        {/* <Route path="/dashboard" element={<DashboardPage />}></Route> */}
-        <Route path="/purchasing"></Route>
-        <Route path="/admin" element={<UsersPage />}></Route>
-        <Route path="/help"></Route>
-        <Route path="/notifications"></Route>
-        <Route path="/user"></Route>
-        <Route path="settings"></Route>
+      <Route element={<ProtectedRoute />}>
+        <Route element={<AppShell />}>
+          <Route path="/dashboard" element={<DashboardPage />}></Route>
+          <Route path="/orval" element={<OrvalTest />}></Route>
+          <Route
+            path="/inventory/products"
+            element={<ProductInventorySection />}
+          ></Route>
+          <Route path="/reports" element={<Reports />}></Route>
+          <Route
+            path="/inventory-summary"
+            element={<InventorySummaryPage />}
+          ></Route>
+          <Route path="/dashboard" element={<DashboardPage />}></Route>
+          <Route path="/purchasing" element={<PurchaseOrdersPage />}></Route>
+          <Route path="/purchasing/create" element={<CreatePoPage />}></Route>
+          <Route path="/purchase-order/:id" element={<InvoicePage />}></Route>
+          <Route path="/admin" element={<UsersPage />}></Route>
+          <Route path="/help"></Route>
+          <Route path="/notifications"></Route>
+          <Route path="/user"></Route>
+          <Route path="/settings"></Route>
+          <Route path="/logout" element={<Logout />}></Route>
+        </Route>
       </Route>
-      <Route path="signin" element={<Login />}></Route>
+
+      <Route path="/signin" element={<Login />}></Route>
     </Routes>
   );
 };
