@@ -84,6 +84,7 @@ export const ProductTable = () => {
       transition={{ duration: 1.3, ease: "backInOut" }}
     >
       <GenericTable
+        getRowId={(item) => item.id}
         items={products}
         columns={columns}
         sortColumn={sortColumn}

@@ -201,11 +201,11 @@ export interface User {
   password?: string;
   role?: UserRole;
   enabled?: boolean;
-  credentialsNonExpired?: boolean;
   accountNonExpired?: boolean;
   accountNonLocked?: boolean;
-  authorities?: GrantedAuthority[];
+  credentialsNonExpired?: boolean;
   username?: string;
+  authorities?: GrantedAuthority[];
 }
 
 export interface ApiResponseUser {
@@ -242,6 +242,7 @@ export interface ApiResponseLoginResponse {
 
 export interface PurchaseOrderRecordDTO {
   productId: number;
+  productName: string;
   quantity: number;
   unitPrice: number;
 }
@@ -253,25 +254,15 @@ export interface CreatePurchaseOrderRequest {
   records: PurchaseOrderRecordDTO[];
 }
 
-export interface PurchaseOrderRecord {
-  createdAt?: string;
-  updatedAt?: string;
-  id?: number;
-  purchaseOrder?: PurchaseOrder;
-  product?: Product;
-  quantity?: number;
-  unitPrice?: number;
-}
-
-export interface PurchaseOrder {
-  createdAt?: string;
-  updatedAt?: string;
-  id?: number;
-  records?: PurchaseOrderRecord[];
-  userId?: number;
-  orderStatus?: string;
-  orderPrice?: number;
-  totalQuantity?: number;
+export interface PurchaseOrderResponse {
+  id: number;
+  userId: number;
+  records: PurchaseOrderRecordDTO[];
+  orderStatus: string;
+  orderPrice: number;
+  totalQuantity: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type UpdateTicketStatusRequestStatus = typeof UpdateTicketStatusRequestStatus[keyof typeof UpdateTicketStatusRequestStatus];
@@ -324,7 +315,7 @@ export interface UpdateStockRequest {
   note: string;
 }
 
-export type ApiResponseVoidData = { [key: string]: unknown };
+export type ApiResponseVoidData = { [key: string]: unknown; };
 
 export interface ApiResponseVoid {
   timestamp?: string;
@@ -335,6 +326,22 @@ export interface ApiResponseVoid {
   path?: string;
   data?: ApiResponseVoidData;
   fieldErrors?: FieldError[];
+}
+
+export type UpdateStatusRequestStatus = typeof UpdateStatusRequestStatus[keyof typeof UpdateStatusRequestStatus];
+
+
+export const UpdateStatusRequestStatus = {
+  PENDING: 'PENDING',
+  SHIPPED: 'SHIPPED',
+  ARRIVED: 'ARRIVED',
+  CANCELLED: 'CANCELLED',
+  RETURNED: 'RETURNED',
+} as const;
+
+export interface UpdateStatusRequest {
+  status: UpdateStatusRequestStatus;
+  purchaseId: number;
 }
 
 export interface ApiResponseListUserDTO {
@@ -465,9 +472,9 @@ export const AuditLogAction = {
   BULK_DELETE: 'BULK_DELETE',
 } as const;
 
-export type AuditLogOldValue = {[key: string]: { [key: string]: unknown }};
+export type AuditLogOldValue = { [key: string]: { [key: string]: unknown; }; };
 
-export type AuditLogNewValue = {[key: string]: { [key: string]: unknown }};
+export type AuditLogNewValue = { [key: string]: { [key: string]: unknown; }; };
 
 export interface AuditLog {
   createdAt?: string;
@@ -506,7 +513,7 @@ export interface ApiResponsePageAuditLog {
   fieldErrors?: FieldError[];
 }
 
-export type ApiResponseObjectData = { [key: string]: unknown };
+export type ApiResponseObjectData = { [key: string]: unknown; };
 
 export interface ApiResponseObject {
   timestamp?: string;
@@ -520,23 +527,23 @@ export interface ApiResponseObject {
 }
 
 export type GetAllProductsParams = {
-/**
- * Zero-based page index (0..N)
- * @minimum 0
- */
-page?: number;
-/**
- * The size of the page to be returned
- * @minimum 1
- */
-size?: number;
-/**
- * Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
- */
-sort?: string[];
-search?: string;
-category?: GetAllProductsCategory;
-stockStatus?: GetAllProductsStockStatus;
+  /**
+   * Zero-based page index (0..N)
+   * @minimum 0
+   */
+  page?: number;
+  /**
+   * The size of the page to be returned
+   * @minimum 1
+   */
+  size?: number;
+  /**
+   * Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+   */
+  sort?: string[];
+  search?: string;
+  category?: GetAllProductsCategory;
+  stockStatus?: GetAllProductsStockStatus;
 };
 
 export type GetAllProductsCategory = typeof GetAllProductsCategory[keyof typeof GetAllProductsCategory];
@@ -561,14 +568,14 @@ export type CreateProductsWithCsvBody = {
 };
 
 export type SearchUsersParams = {
-email?: string;
-name?: string;
+  email?: string;
+  name?: string;
 };
 
 export type GetProductSummaryParams = {
-search?: string;
-category?: GetProductSummaryCategory;
-stockStatus?: GetProductSummaryStockStatus;
+  search?: string;
+  category?: GetProductSummaryCategory;
+  stockStatus?: GetProductSummaryStockStatus;
 };
 
 export type GetProductSummaryCategory = typeof GetProductSummaryCategory[keyof typeof GetProductSummaryCategory];
@@ -589,6 +596,6 @@ export const GetProductSummaryStockStatus = {
 } as const;
 
 export type GetAuditLogsParams = {
-pageable: Pageable;
+  pageable: Pageable;
 };
 

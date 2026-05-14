@@ -5,6 +5,7 @@ import java.time.Duration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import io.github.bucket4j.distributed.ExpirationAfterWriteStrategy;
 import io.github.bucket4j.distributed.proxy.ClientSideConfig;
@@ -16,6 +17,7 @@ import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.codec.StringCodec;
 
+@Profile("redis")
 @Configuration
 public class RateLimitConfig {
 
@@ -31,15 +33,13 @@ public class RateLimitConfig {
                 RedisURI.builder()
                         .withHost(redisHost)
                         .withPort(redisPort)
-                        .build()
-        );
+                        .build());
     }
 
     @Bean
     public ProxyManager<String> proxyManager(RedisClient redisClient) {
         var redisConnection = redisClient.connect(
-                RedisCodec.of(StringCodec.UTF8, ByteArrayCodec.INSTANCE)
-        );
+                RedisCodec.of(StringCodec.UTF8, ByteArrayCodec.INSTANCE));
 
         var expirationStrategy = ExpirationAfterWriteStrategy
                 .basedOnTimeForRefillingBucketUpToMax(Duration.ofHours(1));

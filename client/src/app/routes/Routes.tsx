@@ -8,6 +8,9 @@ import {
   Reports,
 } from "@/features";
 import { UsersPage } from "@/features/admin/users/UserManagement";
+import { CreatePoPage } from "@/features/purchases/CreatePoPage";
+import { InvoicePage } from "@/features/purchases/InvoicePage";
+import { PurchaseOrdersPage } from "@/features/purchases/PurchaseOrderPage";
 import { Route, Routes } from "react-router-dom";
 
 export const AppRoutes = () => {
@@ -27,15 +30,17 @@ export const AppRoutes = () => {
           path="/inventory-summary"
           element={<InventorySummaryPage />}
         ></Route>
-        {/* <Route path="/dashboard" element={<DashboardPage />}></Route> */}
-        <Route path="/purchasing"></Route>
+        <Route path="/dashboard" element={<DashboardPage />}></Route>
+        <Route path="/purchasing" element={<PurchaseOrdersPage />}></Route>
+        <Route path="/purchasing/create" element={<CreatePoPage />}></Route>
+        <Route path="/purchase-order/:id" element={<InvoicePage />}></Route>
         <Route path="/admin" element={<UsersPage />}></Route>
         <Route path="/help"></Route>
         <Route path="/notifications"></Route>
         <Route path="/user"></Route>
-        <Route path="settings"></Route>
+        <Route path="/settings"></Route>
       </Route>
-      <Route path="signin" element={<Login />}></Route>
+      <Route path="/signin" element={<Login />}></Route>
     </Routes>
   );
 };

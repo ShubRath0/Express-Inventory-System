@@ -26,7 +26,8 @@ import type {
 
 import type {
   CreatePurchaseOrderRequest,
-  PurchaseOrder
+  PurchaseOrderResponse,
+  UpdateStatusRequest
 } from '../types.schemas';
 
 import { axiosInstance } from '../../../lib/axios';
@@ -40,7 +41,7 @@ export const getPurchaseOrders = (
 ) => {
 
 
-      return axiosInstance<PurchaseOrder[]>(
+      return axiosInstance<PurchaseOrderResponse[]>(
       {url: `/api/purchases`, method: 'GET', signal
     },
       );
@@ -126,7 +127,7 @@ export const createPurchaseOrder = (
 ) => {
 
 
-      return axiosInstance<PurchaseOrder>(
+      return axiosInstance<PurchaseOrderResponse>(
       {url: `/api/purchases`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: createPurchaseOrderRequest, signal
@@ -177,13 +178,70 @@ const {mutation: mutationOptions} = options ?
       > => {
       return useMutation(getCreatePurchaseOrderMutationOptions(options), queryClient);
     }
+    export const updatePurchaseOrderStatus = (
+    updateStatusRequest: UpdateStatusRequest,
+ signal?: AbortSignal
+) => {
+
+
+      return axiosInstance<PurchaseOrderResponse>(
+      {url: `/api/purchases`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateStatusRequest, signal
+    },
+      );
+    }
+
+
+
+export const getUpdatePurchaseOrderStatusMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePurchaseOrderStatus>>, TError,{data: UpdateStatusRequest}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof updatePurchaseOrderStatus>>, TError,{data: UpdateStatusRequest}, TContext> => {
+
+const mutationKey = ['updatePurchaseOrderStatus'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updatePurchaseOrderStatus>>, {data: UpdateStatusRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  updatePurchaseOrderStatus(data,)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdatePurchaseOrderStatusMutationResult = NonNullable<Awaited<ReturnType<typeof updatePurchaseOrderStatus>>>
+    export type UpdatePurchaseOrderStatusMutationBody = UpdateStatusRequest
+    export type UpdatePurchaseOrderStatusMutationError = unknown
+
+    export const useUpdatePurchaseOrderStatus = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePurchaseOrderStatus>>, TError,{data: UpdateStatusRequest}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof updatePurchaseOrderStatus>>,
+        TError,
+        {data: UpdateStatusRequest},
+        TContext
+      > => {
+      return useMutation(getUpdatePurchaseOrderStatusMutationOptions(options), queryClient);
+    }
     export const getPurchaseOrder = (
     id: number,
  signal?: AbortSignal
 ) => {
 
 
-      return axiosInstance<PurchaseOrder>(
+      return axiosInstance<PurchaseOrderResponse>(
       {url: `/api/purchases/${id}`, method: 'GET', signal
     },
       );
@@ -324,7 +382,7 @@ const {mutation: mutationOptions} = options ?
 ) => {
 
 
-      return axiosInstance<PurchaseOrder[]>(
+      return axiosInstance<PurchaseOrderResponse[]>(
       {url: `/api/purchases/product/${id}`, method: 'GET', signal
     },
       );
