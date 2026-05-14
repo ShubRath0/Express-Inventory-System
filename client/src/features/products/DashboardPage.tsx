@@ -21,8 +21,6 @@ export const DashboardPage = () => {
         </SectionContainer>
       </motion.div>
 
-      <Divider />
-
       {/* CHARTS */}
       <motion.div
         initial={{ opacity: 0, x: 100 }}
@@ -45,7 +43,6 @@ export const DashboardPage = () => {
         </SectionContainer>
       </motion.div>
 
-      <Divider />
     </ScrollContainer>
   );
 };
