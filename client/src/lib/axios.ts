@@ -1,4 +1,5 @@
 import Axios, { type AxiosRequestConfig } from 'axios';
+import {authStorage} from "@/features/auth";
 
 export const api = Axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080/api/v1",
@@ -20,3 +21,10 @@ export const apiClient = Axios.create({
 export const axiosInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
   return apiClient(config).then((res) => res.data);
 };
+
+api.interceptors.request.use((config) => {
+  const token = authStorage.getToken();
+
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});

@@ -1,9 +1,8 @@
 import { Checkbox, Link } from "@heroui/react";
-import type { User } from "./api/user.type.tsx";
 import { GenericForm, type FormField } from "@/components/Generic/index.ts";
 import type { LoginRequest } from "@/api/__generated__/types.schemas.ts";
 
-const loginFields: FormField<User>[] = [
+const loginFields: FormField<LoginRequest>[] = [
   {
     key: "email",
     type: "email",
