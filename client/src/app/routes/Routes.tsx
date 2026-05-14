@@ -7,6 +7,7 @@ import {
   ProductInventorySection,
   Reports,
 } from "@/features";
+import { UsersPage } from "@/features/admin/users/UserManagement";
 import { CreatePoPage } from "@/features/purchases/CreatePoPage";
 import { InvoicePage } from "@/features/purchases/InvoicePage";
 import { PurchaseOrdersPage } from "@/features/purchases/PurchaseOrderPage";
@@ -33,7 +34,7 @@ export const AppRoutes = () => {
         <Route path="/purchasing" element={<PurchaseOrdersPage />}></Route>
         <Route path="/purchasing/create" element={<CreatePoPage />}></Route>
         <Route path="/purchase-order/:id" element={<InvoicePage />}></Route>
-        <Route path="/admin"></Route>
+        <Route path="/admin" element={<UsersPage />}></Route>
         <Route path="/help"></Route>
         <Route path="/notifications"></Route>
         <Route path="/user"></Route>

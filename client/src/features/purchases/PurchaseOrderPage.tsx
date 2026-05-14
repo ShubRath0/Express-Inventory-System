@@ -22,7 +22,6 @@ export const PurchaseOrdersPage = () => {
               <div className="flex flex-1 gap-4 items-center">
               </div>
 
-              {/* CREATE , EXPORT, NUKE */}
               <CreatePoButton />
 
             </div>

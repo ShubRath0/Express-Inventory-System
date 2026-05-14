@@ -132,7 +132,11 @@ export const CreatePoPage = () => {
         </Button>
       </motion.div>
 
-      <div className="p-6 space-y-8">
+      <motion.div
+        initial={{ opacity: 0, x: 100 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1.3, ease: "backInOut" }}
+      >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
           <Autocomplete
             label="Product"
@@ -183,16 +187,27 @@ export const CreatePoPage = () => {
             </Button>
           </div>
         </div>
+      </motion.div>
 
-        <GenericTable
-          items={poItems}
-          columns={columns}
-          getRowId={(item) => item.rowId}
-          sortColumn={sortColumn}
-          sortDirection={sortDirection}
-          setSortColumn={setSortColumn as any}
-          setSortDirection={setSortDirection}
-        />
+      <div className="p-6 space-y-8">
+
+
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.3, ease: "backInOut" }}
+        >
+          <GenericTable
+            items={poItems}
+            columns={columns}
+            getRowId={(item) => item.rowId}
+            sortColumn={sortColumn}
+            sortDirection={sortDirection}
+            setSortColumn={setSortColumn as any}
+            setSortDirection={setSortDirection}
+          />
+        </motion.div>
+
 
         {poItems.length > 0 && (
           <div className="flex justify-end">

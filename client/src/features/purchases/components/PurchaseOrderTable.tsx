@@ -38,7 +38,6 @@ export const PurchaseOrderTable = () => {
     rowsPerPage: 10
   });
 
-
   const columns = useMemo<ColumnDef<PurchaseOrderResponse>[]>(() => [
     {
       key: "id",
