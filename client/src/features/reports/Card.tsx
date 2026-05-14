@@ -22,6 +22,7 @@ const CardItems: CardProps[] = [
     title: "Audit",
     description:
       "Tracks changes made to inventory items, including additions, deletions, and modifications, along with timestamps and user information.",
+    href: "/inventory-summary/audit"
   },
   {
     icon: <UserCheck className="text-yellow-500" />,

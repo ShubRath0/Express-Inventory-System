@@ -26,6 +26,8 @@ import type {
 
 import type {
   CreatePurchaseOrderRequest,
+  GetPurchaseOrdersParams,
+  PagePurchaseOrderResponse,
   PurchaseOrderResponse,
   UpdateStatusRequest
 } from '../types.schemas';
@@ -36,13 +38,14 @@ import { axiosInstance } from '../../../lib/axios';
 
 
 export const getPurchaseOrders = (
-
+    params?: GetPurchaseOrdersParams,
  signal?: AbortSignal
 ) => {
 
 
-      return axiosInstance<PurchaseOrderResponse[]>(
-      {url: `/api/purchases`, method: 'GET', signal
+      return axiosInstance<PagePurchaseOrderResponse>(
+      {url: `/api/purchases`, method: 'GET',
+        params, signal
     },
       );
     }
@@ -50,23 +53,23 @@ export const getPurchaseOrders = (
 
 
 
-export const getGetPurchaseOrdersQueryKey = () => {
+export const getGetPurchaseOrdersQueryKey = (params?: GetPurchaseOrdersParams,) => {
     return [
-    `/api/purchases`
+    `/api/purchases`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getGetPurchaseOrdersQueryOptions = <TData = Awaited<ReturnType<typeof getPurchaseOrders>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPurchaseOrders>>, TError, TData>>, }
+export const getGetPurchaseOrdersQueryOptions = <TData = Awaited<ReturnType<typeof getPurchaseOrders>>, TError = unknown>(params?: GetPurchaseOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPurchaseOrders>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetPurchaseOrdersQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetPurchaseOrdersQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPurchaseOrders>>> = ({ signal }) => getPurchaseOrders(signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPurchaseOrders>>> = ({ signal }) => getPurchaseOrders(params, signal);
 
 
 
@@ -80,7 +83,7 @@ export type GetPurchaseOrdersQueryError = unknown
 
 
 export function useGetPurchaseOrders<TData = Awaited<ReturnType<typeof getPurchaseOrders>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPurchaseOrders>>, TError, TData>> & Pick<
+ params: undefined |  GetPurchaseOrdersParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPurchaseOrders>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPurchaseOrders>>,
           TError,
@@ -90,7 +93,7 @@ export function useGetPurchaseOrders<TData = Awaited<ReturnType<typeof getPurcha
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetPurchaseOrders<TData = Awaited<ReturnType<typeof getPurchaseOrders>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPurchaseOrders>>, TError, TData>> & Pick<
+ params?: GetPurchaseOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPurchaseOrders>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPurchaseOrders>>,
           TError,
@@ -100,16 +103,16 @@ export function useGetPurchaseOrders<TData = Awaited<ReturnType<typeof getPurcha
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetPurchaseOrders<TData = Awaited<ReturnType<typeof getPurchaseOrders>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPurchaseOrders>>, TError, TData>>, }
+ params?: GetPurchaseOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPurchaseOrders>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
 export function useGetPurchaseOrders<TData = Awaited<ReturnType<typeof getPurchaseOrders>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPurchaseOrders>>, TError, TData>>, }
+ params?: GetPurchaseOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPurchaseOrders>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetPurchaseOrdersQueryOptions(options)
+  const queryOptions = getGetPurchaseOrdersQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

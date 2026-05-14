@@ -3,6 +3,8 @@ package com.express.inventory.api.purchases;
 import java.util.List;
 
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.express.inventory.api.products.Product;
@@ -27,11 +29,9 @@ public class PurchaseService {
     @PersistenceContext
     private final EntityManager entityManager;
 
-    public List<PurchaseOrderResponse> getAllPurchases() {
-        return purchaseRepository.findAll()
-                .stream()
-                .map(purchaseOrderMapper::toDTO)
-                .toList();
+    public Page<PurchaseOrderResponse> getAllPurchases(Pageable pageable) {
+        return purchaseRepository.findAll(pageable)
+                .map(purchaseOrderMapper::toDTO);
     }
 
     public PurchaseOrderResponse getPurchaseById(Integer id) {

@@ -2,11 +2,10 @@ import { useGetPurchaseOrders } from "@/api/__generated__/purchase-controller/pu
 import type { PurchaseOrderResponse } from "@/api/__generated__/types.schemas";
 import { GenericTable, type ColumnDef } from "@/components";
 import { setSortColumn, setSortDirection } from "@/features/products";
-import { usePagination } from "@/hooks";
 import { Button } from "@heroui/react";
 import { motion } from "framer-motion";
 import { Eye } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -30,13 +29,9 @@ export const statusColors: Record<string, string> = {
 export const PurchaseOrderTable = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const { data } = useGetPurchaseOrders();
-
-  const { items, page, totalPages, setPage } = usePagination<PurchaseOrderResponse>({
-    data: data ?? [],
-    rowsPerPage: 10
-  });
+  const [page, setPage] = useState(0);
+  const { data } = useGetPurchaseOrders({ page: page, size: 5 });
+  const items = data?.content;
 
   const columns = useMemo<ColumnDef<PurchaseOrderResponse>[]>(() => [
     {
@@ -103,7 +98,7 @@ export const PurchaseOrderTable = () => {
       transition={{ duration: 1.3, ease: "backInOut" }}
     >
       <GenericTable
-        items={items}
+        items={items || []}
         getRowId={(item: PurchaseOrderResponse) => item.id}
         columns={columns}
         sortColumn={"id"}
@@ -111,8 +106,8 @@ export const PurchaseOrderTable = () => {
         setSortColumn={(col) => dispatch(setSortColumn(col))}
         setSortDirection={(dir) => dispatch(setSortDirection(dir))}
         page={page}
-        pages={totalPages}
-        onChange={(page) => setPage(page)}
+        pages={data?.totalPages || 0}
+        onChange={setPage}
       />
 
     </motion.div>

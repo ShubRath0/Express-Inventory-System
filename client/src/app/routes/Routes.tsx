@@ -13,6 +13,7 @@ import { UsersPage } from "@/features/admin/users/UserManagement";
 import { CreatePoPage } from "@/features/purchases/CreatePoPage";
 import { InvoicePage } from "@/features/purchases/InvoicePage";
 import { PurchaseOrdersPage } from "@/features/purchases/PurchaseOrderPage";
+import { AuditTable } from "@/features/reports/audit/AuditTable";
 import { Route, Routes } from "react-router-dom";
 
 export const AppRoutes = () => {
@@ -43,6 +44,7 @@ export const AppRoutes = () => {
           <Route path="/user"></Route>
           <Route path="/settings"></Route>
           <Route path="/logout" element={<Logout />}></Route>
+          <Route path="/inventory-summary/audit" element={<AuditTable />}></Route>
         </Route>
       </Route>
 

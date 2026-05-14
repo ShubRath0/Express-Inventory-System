@@ -2,7 +2,6 @@
 import { Header, ScrollContainer, SectionContainer } from "@/components";
 import { CreateByCsvBtn, CreateProductBtn, CreateProductModal, DeleteAlert, FilterBtn, FilteredStatsBanner, InventorySearchbar, ProductTable, UpdateStockModal } from "@/features/products/components";
 import { ExportBtn } from "@/features/products/components/Export/ExportBtn";
-import { NukeBtn } from "@/features/products/components/ui/NukeBtn";
 import { Divider } from "@heroui/react";
 import { motion } from 'framer-motion';
 import { useRef } from "react";
@@ -45,7 +44,6 @@ export const ProductInventorySection = () => {
               {/* CREATE , EXPORT, NUKE */}
               <CreateProductBtn onCsvClick={() => csvInputRef.current?.click()} />
               <ExportBtn />
-              <NukeBtn />
             </div>
           </section>
         </motion.div>

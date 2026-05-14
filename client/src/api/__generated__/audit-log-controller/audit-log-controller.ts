@@ -31,7 +31,7 @@ import { axiosInstance } from '../../../lib/axios';
 
 
 export const getAuditLogs = (
-    params: GetAuditLogsParams,
+    params?: GetAuditLogsParams,
  signal?: AbortSignal
 ) => {
 
@@ -53,7 +53,7 @@ export const getGetAuditLogsQueryKey = (params?: GetAuditLogsParams,) => {
     }
 
 
-export const getGetAuditLogsQueryOptions = <TData = Awaited<ReturnType<typeof getAuditLogs>>, TError = unknown>(params: GetAuditLogsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuditLogs>>, TError, TData>>, }
+export const getGetAuditLogsQueryOptions = <TData = Awaited<ReturnType<typeof getAuditLogs>>, TError = unknown>(params?: GetAuditLogsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuditLogs>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
@@ -76,7 +76,7 @@ export type GetAuditLogsQueryError = unknown
 
 
 export function useGetAuditLogs<TData = Awaited<ReturnType<typeof getAuditLogs>>, TError = unknown>(
- params: GetAuditLogsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuditLogs>>, TError, TData>> & Pick<
+ params: undefined |  GetAuditLogsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuditLogs>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getAuditLogs>>,
           TError,
@@ -86,7 +86,7 @@ export function useGetAuditLogs<TData = Awaited<ReturnType<typeof getAuditLogs>>
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetAuditLogs<TData = Awaited<ReturnType<typeof getAuditLogs>>, TError = unknown>(
- params: GetAuditLogsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuditLogs>>, TError, TData>> & Pick<
+ params?: GetAuditLogsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuditLogs>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getAuditLogs>>,
           TError,
@@ -96,12 +96,12 @@ export function useGetAuditLogs<TData = Awaited<ReturnType<typeof getAuditLogs>>
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetAuditLogs<TData = Awaited<ReturnType<typeof getAuditLogs>>, TError = unknown>(
- params: GetAuditLogsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuditLogs>>, TError, TData>>, }
+ params?: GetAuditLogsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuditLogs>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
 export function useGetAuditLogs<TData = Awaited<ReturnType<typeof getAuditLogs>>, TError = unknown>(
- params: GetAuditLogsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuditLogs>>, TError, TData>>, }
+ params?: GetAuditLogsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuditLogs>>, TError, TData>>, }
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 

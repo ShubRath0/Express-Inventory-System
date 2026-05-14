@@ -2,6 +2,10 @@ package com.express.inventory.api.purchases;
 
 import java.util.List;
 
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,8 +29,9 @@ public class PurchaseController {
     private final PurchaseService purchaseService;
 
     @GetMapping
-    public List<PurchaseOrderResponse> getPurchaseOrders() {
-        return purchaseService.getAllPurchases();
+    public Page<PurchaseOrderResponse> getPurchaseOrders(
+            @PageableDefault(page = 0, size = 10) @ParameterObject Pageable pageable) {
+        return purchaseService.getAllPurchases(pageable);
     }
 
     @GetMapping("/{id}")

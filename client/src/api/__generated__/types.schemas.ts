@@ -201,11 +201,11 @@ export interface User {
   password?: string;
   role?: UserRole;
   enabled?: boolean;
-  accountNonLocked?: boolean;
-  credentialsNonExpired?: boolean;
-  accountNonExpired?: boolean;
   username?: string;
   authorities?: GrantedAuthority[];
+  accountNonExpired?: boolean;
+  accountNonLocked?: boolean;
+  credentialsNonExpired?: boolean;
 }
 
 export interface ApiResponseUser {
@@ -357,30 +357,30 @@ export interface ApiResponseListUserDTO {
 
 export interface SortObject {
   empty?: boolean;
-  unsorted?: boolean;
   sorted?: boolean;
+  unsorted?: boolean;
 }
 
 export interface PageableObject {
   offset?: number;
+  sort?: SortObject;
   unpaged?: boolean;
+  paged?: boolean;
   pageNumber?: number;
   pageSize?: number;
-  sort?: SortObject;
-  paged?: boolean;
 }
 
 export interface PageProductResponse {
-  totalPages?: number;
   totalElements?: number;
+  totalPages?: number;
   size?: number;
   content?: ProductResponse[];
   number?: number;
   first?: boolean;
   last?: boolean;
   numberOfElements?: number;
-  pageable?: PageableObject;
   sort?: SortObject;
+  pageable?: PageableObject;
   empty?: boolean;
 }
 
@@ -450,14 +450,6 @@ export interface InventoryTransaction {
   note?: string;
 }
 
-export interface Pageable {
-  /** @minimum 0 */
-  page?: number;
-  /** @minimum 1 */
-  size?: number;
-  sort?: string[];
-}
-
 export type AuditLogAction = typeof AuditLogAction[keyof typeof AuditLogAction];
 
 
@@ -489,16 +481,16 @@ export interface AuditLog {
 }
 
 export interface PageAuditLog {
-  totalPages?: number;
   totalElements?: number;
+  totalPages?: number;
   size?: number;
   content?: AuditLog[];
   number?: number;
   first?: boolean;
   last?: boolean;
   numberOfElements?: number;
-  pageable?: PageableObject;
   sort?: SortObject;
+  pageable?: PageableObject;
   empty?: boolean;
 }
 
@@ -511,6 +503,20 @@ export interface ApiResponsePageAuditLog {
   path?: string;
   data?: PageAuditLog;
   fieldErrors?: FieldError[];
+}
+
+export interface PagePurchaseOrderResponse {
+  totalElements?: number;
+  totalPages?: number;
+  size?: number;
+  content?: PurchaseOrderResponse[];
+  number?: number;
+  first?: boolean;
+  last?: boolean;
+  numberOfElements?: number;
+  sort?: SortObject;
+  pageable?: PageableObject;
+  empty?: boolean;
 }
 
 export type ApiResponseObjectData = { [key: string]: unknown };
@@ -567,6 +573,23 @@ export type CreateProductsWithCsvBody = {
   file: Blob;
 };
 
+export type GetPurchaseOrdersParams = {
+/**
+ * Zero-based page index (0..N)
+ * @minimum 0
+ */
+page?: number;
+/**
+ * The size of the page to be returned
+ * @minimum 1
+ */
+size?: number;
+/**
+ * Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+ */
+sort?: string[];
+};
+
 export type SearchUsersParams = {
 email?: string;
 name?: string;
@@ -596,6 +619,19 @@ export const GetProductSummaryStockStatus = {
 } as const;
 
 export type GetAuditLogsParams = {
-pageable: Pageable;
+/**
+ * Zero-based page index (0..N)
+ * @minimum 0
+ */
+page?: number;
+/**
+ * The size of the page to be returned
+ * @minimum 1
+ */
+size?: number;
+/**
+ * Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+ */
+sort?: string[];
 };
 

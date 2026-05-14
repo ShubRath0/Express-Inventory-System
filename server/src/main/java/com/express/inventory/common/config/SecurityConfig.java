@@ -49,8 +49,7 @@ public class SecurityConfig {
 
                         // Allow public access to authentication API and Documentation
                         .requestMatchers(
-                                "/api/v1/**",
-                                "/api/**",
+                                "/api/v1/auth/login",
                                 "/v3/api-docs",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
