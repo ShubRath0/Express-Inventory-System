@@ -17,6 +17,7 @@ export const GenericStatBanner = ({
                         statValue={stat.statValue}
                         render={stat.render}
                         icon={stat.icon}
+                        className={stat.className}
                     />
                 ))
             }

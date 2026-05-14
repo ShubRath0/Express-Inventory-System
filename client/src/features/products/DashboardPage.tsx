@@ -1,6 +1,5 @@
 import { Header, ProductStatsBanner, ScrollContainer, Section, SectionContainer } from "@/components";
 import { HealthChart, ProfitChart, StockChart } from "@/features/products/components/Charts";
-import { Divider } from "@heroui/react";
 import { motion } from "framer-motion";
 
 export const DashboardPage = () => {
@@ -20,8 +19,6 @@ export const DashboardPage = () => {
           <ProductStatsBanner />
         </SectionContainer>
       </motion.div>
-
-      <Divider />
 
       {/* CHARTS */}
       <motion.div
@@ -45,7 +42,6 @@ export const DashboardPage = () => {
         </SectionContainer>
       </motion.div>
 
-      <Divider />
     </ScrollContainer>
   );
 };

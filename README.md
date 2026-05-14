@@ -1,6 +1,6 @@
 # Express Inventory System
 
-🔗 Live Demo: [https://express-inventory-system-1.onrender.com/](https://express-inventory-system-1.onrender.com/)
+🔗 Live Demo: [https://express-inventory-system-1.onrender.com/](https://express-inventory-system-1.onrender.com/signin)
 
 ## Tech Stack
 

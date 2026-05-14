@@ -18,7 +18,7 @@ export const InventorySearchbar = () => {
     <SearchBar
       onChange={(searchTerm) => setSearchInput(searchTerm)}
       placeholder="Search Items"
-      className="w-[20%]"
+      className="w-[40%]"
     />
   );
 
